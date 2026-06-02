@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏭 具身智能机器人组装流水线管理指南 · wxcadk</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --card: #161b22;
+    --border: #30363d;
+    --text: #e6edf3;
+    --text2: #8b949e;
+    --accent: #58a6ff;
+    --green: #3fb950;
+    --orange: #f0883e;
+    --purple: #bc8cff;
+    --red: #f85149;
+    --yellow: #f0c674;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; line-height: 1.8; padding: 20px; }
+  .container { max-width: 960px; margin: 0 auto; }
+  
+  /* Header */
+  .hero { text-align: center; padding: 60px 0 30px; }
+  .hero h1 { font-size: 2.2em; background: linear-gradient(135deg, var(--accent), var(--purple), var(--orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 12px; }
+  .hero p { color: var(--text2); font-size: 1.1em; max-width: 600px; margin: 0 auto; }
+  .hero .meta { margin-top: 16px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+  .hero .meta span { color: var(--text2); font-size: 0.85em; }
+  
+  /* Navigation */
+  .toc { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin: 30px 0; }
+  .toc h2 { font-size: 1.2em; color: var(--accent); margin-bottom: 16px; }
+  .toc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; }
+  .toc a { color: var(--text2); text-decoration: none; padding: 8px 12px; border-radius: 6px; display: block; transition: all 0.2s; font-size: 0.95em; }
+  .toc a:hover { background: rgba(88,166,255,0.1); color: var(--accent); }
+  .toc a .num { color: var(--accent); font-weight: 700; margin-right: 6px; }
+  
+  /* Sections */
+  .section { margin: 40px 0; }
+  .section-header { padding: 16px 0; border-bottom: 2px solid var(--border); margin-bottom: 20px; }
+  .section-header h2 { font-size: 1.5em; display: flex; align-items: center; gap: 10px; }
+  .section-header h2 .emoji { font-size: 1.2em; }
+  .section-header p { color: var(--text2); margin-top: 6px; font-size: 0.95em; }
+  
+  /* Cards */
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 16px; transition: border-color 0.2s; }
+  .card:hover { border-color: var(--accent); }
+  .card h3 { color: var(--accent); font-size: 1.1em; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .card h4 { color: var(--orange); font-size: 1em; margin: 16px 0 8px; }
+  
+  /* Tables */
+  .table-wrap { overflow-x: auto; margin: 12px 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.9em; }
+  th { background: rgba(88,166,255,0.1); color: var(--accent); text-align: left; padding: 10px 12px; border: 1px solid var(--border); font-weight: 600; }
+  td { padding: 8px 12px; border: 1px solid var(--border); vertical-align: top; }
+  tr:hover td { background: rgba(88,166,255,0.03); }
+  
+  /* Lists */
+  ul, ol { padding-left: 24px; margin: 8px 0; }
+  li { margin: 4px 0; }
+  
+  /* Info boxes */
+  .info-box { border-left: 3px solid var(--accent); background: rgba(88,166,255,0.05); padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 12px 0; }
+  .info-box.warn { border-left-color: var(--orange); background: rgba(240,136,62,0.05); }
+  .info-box.success { border-left-color: var(--green); background: rgba(63,185,80,0.05); }
+  .info-box.danger { border-left-color: var(--red); background: rgba(248,81,73,0.05); }
+  
+  /* Flow diagram */
+  .flow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 12px 0; justify-content: center; }
+  .flow-step { background: rgba(88,166,255,0.1); border: 1px solid var(--accent); border-radius: 8px; padding: 8px 14px; font-size: 0.85em; color: var(--accent); font-weight: 600; }
+  .flow-arrow { color: var(--text2); font-size: 1.2em; }
+  
+  /* Tags */
+  .tag { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 0.75em; font-weight: 600; margin-right: 4px; }
+  .tag-critical { background: rgba(248,81,73,0.15); color: var(--red); }
+  .tag-high { background: rgba(240,136,62,0.15); color: var(--orange); }
+  .tag-medium { background: rgba(240,198,116,0.15); color: var(--yellow); }
+  .tag-good { background: rgba(63,185,80,0.15); color: var(--green); }
+  
+  /* Benchmark cards */
+  .benchmark { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 16px 0; }
+  .bench-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+  .bench-card h4 { color: var(--purple); margin-bottom: 8px; font-size: 1em; }
+  .bench-card .desc { color: var(--text2); font-size: 0.85em; }
+  
+  /* KPI grid */
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 16px 0; }
+  .kpi { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 14px; text-align: center; }
+  .kpi .value { font-size: 1.5em; font-weight: 700; color: var(--green); }
+  .kpi .name { color: var(--text2); font-size: 0.8em; margin-top: 4px; }
+  
+  /* BOM tree */
+  .bom-tree { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.85em; background: rgba(0,0,0,0.3); padding: 16px; border-radius: 8px; overflow-x: auto; white-space: pre; line-height: 1.6; color: var(--text2); }
+  .bom-tree .l0 { color: var(--accent); font-weight: 700; }
+  .bom-tree .l1 { color: var(--purple); }
+  .bom-tree .l2 { color: var(--orange); }
+  .bom-tree .l3 { color: var(--text2); }
+  
+  /* Footer */
+  .footer { text-align: center; padding: 40px 0 20px; color: var(--text2); font-size: 0.85em; border-top: 1px solid var(--border); margin-top: 40px; }
+  .footer a { color: var(--accent); text-decoration: none; }
+  
+  /* Print */
+  @media print {
+    body { background: #fff; color: #000; }
+    .card, .toc, .bench-card, .kpi { border-color: #ccc; background: #f9f9f9; }
+    .hero h1 { -webkit-text-fill-color: #1a1a2e; }
+  }
+  
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 1.6em; }
+    .toc-grid { grid-template-columns: 1fr; }
+    .benchmark { grid-template-columns: 1fr; }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .flow { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- Hero -->
+<div class="hero">
+  <h1>🏭 具身智能机器人组装流水线管理指南</h1>
+  <p>面向代工厂组装车间主任的全方位管理手册 — 涵盖生产规范、区域划分、ERP流程与管理办法</p>
+  <div class="meta">
+    <span>📅 2026年6月</span>
+    <span>📖 10大章节</span>
+    <span>🏭 车间管理实战</span>
+    <span>📋 含GB标准</span>
+  </div>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <h2>📑 目录导航</h2>
+  <div class="toc-grid">
+    <a href="#ch1"><span class="num">01</span> 行业背景与独特性</a>
+    <a href="#ch2"><span class="num">02</span> 生产规范与SOP体系</a>
+    <a href="#ch3"><span class="num">03</span> 质量控制框架</a>
+    <a href="#ch4"><span class="num">04</span> 车间区域划分</a>
+    <a href="#ch5"><span class="num">05</span> 物料流动与仓储</a>
+    <a href="#ch6"><span class="num">06</span> ERP/MES系统集成</a>
+    <a href="#ch7"><span class="num">07</span> 人员管理与培训</a>
+    <a href="#ch8"><span class="num">08</span> 安全管理与ESD防护</a>
+    <a href="#ch9"><span class="num">09</span> 精益生产与持续改善</a>
+    <a href="#ch10"><span class="num">10</span> KPI体系与行业标杆</a>
+  </div>
+</div>
+
+<!-- ==================== Chapter 1 ==================== -->
+<div class="section" id="ch1">
+  <div class="section-header">
+    <h2><span class="emoji">🤖</span> 第一章 行业背景与独特性</h2>
+    <p>理解具身智能机器人组装与传统制造的核心差异，是做好管理的第一步</p>
+  </div>
+
+  <div class="card">
+    <h3>📊 与传统制造业对比</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>维度</th><th>传统制造业（3C/汽车）</th><th>具身智能机器人组装</th></tr>
+        <tr><td>产品成熟度</td><td>高度成熟，设计冻结</td><td>快速迭代，BOM频繁变更</td></tr>
+        <tr><td>零部件标准化</td><td>高标准、大批量</td><td>定制件多，关节/执行器规格多样</td></tr>
+        <tr><td>软硬件耦合</td><td>相对独立</td><td>深度耦合，需固件烧录+标定</td></tr>
+        <tr><td>测试复杂度</td><td>功能性测试为主</td><td>运动学标定、力控校准、AI模型部署</td></tr>
+        <tr><td>工艺稳定性</td><td>成熟稳定</td><td>工艺窗口窄，调试周期长</td></tr>
+        <tr><td>组装精度要求</td><td>毫米级</td><td>关节重复定位精度 ±0.05mm 以内</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>⚠️ 核心挑战</h3>
+    <ul>
+      <li><strong>多学科集成：</strong>机械、电气、传感器、嵌入式软件、AI算法五位一体</li>
+      <li><strong>柔性关节组装：</strong>谐波减速器/RV减速器装配精度直接影响运动性能</li>
+      <li><strong>线缆管理：</strong>内部走线空间狭小，需兼顾信号完整性与机械可靠性</li>
+      <li><strong>传感器标定：</strong>IMU、力矩传感器、视觉相机需逐台标定</li>
+      <li><strong>软件部署：</strong>每台机器人需烧录固件、校准参数、部署AI模型</li>
+      <li><strong>产品迭代快：</strong>相较家电组装慢 4-6 倍，瓶颈在校准、非标布线与软件联调</li>
+    </ul>
+    <div class="info-box">
+      <strong>💡 关键认知：</strong>代工厂的核心竞争力不只是"装"，更要能"调"——软硬件一体化测试能力是区别于传统代工的核心壁垒。
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Chapter 2 ==================== -->
+<div class="section" id="ch2">
+  <div class="section-header">
+    <h2><span class="emoji">📋</span> 第二章 生产规范与SOP体系</h2>
+    <p>建立标准化作业流程，确保每一台出厂产品的一致性和可靠性</p>
+  </div>
+
+  <div class="card">
+    <h3>🔧 典型组装工序流程（四阶段模型）</h3>
+    
+    <h4>阶段一：子组件预装</h4>
+    <div class="flow">
+      <span class="flow-step">骨架/结构件预装</span><span class="flow-arrow">→</span>
+      <span class="flow-step">关节模组预装</span><span class="flow-arrow">→</span>
+      <span class="flow-step">线束预制</span><span class="flow-arrow">→</span>
+      <span class="flow-step">电气控制板预装</span>
+    </div>
+
+    <h4>阶段二：主体组装</h4>
+    <div class="flow">
+      <span class="flow-step">躯干骨架</span><span class="flow-arrow">→</span>
+      <span class="flow-step">下肢组装</span><span class="flow-arrow">→</span>
+      <span class="flow-step">上肢组装</span><span class="flow-arrow">→</span>
+      <span class="flow-step">头部/感知模组</span><span class="flow-arrow">→</span>
+      <span class="flow-step">内部走线</span><span class="flow-arrow">→</span>
+      <span class="flow-step">电池模组</span>
+    </div>
+
+    <h4>阶段三：软件与调试</h4>
+    <div class="flow">
+      <span class="flow-step">固件烧录</span><span class="flow-arrow">→</span>
+      <span class="flow-step">传感器初始化</span><span class="flow-arrow">→</span>
+      <span class="flow-step">关节零位标定</span><span class="flow-arrow">→</span>
+      <span class="flow-step">运动学验证</span><span class="flow-arrow">→</span>
+      <span class="flow-step">AI模型部署</span><span class="flow-arrow">→</span>
+      <span class="flow-step">遥操联调</span>
+    </div>
+
+    <h4>阶段四：整机测试与老化</h4>
+    <div class="flow">
+      <span class="flow-step">功能测试</span><span class="flow-arrow">→</span>
+      <span class="flow-step">运动性能测试</span><span class="flow-arrow">→</span>
+      <span class="flow-step">老化测试(24-72h)</span><span class="flow-arrow">→</span>
+      <span class="flow-step">外观检查</span><span class="flow-arrow">→</span>
+      <span class="flow-step">包装出货</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📄 每个工位SOP文件清单</h3>
+    <ul>
+      <li><strong>作业指导书（WI）：</strong>图文并茂，步骤分解到原子动作</li>
+      <li><strong>物料清单（BOM）与取料规范：</strong>每工位专用料盒，防混料</li>
+      <li><strong>扭矩规格表：</strong>关节部位 5-15 N·m，结构件 8-25 N·m</li>
+      <li><strong>力矩扳手校准记录：</strong>每班次校准</li>
+      <li><strong>防静电规范：</strong>ESD防护要求</li>
+      <li><strong>清洁度要求：</strong>关节内部无金属碎屑，光学元件无指纹/灰尘</li>
+      <li><strong>异常处理流程（ANP）：</strong>发现缺陷时的停线、上报、处置标准</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>🎯 关键工艺参数标准</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>工艺项</th><th>标准要求</th><th>检测工具</th></tr>
+        <tr><td>关节安装同轴度</td><td>≤ 0.02mm</td><td>百分表/激光对中仪</td></tr>
+        <tr><td>减速器预紧力</td><td>按厂家规格 ±5%</td><td>扭矩传感器</td></tr>
+        <tr><td>线缆弯曲半径</td><td>≥ 线缆外径 5 倍</td><td>目视/模板</td></tr>
+        <tr><td>螺丝紧固扭矩</td><td>按规格 ±10%</td><td>数显力矩扳手</td></tr>
+        <tr><td>传感器安装角度</td><td>±0.5° 以内</td><td>角度仪/标定工具</td></tr>
+        <tr><td>接插件插拔力</td><td>按规格</td><td>拉力计</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Chapter 3 ==================== -->
+<div class="section" id="ch3">
+  <div class="section-header">
+    <h2><span class="emoji">🔍</span> 第三章 质量控制框架</h2>
+    <p>IQC → IPQC → FQC/OQC 全链路质量管控</p>
+  </div>
+
+  <div class="card">
+    <h3>📥 来料检验（IQC）— 分层检验策略</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>等级</th><th>物料类别</th><th>检验策略</th></tr>
+        <tr><td><span class="tag tag-critical">A类</span> 关键件</td><td>电机、减速器、编码器、主控芯片、电池</td><td>100%全检 或 AQL 0.65 严格抽检</td></tr>
+        <tr><td><span class="tag tag-high">B类</span> 重要件</td><td>结构件、线束、连接器</td><td>AQL 1.0 抽检</td></tr>
+        <tr><td><span class="tag tag-medium">C类</span> 一般件</td><td>螺丝、标签、包装材料</td><td>AQL 2.5 抽检</td></tr>
+      </table>
+    </div>
+    
+    <h4>关键来料检测项目</h4>
+    <ul>
+      <li><strong>电机：</strong>空载电流、堵转扭矩、KV值、绝缘电阻、噪音</li>
+      <li><strong>减速器：</strong>传动比、回差（backlash ≤1 arcmin）、额定扭矩、噪音</li>
+      <li><strong>编码器：</strong>分辨率、信号质量、温漂</li>
+      <li><strong>结构件：</strong>尺寸CMM检测、表面粗糙度、材质证书核验</li>
+      <li><strong>电池：</strong>容量、内阻、充放电曲线、安全认证</li>
+      <li><strong>PCB板：</strong>AOI检测、功能测试、ICT测试</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>🔧 过程质量控制（IPQC）— 质量门（Quality Gate）</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>质量门</th><th>位置</th><th>检查内容</th></tr>
+        <tr><td><span class="tag tag-critical">QG1</span></td><td>关节预装完成</td><td>空载运转、电流波形、温升、噪音、编码器信号</td></tr>
+        <tr><td><span class="tag tag-critical">QG2</span></td><td>下肢组装完成</td><td>各关节活动范围、力矩反馈、线缆无干涉</td></tr>
+        <tr><td><span class="tag tag-critical">QG3</span></td><td>上肢组装完成</td><td>同上 + 末端重复定位精度</td></tr>
+        <tr><td><span class="tag tag-high">QG4</span></td><td>电气连接完成</td><td>绝缘电阻、接地连续性、各路供电电压</td></tr>
+        <tr><td><span class="tag tag-high">QG5</span></td><td>软件部署完成</td><td>传感器数据正常、通信正常、基础运动功能</td></tr>
+        <tr><td><span class="tag tag-critical">QG6</span></td><td>整机组装完成</td><td>全项目综合测试</td></tr>
+      </table>
+    </div>
+    <div class="info-box">
+      <strong>💡 过程控制工具：</strong>防错（Poka-Yoke）连接器物理防呆设计、扭力数据自动上传MES、首件检验（每班/每批）、SPC统计过程控制（关节回差、同轴度控制图）、4M变更管理。
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>✅ 最终测试（FQC/OQC）— 整机测试矩阵</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>测试类别</th><th>测试项目</th><th>合格标准</th></tr>
+        <tr><td>电气安全</td><td>绝缘电阻、接地、漏电流</td><td>符合GB/IEC相关标准</td></tr>
+        <tr><td>运动性能</td><td>各关节行程/速度/加速度</td><td>设计规格 ±5%</td></tr>
+        <tr><td>负载测试</td><td>额定负载下各姿态保持</td><td>无异常、电流在限值内</td></tr>
+        <tr><td>精度测试</td><td>末端重复定位精度</td><td>±0.5mm 以内</td></tr>
+        <tr><td>力控测试</td><td>力矩传感器精度、碰撞检测</td><td>力控响应时间 <10ms</td></tr>
+        <tr><td>续航测试</td><td>标准动作循环下的电池续航</td><td>≥4小时（视产品）</td></tr>
+        <tr><td>通信测试</td><td>Wi-Fi/5G/有线通信</td><td>延迟、丢包率达标</td></tr>
+        <tr><td>噪音测试</td><td>运行噪音</td><td>≤65dB（1m距离）</td></tr>
+        <tr><td>老化测试</td><td>连续运行 24-72 小时</td><td>无故障、无过热</td></tr>
+        <tr><td>外观检查</td><td>表面质量、标识、配件</td><td>无划伤、标识齐全</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Chapter 4 ==================== -->
+<div class="section" id="ch4">
+  <div class="section-header">
+    <h2><span class="emoji">🏗️</span> 第四章 车间区域划分</h2>
+    <p>科学的区域划分是高效生产的基础——人流物流分离、功能分区明确</p>
+  </div>
+
+  <div class="card">
+    <h3>📐 八大功能区域</h3>
+    <div class="flow">
+      <span class="flow-step">来料接收与仓储 15-20%</span><span class="flow-arrow">→</span>
+      <span class="flow-step">预加工区 10%</span><span class="flow-arrow">→</span>
+      <span class="flow-step">子装配区 20-25%</span><span class="flow-arrow">→</span>
+      <span class="flow-step">主装配区 20-25%</span><span class="flow-arrow">→</span>
+      <span class="flow-step">测试调试区 15-20%</span><span class="flow-arrow">→</span>
+      <span class="flow-step">返修区 5%</span><span class="flow-arrow">→</span>
+      <span class="flow-step">包装出货区 10%</span>
+    </div>
+
+    <h4>1. 来料接收与仓储区（15-20%）</h4>
+    <ul>
+      <li>来料卸货区（液压升降平台/月台）</li>
+      <li>IQC检验区（三坐标测量仪、光学检测设备）</li>
+      <li>原材料仓库（电子元器件需温湿度控制）</li>
+      <li>危险品库（锂电池、化学品单独隔离）</li>
+      <li><strong>恒温恒湿电子仓：</strong>温度 23±3℃，湿度 45±15%RH</li>
+    </ul>
+
+    <h4>2. 零部件预加工区（10%）</h4>
+    <ul>
+      <li>线束加工区（裁线、压接、焊接、套管）</li>
+      <li>PCB分板/预处理区（PCBA分板、清洗、三防涂覆）</li>
+      <li>机械零件预处理（去毛刺、清洗）</li>
+      <li>标签打印与追溯码赋码区</li>
+    </ul>
+
+    <h4>3. 子装配区（20-25%）</h4>
+    <ul>
+      <li>关节模组装配线（电机+减速器+编码器+力矩传感器）</li>
+      <li>手部/末端执行器装配（灵巧手、夹爪）</li>
+      <li>传感器模组装配（RGB-D相机、IMU、LiDAR）</li>
+      <li>控制板卡装配与预测试</li>
+      <li>电池包组装（电芯分选、BMS集成）</li>
+      <li>线束预装</li>
+    </ul>
+
+    <h4>4. 主装配区（20-25%）</h4>
+    <ul>
+      <li>机身框架装配工位</li>
+      <li>手臂/下肢组装工位</li>
+      <li>电气集成工位（线束连接、插接、理线）</li>
+      <li>软件烧录/初始化工位</li>
+      <li>外壳组装工位</li>
+    </ul>
+
+    <h4>5. 测试与调试区（15-20%）</h4>
+    <ul>
+      <li>功能测试区（关节运动、传感器、通信）</li>
+      <li>环境测试区（高低温、振动、跌落）</li>
+      <li>整机联调区（运动控制算法、AI模型、人机交互）</li>
+      <li>老化测试区（连续运行 24-72 小时）</li>
+    </ul>
+
+    <h4>6. 返修/维修区（5%）</h4>
+    <ul>
+      <li>不良品分析台（示波器、逻辑分析仪）</li>
+      <li>返修工位（与主产线分离）</li>
+      <li>故障件拆解与报废处理区</li>
+    </ul>
+
+    <h4>7. 成品包装与出货区（10%）</h4>
+    <ul>
+      <li>清洁/外观检查区 → 附件配对区 → 包装工位</li>
+      <li>成品暂存区（按订单/客户分区）→ OQC出货检验 → 出货月台</li>
+    </ul>
+
+    <h4>8. 辅助功能区</h4>
+    <ul>
+      <li>办公区/中控室（生产监控大屏、MES终端）</li>
+      <li>研发试产线、培训区、更衣/风淋室、工装夹具库</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>🧪 洁净室与ESD防护等级</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>区域</th><th>洁净度等级</th><th>说明</th></tr>
+        <tr><td>传感器装配区</td><td>ISO 7（万级）</td><td>光学元件、深度相机镜头装配需防尘</td></tr>
+        <tr><td>PCBA贴片区</td><td>ISO 7</td><td>SMT回流焊区域</td></tr>
+        <tr><td>主装配区</td><td>ISO 8（十万级）</td><td>减少灰尘对精密机构影响</td></tr>
+        <tr><td>测试区</td><td>普通工业洁净</td><td>保持基本洁净度</td></tr>
+        <tr><td>包装区</td><td>普通工业洁净</td><td>防止产品二次污染</td></tr>
+      </table>
+    </div>
+    <div class="info-box warn">
+      <strong>⚠️ ESD全员防护：</strong>整个装配区铺设防静电地板（接地电阻 10⁶-10⁹Ω）；所有人员佩戴有绳防静电手环；每个工位配备防静电台垫和离子风机；门禁处设手腕带/鞋底测试仪，不通过不得进入；装配区相对湿度 ≥40%RH。
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🚦 安全区域标识系统</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>颜色</th><th>含义</th><th>应用场景</th></tr>
+        <tr><td>🔴 红色</td><td>高危/禁止</td><td>测试区（高压/电池测试）、激光设备区——需授权进入</td></tr>
+        <tr><td>🟠 橙色</td><td>中危区</td><td>机械装配区（设备运行中）、返修区——需PPE</td></tr>
+        <tr><td>🟡 黄色</td><td>通道标识</td><td>人行通道 ≥1.2m，用黄色实线标识</td></tr>
+        <tr><td>🟢 绿色</td><td>物流/安全区</td><td>AGV/叉车通道 ≥2m，办公区通道</td></tr>
+        <tr><td>🔵 蓝色</td><td>待检区</td><td>待检品暂存</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Chapter 5 ==================== -->
+<div class="section" id="ch5">
+  <div class="section-header">
+    <h2><span class="emoji">📦</span> 第五章 物料流动与仓储</h2>
+    <p>精益物料配送，让生产线永不缺料、不积压</p>
+  </div>
+
+  <div class="card">
+    <h3>🔄 物料流动原则</h3>
+    <ul>
+      <li><strong>单向流动：</strong>原材料从一端进入，成品从另一端出，避免交叉和回流</li>
+      <li><strong>精益配送：</strong>采用"超市+水蜘蛛"模式，线边物料定时定量补给</li>
+      <li><strong>拉动式生产：</strong>后工序向前工序拉动，减少WIP在制品库存</li>
+    </ul>
+    <div class="info-box">
+      <strong>💡 物流路径：</strong>原材料仓 → 来料检验 → 预处理区 → 子装配区 → 主装配区 → 测试区 → 包装区 → 成品仓 → 出货（不合格品回流至返修区）
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🏗️ 物流设备配置</h3>
+    <ul>
+      <li><strong>AGV/AMR：</strong>自动导引车用于仓储到产线、工序间的物料搬运</li>
+      <li><strong>精益料架：</strong>线边物料按照装配顺序排列</li>
+      <li><strong>自动化立体仓库（AS/RS）：</strong>原材料和成品的高密度存储</li>
+      <li><strong>输送带/滚筒线：</strong>工序间的半成品流转（适合大批量）</li>
+      <li><strong>智能料塔：</strong>小型元器件的自动发料</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>📊 库存管理策略</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>分类</th><th>物料</th><th>管理方式</th></tr>
+        <tr><td><span class="tag tag-critical">A类</span> 高价值</td><td>电机、减速器、传感器、主控板</td><td>精确管控，JIT配送</td></tr>
+        <tr><td><span class="tag tag-high">B类</span> 中价值</td><td>线缆、结构件、外壳</td><td>定期补货</td></tr>
+        <tr><td><span class="tag tag-medium">C类</span> 低价值</td><td>螺丝、扎带、标签</td><td>定量补货，VMI模式</td></tr>
+      </table>
+    </div>
+    <ul>
+      <li><strong>VMI（供应商管理库存）：</strong>通用件由供应商驻场管理</li>
+      <li><strong>JIT配送：</strong>高价值件按生产节拍准时配送</li>
+      <li><strong>安全库存：</strong>长交期件（进口芯片、定制减速器）保持 2-4 周安全库存</li>
+      <li><strong>呆滞物料预警：</strong>超过 90 天无异动自动预警</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== Chapter 6 ==================== -->
+<div class="section" id="ch6">
+  <div class="section-header">
+    <h2><span class="emoji">💻</span> 第六章 ERP/MES系统集成</h2>
+    <p>数字化是实现全流程追溯和精细化管理的基础</p>
+  </div>
+
+  <div class="card">
+    <h3>🏗️ 系统架构</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>层级</th><th>系统</th><th>功能</th></tr>
+        <tr><td>ERP层</td><td>SAP/Oracle/用友/金蝶/浪潮</td><td>财务、采购、销售、库存、计划、BOM</td></tr>
+        <tr><td>MES层</td><td>自研/西门子Opcenter/达索DELMIA</td><td>排产、调度、报工、质量、追溯、设备、工艺</td></tr>
+        <tr><td>数据采集层</td><td>SCADA/IoT</td><td>PLC、传感器、测试设备、扫码枪、视觉系统、AGV</td></tr>
+        <tr><td>物理执行层</td><td>设备/工装/产线</td><td>设备、工装、产线、仓储、物流</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🌳 BOM层级结构（示例）</h3>
+    <div class="bom-tree"><span class="l0">L0-整机：具身智能机器人-标准版</span>
+├── <span class="l1">L1-躯干组件</span>
+│   ├── <span class="l2">L2-骨架结构件</span>（铝型材/钣金件）
+│   ├── <span class="l2">L2-主控板组件</span>
+│   │   ├── <span class="l3">L3-主控PCBA</span>
+│   │   ├── <span class="l3">L3-散热模组</span>
+│   │   └── <span class="l3">L3-连接器组</span>
+│   ├── <span class="l2">L2-电源管理组件</span>
+│   │   ├── <span class="l3">L3-电池包</span>
+│   │   ├── <span class="l3">L3-BMS板</span>
+│   │   └── <span class="l3">L3-DC-DC转换器</span>
+│   └── <span class="l2">L2-线束总成</span>
+├── <span class="l1">L1-左臂组件</span>
+│   ├── <span class="l2">L2-肩关节模组</span>
+│   │   ├── <span class="l3">L3-无框力矩电机</span>
+│   │   ├── <span class="l3">L3-谐波减速器</span>
+│   │   ├── <span class="l3">L3-编码器</span>
+│   │   ├── <span class="l3">L3-力矩传感器</span>
+│   │   └── <span class="l3">L3-关节轴承/密封件</span>
+│   ├── <span class="l2">L2-肘关节模组</span>
+│   ├── <span class="l2">L2-腕关节模组</span>
+│   └── <span class="l2">L2-左臂线束</span>
+├── <span class="l1">L1-右臂组件</span>（同左臂镜像）
+├── <span class="l1">L1-头部组件</span>
+│   ├── <span class="l2">L2-RGBD相机模组</span>
+│   ├── <span class="l2">L2-显示屏模组</span>
+│   ├── <span class="l2">L2-麦克风阵列</span>
+│   └── <span class="l2">L2-扬声器模组</span>
+├── <span class="l1">L1-下肢/底盘组件</span>
+├── <span class="l1">L1-外壳组件</span>
+├── <span class="l1">L1-附件包</span>（充电器/数据线/说明书/工具包）
+└── <span class="l1">L1-软件固件包</span>（主控固件/驱动固件/AI模型/应用软件）</div>
+  </div>
+
+  <div class="card">
+    <h3>📊 BOM管理要点</h3>
+    <ul>
+      <li><strong>多版本BOM管理：</strong>E-BOM（工程BOM）→ M-BOM（制造BOM）→ S-BOM（服务BOM）</li>
+      <li><strong>替代料管理：</strong>关键物料设置合格供应商替代料</li>
+      <li><strong>ECN变更管理：</strong>ECR → ECN → 实施 → 验证，MES同步更新工艺文件</li>
+      <li><strong>配置BOM：</strong>支持客户定制选项（不同自由度、不同传感器）的超级BOM管理</li>
+      <li><strong>批次追溯BOM：</strong>记录每台整机使用的关键物料批次号</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>📅 生产排程</h3>
+    <h4>排产层级</h4>
+    <ul>
+      <li><strong>主生产计划（MPS）：</strong>ERP层，根据销售订单/预测制定月/周计划</li>
+      <li><strong>详细排程：</strong>MES层，根据产能、物料到位情况分解为日/班次计划</li>
+      <li><strong>实时调度：</strong>MES层，根据实际进度动态调整工单顺序</li>
+    </ul>
+    <h4>排产约束条件</h4>
+    <ul>
+      <li>关键资源产能（关节标定台位、整机调试工位通常为瓶颈）</li>
+      <li>物料齐套率（BOM齐套检查，长交期物料是主要约束）</li>
+      <li>人员技能矩阵（不同工位需要不同技能等级的操作员）</li>
+      <li>设备维护计划（测试设备定期校准）</li>
+      <li>客户交期优先级</li>
+    </ul>
+    <div class="info-box success">
+      <strong>💡 排产策略：</strong>当前人形机器人为小批量多品种，子装配区采用<strong>流水式</strong>提高效率，主装配区采用<strong>固定工位式</strong>保证灵活性，测试区采用<strong>柔性岛式</strong>适应不同产品。
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🔗 质量追溯体系</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>工序</th><th>采集数据</th></tr>
+        <tr><td>来料检验</td><td>IQC检验报告、供应商批次号、关键尺寸/性能数据</td></tr>
+        <tr><td>子装配</td><td>扭矩值、压装力、焊点数据、标定参数</td></tr>
+        <tr><td>软件烧录</td><td>固件版本号、烧录时间、校验码（MD5/SHA）</td></tr>
+        <tr><td>功能测试</td><td>各关节角度/力矩/速度测试数据、传感器标定结果</td></tr>
+        <tr><td>老化测试</td><td>连续运行时长、异常事件记录、温升数据</td></tr>
+        <tr><td>终检</td><td>外观检查照片、全项测试报告、入库检验结论</td></tr>
+        <tr><td>出货</td><td>客户信息、发货时间、序列号-客户绑定</td></tr>
+      </table>
+    </div>
+    <div class="info-box">
+      <strong>💡 核心要求：</strong>一机一码，每台机器人唯一序列号（SN），关键件（电机编码器、减速机批次、控制器序列号）与整机关联，过程数据自动上传MES，实现从原材料到成品的全流程数字化追溯。
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Chapter 7 ==================== -->
+<div class="section" id="ch7">
+  <div class="section-header">
+    <h2><span class="emoji">👥</span> 第七章 人员管理与培训</h2>
+    <p>人是组装车间最核心的资源——分级培训、持证上岗、多能工培养</p>
+  </div>
+
+  <div class="card">
+    <h3>🏗️ 推荐组织架构</h3>
+    <div class="bom-tree"><span class="l0">车间主任</span>
+├── <span class="l1">生产副主任</span>
+│   ├── <span class="l2">各产线线长（班组长）</span>
+│   ├── <span class="l2">IE工程师（工艺/精益）</span>
+│   └── <span class="l2">设备管理员</span>
+├── <span class="l1">质量副主任</span>
+│   ├── <span class="l2">来料检验(IQC)</span>
+│   ├── <span class="l2">过程检验(IPQC)</span>
+│   └── <span class="l2">出货检验(OQC)</span>
+├── <span class="l1">技术副主任</span>
+│   ├── <span class="l2">电气工程师</span>
+│   ├── <span class="l2">机械工程师</span>
+│   └── <span class="l2">软件调试工程师</span>
+└── <span class="l1">安全/行政管理员</span></div>
+  </div>
+
+  <div class="card">
+    <h3>📚 三级培训体系</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>级别</th><th>内容</th><th>课时</th><th>考核方式</th></tr>
+        <tr><td>公司级</td><td>安全生产法、消防、职业健康</td><td>≥24学时</td><td>笔试≥80分</td></tr>
+        <tr><td>车间级</td><td>车间规章制度、ESD防护、5S、危险源辨识</td><td>≥16学时</td><td>笔试+实操</td></tr>
+        <tr><td>班组级</td><td>工位SOP、工具使用、质量标准</td><td>≥24学时</td><td>实操考核</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🎖️ 关键岗位资质要求</h3>
+    <ul>
+      <li><strong>电气接线工：</strong>持有电工操作证（低压），每年复审</li>
+      <li><strong>起重/吊装操作：</strong>持有起重机械操作证</li>
+      <li><strong>焊接工位：</strong>持有焊工证（如涉及）</li>
+      <li><strong>质检人员：</strong>通过内部质量判定标准考核，持证上岗</li>
+      <li><strong>调试工程师：</strong>完成机器人系统调试专项培训，通过认证考试</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>📋 持续培训与多能工</h3>
+    <ul>
+      <li>每月 ≥1 次技能提升培训</li>
+      <li>每季度 ≥1 次安全复训</li>
+      <li>新工艺/新机型导入前专项培训</li>
+      <li>建立培训档案，保存期限 ≥3 年</li>
+      <li><strong>多能工培养：</strong>每人至少掌握 3 个工位操作</li>
+    </ul>
+    <div class="info-box">
+      <strong>💡 班前会（15分钟）：</strong>安全提醒 → 质量通报 → 任务分配。交接班制度：填写《交接班记录表》，确保信息无缝传递。
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Chapter 8 ==================== -->
+<div class="section" id="ch8">
+  <div class="section-header">
+    <h2><span class="emoji">🛡️</span> 第八章 安全管理与ESD防护</h2>
+    <p>安全是底线——机器人组装涉及高压、重物、精密电子，安全管理不能有一丝松懈</p>
+  </div>
+
+  <div class="card">
+    <h3>⚠️ 危险源辨识与防控</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>危险类别</th><th>具体风险</th><th>防控措施</th></tr>
+        <tr><td><span class="tag tag-critical">ESD静电</span></td><td>损坏电子元器件、传感器</td><td>防静电工衣/手环/地板；离子风机；接地监测；湿度≥40%RH</td></tr>
+        <tr><td><span class="tag tag-critical">重物搬运</span></td><td>机器人本体/电池组造成砸伤</td><td>电动葫芦/平衡吊/AGV；>25kg强制机械辅助；安全鞋</td></tr>
+        <tr><td><span class="tag tag-high">夹挤点</span></td><td>关节装配时手指夹伤</td><td>安全距离标识；装配时锁定电源；手指远离运动轴</td></tr>
+        <tr><td><span class="tag tag-high">电气安全</span></td><td>电池短路/触电；高压测试</td><td>绝缘工具；电池防爆箱；高压区隔离警示</td></tr>
+        <tr><td><span class="tag tag-medium">锐利边缘</span></td><td>金属件切割伤</td><td>防切割手套；工装防护</td></tr>
+        <tr><td><span class="tag tag-medium">化学品</span></td><td>导热硅脂、清洗剂</td><td>MSDS看板；通风橱；防护手套/护目镜</td></tr>
+        <tr><td><span class="tag tag-medium">激光/强光</span></td><td>传感器调试激光照射</td><td>激光防护眼镜；警示标识</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📝 安全管理制度</h3>
+    <ul>
+      <li><strong>安全责任书：</strong>逐级签订，覆盖到每个岗位</li>
+      <li><strong>隐患排查：</strong>日巡检 + 周专项检查 + 月综合检查</li>
+      <li><strong>应急预案：</strong>火灾、触电、化学品泄漏、机械伤害，每半年演练1次</li>
+      <li><strong>安全培训：</strong>新员工 ≥24学时；全员每年 ≥8学时复训</li>
+      <li><strong>特种作业：</strong>电工、焊工、叉车工持证上岗，证书在有效期内</li>
+      <li><strong>安全标识：</strong>符合GB 2894，禁止、警告、指令、提示四大类</li>
+    </ul>
+    <div class="info-box danger">
+      <strong>🔴 职业健康底线：</strong>装配区噪声 ≤85dB(A)（GB 12348）；焊接/化学品工位设置局部排风；高处作业（>2m）需安全带。
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Chapter 9 ==================== -->
+<div class="section" id="ch9">
+  <div class="section-header">
+    <h2><span class="emoji">🔄</span> 第九章 精益生产与持续改善</h2>
+    <p>精益不是一次性项目，而是持续改进的文化</p>
+  </div>
+
+  <div class="card">
+    <h3>🔧 精益工具在机器人组装中的应用</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>精益工具</th><th>应用场景</th></tr>
+        <tr><td><strong>价值流图(VSM)</strong></td><td>绘制从原材料到成品全流程，识别浪费</td></tr>
+        <tr><td><strong>单件流</strong></td><td>适合小型机器人模块化组装，减少WIP</td></tr>
+        <tr><td><strong>单元化生产(Cell)</strong></td><td>按功能模块划分装配单元</td></tr>
+        <tr><td><strong>标准化作业(SOS)</strong></td><td>每个工位编制标准作业指导书</td></tr>
+        <tr><td><strong>看板拉动(Kanban)</strong></td><td>物料配送采用电子看板/Andon系统</td></tr>
+        <tr><td><strong>快速换型(SMED)</strong></td><td>多机型混线生产减少换型时间</td></tr>
+        <tr><td><strong>防错(Poka-Yoke)</strong></td><td>连接器防呆设计；螺丝扭力自动计数</td></tr>
+        <tr><td><strong>TPM</strong></td><td>工具设备日点检、周保养、月维护</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📊 改善机制</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>层级</th><th>形式</th><th>频次</th><th>参与人员</th></tr>
+        <tr><td>日常改善</td><td>班组合理化建议（提案制度）</td><td>持续</td><td>全员</td></tr>
+        <tr><td>周改善</td><td>质量/效率问题分析会</td><td>每周</td><td>班组长+工程师</td></tr>
+        <tr><td>月度改善</td><td>QCC品管圈活动</td><td>每月</td><td>跨职能小组</td></tr>
+        <tr><td>专题改善</td><td>6Sigma项目/Kaizen周</td><td>按需</td><td>精益团队</td></tr>
+        <tr><td>年度改善</td><td>年度目标分解、VSM未来状态图</td><td>每年</td><td>管理层</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🔍 问题解决方法</h3>
+    <ul>
+      <li><strong>A3报告：</strong>背景 → 现状 → 目标 → 原因 → 对策 → 效果 → 标准化</li>
+      <li><strong>5Why分析：</strong>根本原因追溯</li>
+      <li><strong>鱼骨图：</strong>人、机、料、法、环、测六因素分析</li>
+      <li><strong>8D报告：</strong>客户投诉处理</li>
+      <li><strong>PDCA循环：</strong>计划-执行-检查-处置</li>
+    </ul>
+    <div class="info-box success">
+      <strong>💡 激励机制：</strong>有效提案每条奖励 50-500 元；月度改善之星评选；QCC成果发表会（每季度）；改善成果与绩效考核挂钩。
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Chapter 10 ==================== -->
+<div class="section" id="ch10">
+  <div class="section-header">
+    <h2><span class="emoji">📈</span> 第十章 KPI体系与行业标杆</h2>
+    <p>用数据说话，向行业领先者看齐</p>
+  </div>
+
+  <div class="card">
+    <h3>📊 核心KPI指标</h3>
+    <div class="kpi-grid">
+      <div class="kpi"><div class="value">≥85%</div><div class="name">产线OEE</div></div>
+      <div class="kpi"><div class="value">≥95%</div><div class="name">直通率(FPY)</div></div>
+      <div class="kpi"><div class="value">≥98%</div><div class="name">物料齐套率</div></div>
+      <div class="kpi"><div class="value">≥98%</div><div class="name">准时交付率</div></div>
+      <div class="kpi"><div class="value">≤0.5%</div><div class="name">客户投诉率</div></div>
+      <div class="kpi"><div class="value">100%</div><div class="name">追溯完整率</div></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <tr><th>类别</th><th>指标</th><th>目标值</th></tr>
+        <tr><td rowspan="4">效率</td><td>产线综合效率(OEE)</td><td>≥85%</td></tr>
+        <tr><td>直通率(FPY)</td><td>初期≥92%，成熟期≥97%</td></tr>
+        <tr><td>人均产出(UPPH)</td><td>按机型设定</td></tr>
+        <tr><td>节拍达成率</td><td>≥95%</td></tr>
+        <tr><td rowspan="4">质量</td><td>来料不良率(A类件)</td><td>≤500PPM</td></tr>
+        <tr><td>过程不良率</td><td>≤2000PPM</td></tr>
+        <tr><td>客户退货率</td><td>≤0.5%</td></tr>
+        <tr><td>返修率</td><td>≤2%</td></tr>
+        <tr><td rowspan="2">安全</td><td>重大安全事故</td><td>0次</td></tr>
+        <tr><td>隐患整改关闭率</td><td>100%</td></tr>
+        <tr><td rowspan="2">交付</td><td>计划完成率</td><td>≥98%</td></tr>
+        <tr><td>准时交付率(OTD)</td><td>≥98%</td></tr>
+        <tr><td rowspan="2">成本</td><td>物料损耗率</td><td>≤0.3%</td></tr>
+        <tr><td>工时利用率</td><td>≥90%</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🏭 行业标杆分析</h3>
+    <div class="benchmark">
+      <div class="bench-card">
+        <h4>🔵 Tesla Optimus</h4>
+        <p class="desc">利用汽车制造经验，模块化子装配+总装模式。自研执行器降低BOM成本。沿用IATF 16949质量体系。2026年目标数千台产能。</p>
+      </div>
+      <div class="bench-card">
+        <h4>🟢 Figure AI (BotQ)</h4>
+        <p class="desc">专用机器人工厂，目标年产12,000台。强调DFM设计面向制造，Helix AI模型实现视觉-语言-动作控制。软硬件一体化验证。</p>
+      </div>
+      <div class="bench-card">
+        <h4>🟣 Agility Robotics (Digit)</h4>
+        <p class="desc">RoboFab工厂目标年产10,000+台。关节模组化程度高，核心指标是长时间无人值守运行可靠性。</p>
+      </div>
+      <div class="bench-card">
+        <h4>🟠 宇树科技 (Unitree)</h4>
+        <p class="desc">中国供应链优势，成本控制领先。标准化程度高，模块化设计便于量产。国内代工厂最直接的对标对象。</p>
+      </div>
+      <div class="bench-card">
+        <h4>🔴 优必选 / 小鹏 / 智元</h4>
+        <p class="desc">国内人形机器人企业2025-2026年进入小批量量产，多数不具备大规模制造能力，代工需求旺盛。</p>
+      </div>
+      <div class="bench-card">
+        <h4>⚪ 波士顿动力</h4>
+        <p class="desc">小批量精密装配。液压系统需特殊管路清洁度控制。测试区配备大型运动捕捉系统。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📜 建议导入的质量管理体系与标准</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>标准编号</th><th>标准名称</th><th>适用领域</th></tr>
+        <tr><td>GB/T 19001-2016</td><td>质量管理体系（ISO 9001）</td><td>基础质量管理</td></tr>
+        <tr><td>GB 11291.1-2011</td><td>工业机器人 安全要求</td><td>机器人本体安全</td></tr>
+        <tr><td>GB 11291.2-2013</td><td>机器人系统集成安全</td><td>系统集成安全</td></tr>
+        <tr><td>GB/T 36008-2018</td><td>协作机器人安全要求</td><td>协作机器人</td></tr>
+        <tr><td>GB 5226.1-2019</td><td>机械电气安全</td><td>电气安全</td></tr>
+        <tr><td>GB/T 45001-2020</td><td>职业健康安全（ISO 45001）</td><td>职业安全</td></tr>
+        <tr><td>SJ/T 10694-2006</td><td>电子产品防静电检测规范</td><td>ESD防护</td></tr>
+        <tr><td>GB 12348-2008</td><td>工业企业厂界噪声排放</td><td>环保</td></tr>
+        <tr><td>—</td><td>IATF 16949（参考）</td><td>汽车级质量管理最佳实践</td></tr>
+        <tr><td>—</td><td>CR认证（中国机器人认证）</td><td>自愿性产品认证</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🗺️ 分期建设路线图</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>阶段</th><th>周期</th><th>核心任务</th></tr>
+        <tr><td><span class="tag tag-good">第一期</span> 基础建设</td><td>0-6个月</td><td>厂房区域划分和装修；ERP基础模块（采购/库存/BOM/财务）；MES基础功能（报工/质检/追溯）；产线调试和试产</td></tr>
+        <tr><td><span class="tag tag-high">第二期</span> 能力提升</td><td>6-12个月</td><td>AGV物流系统上线；MES高级排产；SPC统计过程控制；数据看板和报表体系</td></tr>
+        <tr><td><span class="tag tag-critical">第三期</span> 智能制造</td><td>12-24个月</td><td>IoT设备联网和数据采集；AI辅助质量检测（视觉）；数字孪生产线仿真；供应链协同平台</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== References ==================== -->
+<div class="section">
+  <div class="section-header">
+    <h2><span class="emoji">📚</span> 参考资料与法律法规</h2>
+  </div>
+  <div class="card">
+    <h3>核心法律法规</h3>
+    <ul>
+      <li>《安全生产法》(2021修订) — 安全生产责任制、安全培训、隐患排查治理、应急预案</li>
+      <li>《消防法》 — 车间消防设施配备、消防通道、定期演练</li>
+      <li>《环境保护法》 — 废弃物合规处置</li>
+      <li>《劳动法》《劳动合同法》 — 工时、休假、劳动保护</li>
+      <li>《特种设备安全法》 — 行车/叉车等特种设备定期检验</li>
+      <li>《产品质量法》 — 产品质量责任</li>
+      <li>《数据安全法》《个人信息保护法》 — 机器人联网/数据采集合规</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <p>📋 本文档基于公开行业信息、制造业最佳实践及中国国家标准编制</p>
+  <p>🤖 具身智能机器人组装流水线管理指南 · 2026年6月</p>
+  <p style="margin-top: 12px;"><a href="index.html">← 返回 Memory Journal</a></p>
+</div>
+
+</div>
+</body>
+</html>

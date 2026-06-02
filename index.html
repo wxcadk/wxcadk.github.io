@@ -1,253 +1,732 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Memory Journal — wxcadk</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#0d1117;color:#e6edf3;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh}
-.container{max-width:960px;margin:0 auto;padding:40px 20px}
-h1{font-size:2.4em;background:linear-gradient(135deg,#58a6ff,#bc8cff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
-.subtitle{color:#8b949e;font-size:1em;margin-bottom:8px}
-.badge{display:inline-block;background:#238636;color:#fff;padding:4px 12px;border-radius:20px;font-size:0.85em;margin-bottom:30px}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin-bottom:30px}
-.stat-card{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:20px;text-align:center}
-.stat-val{font-size:2em;font-weight:700;color:#58a6ff}
-.stat-label{color:#8b949e;font-size:0.85em;margin-top:4px}
-.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
-.filter-btn{background:#21262d;color:#8b949e;border:1px solid #30363d;padding:6px 16px;border-radius:20px;cursor:pointer;font-size:0.85em;transition:all 0.2s}
-.filter-btn:hover,.filter-btn.active{background:#58a6ff;color:#fff;border-color:#58a6ff}
-.btn-all{background:#30363d;color:#e6edf3;border-color:#484f58}
-.btn-all:hover,.btn-all.active{background:#58a6ff;color:#fff;border-color:#58a6ff}
-.memories{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
-.memory-card{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:18px;transition:border-color 0.2s,transform 0.2s}
-.memory-card:hover{border-color:#58a6ff;transform:translateY(-2px)}
-.memory-card.hidden{display:none}
-.mc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.mc-container{color:#fff;padding:3px 10px;border-radius:12px;font-size:0.75em;font-weight:600;text-transform:uppercase}
-.mc-date{color:#8b949e;font-size:0.8em}
-.mc-content{font-size:0.92em;line-height:1.5;margin-bottom:8px;word-break:break-word}
-.mc-sim{color:#484f58;font-size:0.78em}
-footer{text-align:center;color:#484f58;font-size:0.8em;padding:40px 0 20px;border-top:1px solid #21262d;margin-top:40px}
-@media(max-width:600px){.stats{grid-template-columns:repeat(2,1fr)}.memories{grid-template-columns:1fr}h1{font-size:1.6em}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧠 Memory Journal · wxcadk</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            background: #0d1117;
+            color: #e6edf3;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', sans-serif;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem; }
+        
+        /* Header */
+        .header { text-align: center; margin-bottom: 2.5rem; }
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #58a6ff 0%, #bc8cff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+        .header .subtitle {
+            color: #8b949e;
+            font-size: 0.95rem;
+            margin-bottom: 0.8rem;
+        }
+        .update-badge {
+            display: inline-block;
+            background: #23863622;
+            color: #3fb950;
+            border: 1px solid #238636;
+            border-radius: 2rem;
+            padding: 0.25rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* Stats */
+        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+        .stat-card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 1.2rem 1rem;
+            text-align: center;
+            transition: border-color 0.2s;
+        }
+        .stat-card:hover { border-color: #58a6ff; }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #58a6ff, #bc8cff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stat-label { color: #8b949e; font-size: 0.8rem; margin-top: 0.25rem; text-transform: uppercase; letter-spacing: 0.05em; }
+
+        /* Filter buttons */
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            justify-content: center;
+        }
+        .filter-btn {
+            background: #161b22;
+            color: #8b949e;
+            border: 1px solid #30363d;
+            border-radius: 2rem;
+            padding: 0.4rem 1.2rem;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        .filter-btn:hover { border-color: #58a6ff; color: #e6edf3; }
+        .filter-btn.active {
+            background: #1f6feb22;
+            color: #58a6ff;
+            border-color: #58a6ff;
+        }
+
+        /* Memory cards */
+        .memories { display: flex; flex-direction: column; gap: 0.75rem; }
+        .memory-card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 1rem 1.2rem;
+            transition: border-color 0.2s, transform 0.15s;
+        }
+        .memory-card:hover {
+            border-color: #58a6ff44;
+            transform: translateX(2px);
+        }
+        .memory-card.hidden { display: none; }
+        .memory-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        .container-tag {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.15rem 0.6rem;
+            border-radius: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .memory-date {
+            color: #484f58;
+            font-size: 0.78rem;
+        }
+        .memory-content {
+            color: #c9d1d9;
+            font-size: 0.92rem;
+            line-height: 1.5;
+            margin-bottom: 0.5rem;
+        }
+        .memory-footer { display: flex; justify-content: flex-end; }
+        .similarity { font-size: 0.75rem; font-weight: 600; }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #21262d;
+            color: #484f58;
+            font-size: 0.78rem;
+        }
+        .footer a { color: #58a6ff; text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            .header h1 { font-size: 1.6rem; }
+            .container { padding: 1.2rem 1rem; }
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-<h1>🧠 Memory Journal</h1>
-<p class="subtitle">SuperMemory 每日记忆存档 · wxcadk</p>
-<div class="badge">🟢 已更新 2026-06-02 19:40</div>
-
-<div class="stats">
-<div class="stat-card"><div class="stat-val">132</div><div class="stat-label">总记忆数</div></div>
-<div class="stat-card"><div class="stat-val">5</div><div class="stat-label">PARA 容器</div></div>
-<div class="stat-card"><div class="stat-val">4</div><div class="stat-label">活跃容器</div></div>
-<div class="stat-card"><div class="stat-val">75.2%</div><div class="stat-label">最高相似度</div></div>
-</div>
-
-<div class="filters">
-<button class="filter-btn btn-all active" onclick="filterMemories('all',this)">全部 (20)</button>
-<button class="filter-btn active" onclick="filterMemories('archives',this)">archives (0)</button><button class="filter-btn active" onclick="filterMemories('areas',this)">areas (17)</button><button class="filter-btn active" onclick="filterMemories('hermes',this)">hermes (96)</button><button class="filter-btn active" onclick="filterMemories('projects',this)">projects (4)</button><button class="filter-btn active" onclick="filterMemories('resources',this)">resources (15)</button>
-</div>
-
-<div class="memories">
-
-    <div class="memory-card" data-container="hermes">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#58a6ff">hermes</span>
-            <span class="mc-date">2026-06-02</span>
+    <div class="container">
+        <div class="header">
+            <h1>🧠 Memory Journal</h1>
+            <p class="subtitle">SuperMemory 每日记忆存档 · wxcadk</p>
+            <span class="update-badge">🕐 更新于 2026-06-02</span>
         </div>
-        <p class="mc-content">PARA containers created: hermes, projects, areas, resources, archives</p>
-        <span class="mc-sim">similarity: 75.2%</span>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value">151</div>
+                <div class="stat-label">总记忆数</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">5</div>
+                <div class="stat-label">PARA 容器</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">4</div>
+                <div class="stat-label">活跃容器</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">75.2%</div>
+                <div class="stat-label">最高相似度</div>
+            </div>
+        </div>
+
+        <div class="filters">
+            <button class="filter-btn active" onclick="filterCards('all')">全部</button>
+            <button class="filter-btn" onclick="filterCards('hermes')" style="border-color:#58a6ff44;color:#58a6ff">hermes</button>
+            <button class="filter-btn" onclick="filterCards('projects')" style="border-color:#3fb95044;color:#3fb950">projects</button>
+            <button class="filter-btn" onclick="filterCards('areas')" style="border-color:#f0883e44;color:#f0883e">areas</button>
+            <button class="filter-btn" onclick="filterCards('resources')" style="border-color:#bc8cff44;color:#bc8cff">resources</button>
+            <button class="filter-btn" onclick="filterCards('archives')" style="border-color:#8b949e44;color:#8b949e">archives</button>
+        </div>
+
+        <div class="memories" id="memories">
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-02</span>
+                    </div>
+                    <div class="memory-content">PARA containers created: hermes, projects, areas, resources, archives</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 75.2%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-01</span>
+                    </div>
+                    <div class="memory-content">All skills are now enabled; to load them into the current session, run /reset.</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 72.5%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-01</span>
+                    </div>
+                    <div class="memory-content">Built-in memory is always active in Hermes.</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 71.6%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-02</span>
+                    </div>
+                    <div class="memory-content">DNS 问题导致飞书消息发送失败</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 71.0%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-02</span>
+                    </div>
+                    <div class="memory-content">Restart Hermes takes effect: hermes</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 70.9%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="resources">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#bc8cff22;color:#bc8cff;border:1px solid #bc8cff44">resources</span>
+                        <span class="memory-date">2026-06-01</span>
+                    </div>
+                    <div class="memory-content">Hermes-agent has 10 community skills installed: 8 in superpowers-zh and 2 in planning-with-files (path: ~/.hermes/skills/community/).</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#bc8cff">◆ 70.7%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-02</span>
+                    </div>
+                    <div class="memory-content">Hermes Dashboard started successfully</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 70.5%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-01</span>
+                    </div>
+                    <div class="memory-content">Installed 10 skills: 8 from superpowers-zh, 2 from planning-with-files</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 70.4%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-01</span>
+                    </div>
+                    <div class="memory-content">总共有 91 个技能，全部启用。</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 70.4%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-01</span>
+                    </div>
+                    <div class="memory-content">During migration, all memories are moved as a bundle and a migration history is recorded</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 70.2%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-01</span>
+                    </div>
+                    <div class="memory-content">Top Hermes Agent Skill repos (as of 2026-06-01): open-design; planning-with-files; hermes-workspace; superpowers-zh; hermes-agent-self-evolution</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 69.8%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-01</span>
+                    </div>
+                    <div class="memory-content">Possible actions: view/edit supermemory.json, search memories, store new memories, or switch memory provider.</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 69.5%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-02</span>
+                    </div>
+                    <div class="memory-content">重启步骤：退出当前会话（/quit 或 Ctrl+C），重新启动 hermes</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 69.4%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-02</span>
+                    </div>
+                    <div class="memory-content">Installed 10 skills: 8 from superpowers-zh, 2 from planning-with-files</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 69.2%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-02</span>
+                    </div>
+                    <div class="memory-content">内置记忆在 Hermes 中始终激活</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 69.0%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-01</span>
+                    </div>
+                    <div class="memory-content">SuperMemory is the current memory backend and supports semantic search, explicit store, forget, profile queries, auto recall, and auto capture.</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 68.8%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="areas">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#f0883e22;color:#f0883e;border:1px solid #f0883e44">areas</span>
+                        <span class="memory-date">2026-06-01</span>
+                    </div>
+                    <div class="memory-content">Daily cybersecurity morning briefings are produced at 4:00 and 7:30, sourcing Hacker News, Reddit, Krebs, TheHackerNews.</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#f0883e">◆ 68.7%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-02</span>
+                    </div>
+                    <div class="memory-content">DeepSeek API Key configured</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 68.6%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-01</span>
+                    </div>
+                    <div class="memory-content">技能分布：共 91 个，示例分类包括自治AI 4、Creative 16、GitHub 6、Productivity 10、MLOps 9、Community 新安装 10。</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 68.6%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-01</span>
+                    </div>
+                    <div class="memory-content">Configuration file for memory system is located at $HERMES_HOME/supermemory.json.</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 68.4%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-02</span>
+                    </div>
+                    <div class="memory-content">memory-organize 18:30 已完成，最近一次运行为 6/1</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 68.2%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-02</span>
+                    </div>
+                    <div class="memory-content">memory-publish 19:00 已完成，最近一次运行为 6/1</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 68.2%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="resources">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#bc8cff22;color:#bc8cff;border:1px solid #bc8cff44">resources</span>
+                        <span class="memory-date">2026-06-01</span>
+                    </div>
+                    <div class="memory-content">GitHub Pages 推送：gh CLI 版本过旧时，使用 gh api 推送到 Contents API，流程是 base64 编码后执行 --method PUT --input payload.json</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#bc8cff">◆ 68.0%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-02</span>
+                    </div>
+                    <div class="memory-content">是否也将初学者版本发布到 GitHub Pages？</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 67.7%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-02</span>
+                    </div>
+                    <div class="memory-content">Dashboard features include configuring models and API keys, managing sessions, viewing system status, and editing configuration files</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 67.7%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-01</span>
+                    </div>
+                    <div class="memory-content">10 个新安装的社区技能，全部启用。</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 67.6%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-01</span>
+                    </div>
+                    <div class="memory-content">PARA containers created: hermes, projects, areas, resources, archives.</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 67.4%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-01</span>
+                    </div>
+                    <div class="memory-content">Top Hermes Agent Skill repos (as of 2026-06-01): open-design; planning-with-files; hermes-workspace; superpowers-zh; hermes-agent-self-evolution.</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 67.4%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-01</span>
+                    </div>
+                    <div class="memory-content">Running 'hermes memory setup' without args resets the provider to built-in; reconfigure with 'hermes config set memory.provider supermemory'.</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 67.3%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-02</span>
+                    </div>
+                    <div class="memory-content">文档没有入门引导，直接给 BOM 让他不知道从何下手。</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 67.3%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-02</span>
+                    </div>
+                    <div class="memory-content">Model configured for DeepSeek: deepseek-chat</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 67.2%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-02</span>
+                    </div>
+                    <div class="memory-content">当前 SuperMemory 配置：auto_recall 启用，auto_capture 启用</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 67.1%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-02</span>
+                    </div>
+                    <div class="memory-content">memory-organize 与 memory-publish 已重新触发，待跑完后网站条目数应纠正</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 67.1%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="resources">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#bc8cff22;color:#bc8cff;border:1px solid #bc8cff44">resources</span>
+                        <span class="memory-date">2026-06-01</span>
+                    </div>
+                    <div class="memory-content">gh CLI 2.4.0 does not support git-credential; solution: use gh api to push files to Contents API</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#bc8cff">◆ 67.0%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-02</span>
+                    </div>
+                    <div class="memory-content">agent-browser 已安装，浏览器自动化 CLI 工具</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 66.9%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-02</span>
+                    </div>
+                    <div class="memory-content">Top Hermes Agent Skill repos: open-design; planning-with-files; hermes-workspace; superpowers-zh; hermes-agent-self-evolution</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 66.8%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-01</span>
+                    </div>
+                    <div class="memory-content">Plan to use GitHub Pages to create a personal website</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 66.7%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="projects">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#3fb95022;color:#3fb950;border:1px solid #3fb95044">projects</span>
+                        <span class="memory-date">2026-06-01</span>
+                    </div>
+                    <div class="memory-content">memory-website project created: auto-publish SuperMemory to GitHub Pages daily</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#3fb950">◆ 66.5%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-01</span>
+                    </div>
+                    <div class="memory-content">飞书消息发送间歇性失败，怀疑 DNS 问题</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 66.4%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-01</span>
+                    </div>
+                    <div class="memory-content">DeepSeek API key 已在 .env 中配置</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 66.4%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="areas">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#f0883e22;color:#f0883e;border:1px solid #f0883e44">areas</span>
+                        <span class="memory-date">2026-06-01</span>
+                    </div>
+                    <div class="memory-content">SuperMemory 相关知识已学习并整理为笔记</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#f0883e">◆ 66.3%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-01</span>
+                    </div>
+                    <div class="memory-content">Built-in memory is always active in Hermes. SuperMemory is the current memory backend.</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 66.3%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-01</span>
+                    </div>
+                    <div class="memory-content">GitHub Pages personal website: wxcadk.github.io</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 66.1%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-01</span>
+                    </div>
+                    <div class="memory-content">已配置的记忆系统包括：内置记忆(Built-in Memory)和 SuperMemory</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 66.1%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-02</span>
+                    </div>
+                    <div class="memory-content">记忆迁移过程中所有记忆作为一个包移动，并记录迁移历史</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 66.1%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-01</span>
+                    </div>
+                    <div class="memory-content">Search results limited to 20 with SuperMemory provider</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 66.0%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-01</span>
+                    </div>
+                    <div class="memory-content">Cron job configuration: memory-organize at 18:30, memory-publish at 19:00</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 66.0%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="projects">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#3fb95022;color:#3fb950;border:1px solid #3fb95044">projects</span>
+                        <span class="memory-date">2026-06-01</span>
+                    </div>
+                    <div class="memory-content">GitHub Pages 网站已部署：wxcadk.github.io</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#3fb950">◆ 65.9%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-02</span>
+                    </div>
+                    <div class="memory-content">记忆存储容器使用 PARA 方法进行组织</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 65.8%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="resources">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#bc8cff22;color:#bc8cff;border:1px solid #bc8cff44">resources</span>
+                        <span class="memory-date">2026-06-01</span>
+                    </div>
+                    <div class="memory-content">飞书 SDK (feishu) 已安装，用于 Hermes 与飞书集成</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#bc8cff">◆ 65.8%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="hermes">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">hermes</span>
+                        <span class="memory-date">2026-06-01</span>
+                    </div>
+                    <div class="memory-content">SuperMemory backend configured as the current memory provider</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#58a6ff">◆ 65.7%</span>
+                    </div>
+                </div>
+                <div class="memory-card" data-container="projects">
+                    <div class="memory-header">
+                        <span class="container-tag" style="background:#3fb95022;color:#3fb950;border:1px solid #3fb95044">projects</span>
+                        <span class="memory-date">2026-06-02</span>
+                    </div>
+                    <div class="memory-content">Hermes Agent 飞书通知功能已通过 cron 定时任务实现</div>
+                    <div class="memory-footer">
+                        <span class="similarity" style="color:#3fb950">◆ 65.6%</span>
+                    </div>
+                </div>
+        </div>
+
+        <div class="footer">
+            <p>Powered by <a href="https://github.com/nousresearch/hermes-agent" target="_blank">Hermes Agent</a> + SuperMemory · Auto-updated daily</p>
+            <p><a href="https://wxcadk.github.io" target="_blank">wxcadk.github.io</a></p>
+        </div>
     </div>
 
-    <div class="memory-card" data-container="hermes">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#58a6ff">hermes</span>
-            <span class="mc-date">2026-06-02</span>
-        </div>
-        <p class="mc-content">PARA 容器已包含 hermes、projects、areas、resources、archives（结构化存储）</p>
-        <span class="mc-sim">similarity: 73.9%</span>
-    </div>
-
-    <div class="memory-card" data-container="hermes">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#58a6ff">hermes</span>
-            <span class="mc-date">2026-06-01</span>
-        </div>
-        <p class="mc-content">SuperMemory is the current memory backend and supports semantic search, explicit store, forget, profile queries, auto recall, and auto capture.</p>
-        <span class="mc-sim">similarity: 72.8%</span>
-    </div>
-
-    <div class="memory-card" data-container="hermes">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#58a6ff">hermes</span>
-            <span class="mc-date">2026-06-01</span>
-        </div>
-        <p class="mc-content">All skills are now enabled; to load them into the current session, run /reset.</p>
-        <span class="mc-sim">similarity: 72.5%</span>
-    </div>
-
-    <div class="memory-card" data-container="hermes">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#58a6ff">hermes</span>
-            <span class="mc-date">2026-06-01</span>
-        </div>
-        <p class="mc-content">Built-in memory is always active in Hermes.</p>
-        <span class="mc-sim">similarity: 71.2%</span>
-    </div>
-
-    <div class="memory-card" data-container="resources">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#bc8cff">resources</span>
-            <span class="mc-date">2026-06-01</span>
-        </div>
-        <p class="mc-content">PARA Memory Manager Skill automates declarative memory extraction and PARA classification into 6 stages</p>
-        <span class="mc-sim">similarity: 71.1%</span>
-    </div>
-
-    <div class="memory-card" data-container="hermes">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#58a6ff">hermes</span>
-            <span class="mc-date">2026-06-02</span>
-        </div>
-        <p class="mc-content">DNS 问题导致飞书消息发送失败</p>
-        <span class="mc-sim">similarity: 71.0%</span>
-    </div>
-
-    <div class="memory-card" data-container="resources">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#bc8cff">resources</span>
-            <span class="mc-date">2026-06-01</span>
-        </div>
-        <p class="mc-content">Hermes-agent has 10 community skills installed: 8 in superpowers-zh and 2 in planning-with-files</p>
-        <span class="mc-sim">similarity: 70.7%</span>
-    </div>
-
-    <div class="memory-card" data-container="hermes">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#58a6ff">hermes</span>
-            <span class="mc-date">2026-06-01</span>
-        </div>
-        <p class="mc-content">Installed 10 skills: 8 from superpowers-zh, 2 from planning-with-files</p>
-        <span class="mc-sim">similarity: 70.4%</span>
-    </div>
-
-    <div class="memory-card" data-container="hermes">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#58a6ff">hermes</span>
-            <span class="mc-date">2026-06-01</span>
-        </div>
-        <p class="mc-content">总共有 91 个技能，全部启用。</p>
-        <span class="mc-sim">similarity: 70.4%</span>
-    </div>
-
-    <div class="memory-card" data-container="hermes">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#58a6ff">hermes</span>
-            <span class="mc-date">2026-06-02</span>
-        </div>
-        <p class="mc-content">Hermes Dashboard started successfully</p>
-        <span class="mc-sim">similarity: 70.2%</span>
-    </div>
-
-    <div class="memory-card" data-container="hermes">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#58a6ff">hermes</span>
-            <span class="mc-date">2026-06-01</span>
-        </div>
-        <p class="mc-content">Confirmed: each topic now constrained to a single PARA container</p>
-        <span class="mc-sim">similarity: 68.9%</span>
-    </div>
-
-    <div class="memory-card" data-container="areas">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#f0883e">areas</span>
-            <span class="mc-date">2026-06-01</span>
-        </div>
-        <p class="mc-content">GitHub热门Skill研究: 2点搜索GitHub, 8点通过Feishu发出分享</p>
-        <span class="mc-sim">similarity: 67.2%</span>
-    </div>
-
-    <div class="memory-card" data-container="hermes">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#58a6ff">hermes</span>
-            <span class="mc-date">2026-06-02</span>
-        </div>
-        <p class="mc-content">memory organization cron updated to 18:30 and 19:00</p>
-        <span class="mc-sim">similarity: 66.9%</span>
-    </div>
-
-    <div class="memory-card" data-container="resources">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#bc8cff">resources</span>
-            <span class="mc-date">2026-06-01</span>
-        </div>
-        <p class="mc-content">Feishu platform App ID cli_aa97b86894b99cc7; websocket mode</p>
-        <span class="mc-sim">similarity: 66.3%</span>
-    </div>
-
-    <div class="memory-card" data-container="areas">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#f0883e">areas</span>
-            <span class="mc-date">2026-06-01</span>
-        </div>
-        <p class="mc-content">Daily cybersecurity morning briefings are produced at 4:00 and 7:30</p>
-        <span class="mc-sim">similarity: 65.9%</span>
-    </div>
-
-    <div class="memory-card" data-container="resources">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#bc8cff">resources</span>
-            <span class="mc-date">2026-06-01</span>
-        </div>
-        <p class="mc-content">gh CLI 2.4.0 does not support git-credential; use gh api to push files</p>
-        <span class="mc-sim">similarity: 65.8%</span>
-    </div>
-
-    <div class="memory-card" data-container="hermes">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#58a6ff">hermes</span>
-            <span class="mc-date">2026-06-02</span>
-        </div>
-        <p class="mc-content">Created supermemory-auto-connect skill to auto-connect Hermes to SuperMemory AI on startup</p>
-        <span class="mc-sim">similarity: 65.0%</span>
-    </div>
-
-    <div class="memory-card" data-container="projects">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#3fb950">projects</span>
-            <span class="mc-date">2026-06-02</span>
-        </div>
-        <p class="mc-content">OpenArm 1.0 Assembly Line SOP (8 stations, BOM, QC checklist)</p>
-        <span class="mc-sim">similarity: 61.7%</span>
-    </div>
-
-    <div class="memory-card" data-container="areas">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#f0883e">areas</span>
-            <span class="mc-date">2026-06-02</span>
-        </div>
-        <p class="mc-content">OpenArm 1.0 Workshop Supervisor Experience Summary: 5-zone reorganization</p>
-        <span class="mc-sim">similarity: 61.6%</span>
-    </div>
-</div>
-
-<footer>
-Powered by SuperMemory + Hermes Agent · Auto-updated daily | wxcadk.github.io
-</footer>
-</div>
-
-<script>
-function filterMemories(container,btn){
-document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-btn.classList.add('active');
-document.querySelectorAll('.memory-card').forEach(card=>{
-if(container==='all'||card.dataset.container===container)card.classList.remove('hidden');
-else card.classList.add('hidden');
-});
-}
-</script>
+    <script>
+        function filterCards(container) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            document.querySelectorAll('.memory-card').forEach(card => {
+                if (container === 'all' || card.dataset.container === container) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+    </script>
 </body>
 </html>

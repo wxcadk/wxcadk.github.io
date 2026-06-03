@@ -16,20 +16,12 @@ h1{font-size:2.4em;background:linear-gradient(135deg,#58a6ff,#bc8cff);-webkit-ba
 .stat-card{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:16px;text-align:center}
 .stat-val{font-size:1.8em;font-weight:700;color:#58a6ff}
 .stat-label{color:#8b949e;font-size:0.8em;margin-top:2px}
-.stage-bar{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:16px;margin-bottom:24px}
-.stage-bar-title{color:#8b949e;font-size:0.85em;margin-bottom:10px}
-.stage-line{display:flex;gap:4px;margin-bottom:8px}
-.stage-dot{flex:1;height:6px;border-radius:3px;background:#21262d}
-.stage-dot.filled{background:#3fb950}
-.stage-labels{display:flex;justify-content:space-between;font-size:0.7em;color:#484f58}
-.stage-labels span{text-align:center}
 .section-title{font-size:1.2em;color:#e6edf3;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #21262d}
 .filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
 .filter-btn{background:#21262d;color:#8b949e;border:1px solid #30363d;padding:5px 12px;border-radius:16px;cursor:pointer;font-size:0.8em;transition:all 0.2s}
 .filter-btn:hover,.filter-btn.active{background:#58a6ff;color:#fff;border-color:#58a6ff}
 .stage-filters .filter-btn:hover,.stage-filters .filter-btn.active{background:#3fb950;border-color:#3fb950}
-.btn-all{background:#30363d;color:#e6edf3;border-color:#484f58}
-.memories{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-bottom:32px}
+.memories{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:24px}
 .memory-card{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:16px;transition:border-color 0.2s,transform 0.15s}
 .memory-card:hover{border-color:#58a6ff;transform:translateY(-1px)}
 .memory-card.hidden{display:none}
@@ -37,425 +29,69 @@ h1{font-size:2.4em;background:linear-gradient(135deg,#58a6ff,#bc8cff);-webkit-ba
 .mc-container{color:#fff;padding:2px 8px;border-radius:10px;font-size:0.72em;font-weight:600;text-transform:uppercase;white-space:nowrap}
 .mc-stage{padding:2px 8px;border-radius:10px;font-size:0.72em;white-space:nowrap}
 .mc-content{font-size:0.9em;line-height:1.55;word-break:break-word}
+.mc-source{font-size:0.75em;color:#484f58;margin-top:6px}
 .empty-state{text-align:center;color:#484f58;padding:40px;font-size:0.9em}
 footer{text-align:center;color:#484f58;font-size:0.78em;padding:32px 0 20px;border-top:1px solid #21262d;margin-top:20px}
-@media(max-width:600px){.stats{grid-template-columns:repeat(2,1fr)}.memories{grid-template-columns:1fr}h1{font-size:1.5em}}
+@media(max-width:600px){.stats{grid-template-columns:repeat(2,1fr)}h1{font-size:1.5em}}
 </style>
 </head>
 <body>
 <div class="container">
 <h1>🧠 Memory Journal</h1>
-<p class="subtitle">陈述性知识存档 · 宁缺毋滥 · wxcadk</p>
-<p class="principle">只收录有价值的领域知识，过滤过程性/配置性噪音</p>
-<div class="badge">🟢 已更新 2026-06-02 19:40</div>
+<p class="subtitle">陈述性知识存档 · 宁缺毋滥 · 文件夹驱动 · wxcadk</p>
+<p class="principle">仅收录 PARA 文件夹中有对应源文件的陈述性知识，过滤过程性噪音</p>
+<div class="badge">🟢 已更新 2026-06-03</div>
 
 <div class="stats">
-<div class="stat-card"><div class="stat-val">53</div><div class="stat-label">精选记忆</div></div>
-<div class="stat-card"><div class="stat-val">4/5</div><div class="stat-label">活跃容器</div></div>
-<div class="stat-card"><div class="stat-val">43%</div><div class="stat-label">应用成熟度</div></div>
-<div class="stat-card"><div class="stat-val">6</div><div class="stat-label">覆盖阶段</div></div>
+<div class="stat-card"><div class="stat-val">2</div><div class="stat-label">知识文档</div></div>
+<div class="stat-card"><div class="stat-val">2/4</div><div class="stat-label">活跃容器</div></div>
+<div class="stat-card"><div class="stat-val">⚫</div><div class="stat-label">应用阶段</div></div>
+<div class="stat-card"><div class="stat-val">📂</div><div class="stat-label">文件夹驱动</div></div>
 </div>
 
-<div class="stage-bar">
-<div class="stage-bar-title">📈 知识成熟度分布（应用阶段占比 43%）</div>
-<div class="stage-line">
-<div class="stage-dot filled"></div><div class="stage-dot filled"></div><div class="stage-dot filled"></div><div class="stage-dot filled"></div><div class="stage-dot filled"></div><div class="stage-dot filled"></div>
-</div>
-<div class="stage-labels">
-<span>🔵 获取 15</span><span>🟢 理解 10</span><span>🟡 拓展 2</span><span>🟠 纠错 2</span><span>🔴 测试 1</span><span>⚫ 应用 23</span>
-</div>
-</div>
-
-<div class="section-title">📦 按容器过滤</div>
+<div class="section-title">📂 容器筛选</div>
 <div class="filters">
-<button class="filter-btn btn-all active" onclick="filterByContainer('all',this)">全部 (53)</button>
-<button class="filter-btn active" onclick="filterByContainer('areas',this)">areas (19)</button><button class="filter-btn active" onclick="filterByContainer('hermes',this)">hermes (3)</button><button class="filter-btn active" onclick="filterByContainer('projects',this)">projects (11)</button><button class="filter-btn active" onclick="filterByContainer('resources',this)">resources (20)</button>
+<button class="filter-btn active" onclick="filterByContainer('all',this)">全部</button>
+<button class="filter-btn" onclick="filterByContainer('projects',this)">projects</button>
+<button class="filter-btn" onclick="filterByContainer('areas',this)">areas</button>
+<button class="filter-btn" onclick="filterByContainer('resources',this)">resources</button>
 </div>
 
-<div class="section-title">🏷️ 按阶段过滤</div>
+<div class="section-title">🏷️ 阶段标签</div>
 <div class="filters stage-filters">
-<button class="filter-btn btn-all active" onclick="filterByStage('all',this)">全部 (53)</button>
-<button class="filter-btn active" onclick="filterByStage('⚫ 应用',this)">⚫ 应用 (23)</button><button class="filter-btn active" onclick="filterByStage('🔴 测试',this)">🔴 测试 (1)</button><button class="filter-btn active" onclick="filterByStage('🔵 获取',this)">🔵 获取 (15)</button><button class="filter-btn active" onclick="filterByStage('🟠 纠错',this)">🟠 纠错 (2)</button><button class="filter-btn active" onclick="filterByStage('🟡 拓展',this)">🟡 拓展 (2)</button><button class="filter-btn active" onclick="filterByStage('🟢 理解',this)">🟢 理解 (10)</button>
+<button class="filter-btn active" onclick="filterByStage('all',this)">全部</button>
+<button class="filter-btn" onclick="filterByStage('获取',this)">🔵 获取</button>
+<button class="filter-btn" onclick="filterByStage('理解',this)">🟢 理解</button>
+<button class="filter-btn" onclick="filterByStage('拓展',this)">🟠 拓展</button>
+<button class="filter-btn" onclick="filterByStage('纠错',this)">🔴 纠错</button>
+<button class="filter-btn" onclick="filterByStage('测试',this)">🟣 测试</button>
+<button class="filter-btn" onclick="filterByStage('应用',this)">⚫ 应用</button>
 </div>
 
 <div class="memories" id="memoryGrid">
 
-    <div class="memory-card" data-container="projects" data-stage="🔵 获取">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#3fb950">projects</span>
-            <span class="mc-stage" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">🔵 获取</span>
-        </div>
-        <p class="mc-content">OpenArm 1.0：7-DOF 开源人形机械臂，含夹爪，额定负载 4.1kg（保持1分钟），峰值负载 6.0kg（3秒运动+1秒保持）</p>
-    </div>
-    <div class="memory-card" data-container="projects" data-stage="🔵 获取">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#3fb950">projects</span>
-            <span class="mc-stage" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">🔵 获取</span>
-        </div>
-        <p class="mc-content">电机规格 J1/J2：DM-J8009P-2EC，额定 20Nm / 峰值 40Nm，9:1 减速比，896g，支持 24-48V</p>
-    </div>
-    <div class="memory-card" data-container="projects" data-stage="🔵 获取">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#3fb950">projects</span>
-            <span class="mc-stage" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">🔵 获取</span>
-        </div>
-        <p class="mc-content">电机规格 J3/J4：DM-J4340P-2EC，额定 9Nm / 峰值 27Nm，40:1 减速比，362g</p>
-    </div>
-    <div class="memory-card" data-container="projects" data-stage="🔵 获取">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#3fb950">projects</span>
-            <span class="mc-stage" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">🔵 获取</span>
-        </div>
-        <p class="mc-content">电机规格 J5-J8：DM-J4310-2EC V1.1，额定 3Nm / 峰值 7Nm，10:1 减速比，300g</p>
-    </div>
-    <div class="memory-card" data-container="projects" data-stage="🟢 理解">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#3fb950">projects</span>
-            <span class="mc-stage" style="background:#3fb95022;color:#3fb950;border:1px solid #3fb95044">🟢 理解</span>
-        </div>
-        <p class="mc-content">全部电机为 24V BLDC，14-bit 双磁编码器，CAN 总线通信</p>
-    </div>
-    <div class="memory-card" data-container="projects" data-stage="🔵 获取">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#3fb950">projects</span>
-            <span class="mc-stage" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">🔵 获取</span>
-        </div>
-        <p class="mc-content">单臂 BOM 总价约 ¥983,378；双臂系统约 $6,500 USD（含全部零件）</p>
-    </div>
-    <div class="memory-card" data-container="projects" data-stage="🟢 理解">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#3fb950">projects</span>
-            <span class="mc-stage" style="background:#3fb95022;color:#3fb950;border:1px solid #3fb95044">🟢 理解</span>
-        </div>
-        <p class="mc-content">8 个工位组装，单臂估计 150-225 分钟；组装比家电慢 4-6 倍</p>
-    </div>
-    <div class="memory-card" data-container="projects" data-stage="🔵 获取">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#3fb950">projects</span>
-            <span class="mc-stage" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">🔵 获取</span>
-        </div>
-        <p class="mc-content">工位 2 关节 ID 映射：J1 0x01→0x11, J2 0x02→0x12, J3 0x03→0x13, J4 0x04→0x14, J5 0x05→0x15, J6 0x06→0x16, J7 0x07→0x17, J8 0x08→0x18</p>
-    </div>
-    <div class="memory-card" data-container="projects" data-stage="🟢 理解">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#3fb950">projects</span>
-            <span class="mc-stage" style="background:#3fb95022;color:#3fb950;border:1px solid #3fb95044">🟢 理解</span>
-        </div>
-        <p class="mc-content">末端执行器重量从额定负载中扣除（如 1.5kg 夹爪 → 剩余 2.6kg 有效负载）</p>
-    </div>
-    <div class="memory-card" data-container="projects" data-stage="⚫ 应用">
+    <div class="memory-card" data-container="projects" data-stage="应用">
         <div class="mc-header">
             <span class="mc-container" style="background:#3fb950">projects</span>
             <span class="mc-stage" style="background:#8b949e22;color:#8b949e;border:1px solid #8b949e44">⚫ 应用</span>
         </div>
-        <p class="mc-content">安全规范：牢固安装、调整前断电、使用急停按钮、保护线缆</p>
+        <p class="mc-content">OpenArm 1.0 流水线组装 SOP — 7-DOF 仿人机械臂，额定 4.1kg/峰值 6.0kg，8 工站 150-225 分钟/臂。电机 DM-J8009P(J1J2)、DM-J4340(J3J4)、DM-J4310(J5-J8)，全 24V BLDC+CAN。BOM 单臂 ~¥983,378。含来料检验/ID配置/子组件装配/布线/总装测试完整流程，及安全规范与资源链接。</p>
+        <p class="mc-source">📄 projects/OpenArm/2026-06-01-OpenArm流水线组装SOP.md</p>
     </div>
-    <div class="memory-card" data-container="projects" data-stage="🔵 获取">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#3fb950">projects</span>
-            <span class="mc-stage" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">🔵 获取</span>
-        </div>
-        <p class="mc-content">OpenArm 硬件文档和 GitHub 仓库可供参考</p>
-    </div>
-    <div class="memory-card" data-container="areas" data-stage="⚫ 应用">
+    <div class="memory-card" data-container="areas" data-stage="应用">
         <div class="mc-header">
             <span class="mc-container" style="background:#f0883e">areas</span>
             <span class="mc-stage" style="background:#8b949e22;color:#8b949e;border:1px solid #8b949e44">⚫ 应用</span>
         </div>
-        <p class="mc-content">OpenArm 1.0 车间 5 区重组：Zone-1 拿料、Zone-2 电机编号与零位、Zone-3 子组件装配（5个子组件）、Zone-4 布线调试、Zone-5 质检包装</p>
+        <p class="mc-content">具身智能机器人组装流水线管理指南 — 10 大章节：行业差异（精度±0.05mm, 慢 4-6 倍）→ SOP 体系 → IQC/质量门/QG1-6 → 8 大功能区（ISO7/8 洁净室）→ 物料 A/B/C 分级 → ERP/MES 四层架构 → 三副主任制+三级培训 → 7 类危险源防护 → VSM/Kanban/8D → KPI（OEE≥85%, FPY≥92%, OTD≥98%）+ 行业标杆（Tesla/Figure/宇树）</p>
+        <p class="mc-source">📄 areas/robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</p>
     </div>
-    <div class="memory-card" data-container="areas" data-stage="🟠 纠错">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#f0883e">areas</span>
-            <span class="mc-stage" style="background:#f8514922;color:#f85149;border:1px solid #f8514944">🟠 纠错</span>
-        </div>
-        <p class="mc-content">最容易出错的 5 个环节：CNC 精度、左右臂装反、电机 ID 漏配、线缆连接器损坏、轴承方向装反</p>
-    </div>
-    <div class="memory-card" data-container="areas" data-stage="⚫ 应用">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#f0883e">areas</span>
-            <span class="mc-stage" style="background:#8b949e22;color:#8b949e;border:1px solid #8b949e44">⚫ 应用</span>
-        </div>
-        <p class="mc-content">关键管理措施：出站签章、扭矩追溯、红蓝标签防混、首批跟线、返工数据驱动改善</p>
-    </div>
-    <div class="memory-card" data-container="areas" data-stage="⚫ 应用">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#f0883e">areas</span>
-            <span class="mc-stage" style="background:#8b949e22;color:#8b949e;border:1px solid #8b949e44">⚫ 应用</span>
-        </div>
-        <p class="mc-content">第一天开工检查清单：工具/BOM零件/CAN分析仪+电脑/24V电源/8工站划分/料盒编号/急救箱+灭火器/急停按钮/安全标识/生产看板/SOP文档/安全培训完成</p>
-    </div>
-    <div class="memory-card" data-container="areas" data-stage="⚫ 应用">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#f0883e">areas</span>
-            <span class="mc-stage" style="background:#8b949e22;color:#8b949e;border:1px solid #8b949e44">⚫ 应用</span>
-        </div>
-        <p class="mc-content">持续改进闭环：数据收集 → Top3分析 → 改进措施 → 试运行 → 验证 → 更新SOP</p>
-    </div>
-    <div class="memory-card" data-container="areas" data-stage="⚫ 应用">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#f0883e">areas</span>
-            <span class="mc-stage" style="background:#8b949e22;color:#8b949e;border:1px solid #8b949e44">⚫ 应用</span>
-        </div>
-        <p class="mc-content">必收数据：各工站工时、返工原因分类、来料缺陷率、人员技能矩阵</p>
-    </div>
-    <div class="memory-card" data-container="areas" data-stage="⚫ 应用">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#f0883e">areas</span>
-            <span class="mc-stage" style="background:#8b949e22;color:#8b949e;border:1px solid #8b949e44">⚫ 应用</span>
-        </div>
-        <p class="mc-content">库存分级：A类关键（电机+CNC加工件）备2-5套，B类标准备3-10套，C类通用备5套；低于安全库存触发预警；补货周期4-6周</p>
-    </div>
-    <div class="memory-card" data-container="areas" data-stage="⚫ 应用">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#f0883e">areas</span>
-            <span class="mc-stage" style="background:#8b949e22;color:#8b949e;border:1px solid #8b949e44">⚫ 应用</span>
-        </div>
-        <p class="mc-content">绩效：产量30% + 质量35% + 安全20% + 协作15%；激励：月度质量之星/产能之星</p>
-    </div>
-    <div class="memory-card" data-container="areas" data-stage="⚫ 应用">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#f0883e">areas</span>
-            <span class="mc-stage" style="background:#8b949e22;color:#8b949e;border:1px solid #8b949e44">⚫ 应用</span>
-        </div>
-        <p class="mc-content">人员管理：技能矩阵目标每人掌握2-3个相邻工站，关键岗2人以上备份；培训计划：第1周安全→认零件→工具→跟岗学习；第2-4周独立完成3台→班组长考核→发工站技能卡</p>
-    </div>
-    <div class="memory-card" data-container="areas" data-stage="⚫ 应用">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#f0883e">areas</span>
-            <span class="mc-stage" style="background:#8b949e22;color:#8b949e;border:1px solid #8b949e44">⚫ 应用</span>
-        </div>
-        <p class="mc-content">安全红线 5 条（违反立即停工）：急停未连接禁止通电、运行时不得越出运动范围、装配前断电、电源正负极反接、操作时不戴安全眼镜</p>
-    </div>
-    <div class="memory-card" data-container="areas" data-stage="⚫ 应用">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#f0883e">areas</span>
-            <span class="mc-stage" style="background:#8b949e22;color:#8b949e;border:1px solid #8b949e44">⚫ 应用</span>
-        </div>
-        <p class="mc-content">返工流程：发现→返工单→轻微(<5分钟)现场修复→严重→退回对应工站→重走后续质检；每月汇总 Top3 问题用于改进</p>
-    </div>
-    <div class="memory-card" data-container="areas" data-stage="⚫ 应用">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#f0883e">areas</span>
-            <span class="mc-stage" style="background:#8b949e22;color:#8b949e;border:1px solid #8b949e44">⚫ 应用</span>
-        </div>
-        <p class="mc-content">质量管理：三级质检 IQC/IPQC/OQC；6个关键检查点 QC1来料、QC2电机ID、QC3底座、QC4 J1-J2端口方向/左右臂、QC5布线、QC6功能</p>
-    </div>
-    <div class="memory-card" data-container="areas" data-stage="⚫ 应用">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#f0883e">areas</span>
-            <span class="mc-stage" style="background:#8b949e22;color:#8b949e;border:1px solid #8b949e44">⚫ 应用</span>
-        </div>
-        <p class="mc-content">生产看板：物理白板，8个工站，每台一个框，完成涂色，一眼看出瓶颈</p>
-    </div>
-    <div class="memory-card" data-container="areas" data-stage="🟠 纠错">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#f0883e">areas</span>
-            <span class="mc-stage" style="background:#f8514922;color:#f85149;border:1px solid #f8514944">🟠 纠错</span>
-        </div>
-        <p class="mc-content">瓶颈：工站5和工站7为天然瓶颈，需拆分任务或安排熟练工以缓解</p>
-    </div>
-    <div class="memory-card" data-container="areas" data-stage="⚫ 应用">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#f0883e">areas</span>
-            <span class="mc-stage" style="background:#8b949e22;color:#8b949e;border:1px solid #8b949e44">⚫ 应用</span>
-        </div>
-        <p class="mc-content">周计划模板：周一物料盘点+工站1-2批量作业，周二工站3-4组装，周三工站5-6组装，周四工站7-8组装，周五终检+包装+发货+返工，周六备用</p>
-    </div>
-    <div class="memory-card" data-container="areas" data-stage="⚫ 应用">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#f0883e">areas</span>
-            <span class="mc-stage" style="background:#8b949e22;color:#8b949e;border:1px solid #8b949e44">⚫ 应用</span>
-        </div>
-        <p class="mc-content">车间编制 8-12人：车间主任 → 班组长×2 → 操作员（按工站分组）+ 质量专员×1 + 物料管理员×1</p>
-    </div>
-    <div class="memory-card" data-container="areas" data-stage="⚫ 应用">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#f0883e">areas</span>
-            <span class="mc-stage" style="background:#8b949e22;color:#8b949e;border:1px solid #8b949e44">⚫ 应用</span>
-        </div>
-        <p class="mc-content">车间目标：月产 10-50 台，良品率 ≥95%，交期达成率 ≥90%，安全事故为零</p>
-    </div>
-    <div class="memory-card" data-container="areas" data-stage="⚫ 应用">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#f0883e">areas</span>
-            <span class="mc-stage" style="background:#8b949e22;color:#8b949e;border:1px solid #8b949e44">⚫ 应用</span>
-        </div>
-        <p class="mc-content">每日网络安全早报：4:00 自动研究 + 7:30 飞书推送，来源 Hacker News / Reddit / Krebs / TheHackerNews</p>
-    </div>
-    <div class="memory-card" data-container="areas" data-stage="⚫ 应用">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#f0883e">areas</span>
-            <span class="mc-stage" style="background:#8b949e22;color:#8b949e;border:1px solid #8b949e44">⚫ 应用</span>
-        </div>
-        <p class="mc-content">GitHub 热门 Skill 研究：每天 2:00 搜索 GitHub，8:00 通过飞书发出分享简报</p>
-    </div>
-    <div class="memory-card" data-container="resources" data-stage="🟢 理解">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#bc8cff">resources</span>
-            <span class="mc-stage" style="background:#3fb95022;color:#3fb950;border:1px solid #3fb95044">🟢 理解</span>
-        </div>
-        <p class="mc-content">PARA Memory Manager Skill：从对话中自动提取陈述性记忆，按PARA容器分类，带6阶段标签（获取→理解→拓展→纠错→测试→应用）；核心约束：同一主题同一时间只属于一个容器</p>
-    </div>
-    <div class="memory-card" data-container="resources" data-stage="⚫ 应用">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#bc8cff">resources</span>
-            <span class="mc-stage" style="background:#8b949e22;color:#8b949e;border:1px solid #8b949e44">⚫ 应用</span>
-        </div>
-        <p class="mc-content">具身智能机器人组装流水线管理指南（2026年6月发布，10大章节）：涵盖与传统制造业的核心差异（快速迭代、BOM频繁变更、定制件多、软硬件深度耦合、需固件烧录与标定）</p>
-    </div>
-    <div class="memory-card" data-container="resources" data-stage="🟢 理解">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#bc8cff">resources</span>
-            <span class="mc-stage" style="background:#3fb95022;color:#3fb950;border:1px solid #3fb95044">🟢 理解</span>
-        </div>
-        <p class="mc-content">分期建设路线图：0-6月基础建设（厂房+ERP/MES）→ 6-12月能力提升（AGV+MES+SPC）→ 12-24月智能制造（IoT+AI质检+数字孪生）</p>
-    </div>
-    <div class="memory-card" data-container="resources" data-stage="🟢 理解">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#bc8cff">resources</span>
-            <span class="mc-stage" style="background:#3fb95022;color:#3fb950;border:1px solid #3fb95044">🟢 理解</span>
-        </div>
-        <p class="mc-content">KPI体系与行业标竿：OEE≥85%、FPY≥95%（成熟≥97%）、OTD≥98%、追溯100%、GB/T ISO等行业标准导入</p>
-    </div>
-    <div class="memory-card" data-container="resources" data-stage="🟡 拓展">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#bc8cff">resources</span>
-            <span class="mc-stage" style="background:#f0883e22;color:#f0883e;border:1px solid #f0883e44">🟡 拓展</span>
-        </div>
-        <p class="mc-content">精益工具与持续改善：VSM、单件流、单元化、看板、SMED、Poka-Yoke、TPM、A3、5Why、PDCA</p>
-    </div>
-    <div class="memory-card" data-container="resources" data-stage="⚫ 应用">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#bc8cff">resources</span>
-            <span class="mc-stage" style="background:#8b949e22;color:#8b949e;border:1px solid #8b949e44">⚫ 应用</span>
-        </div>
-        <p class="mc-content">安全管理与ESD防护：手环、地板、离子风机、逐级签定责任书、日巡检、周专项、月演练</p>
-    </div>
-    <div class="memory-card" data-container="resources" data-stage="🟢 理解">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#bc8cff">resources</span>
-            <span class="mc-stage" style="background:#3fb95022;color:#3fb950;border:1px solid #3fb95044">🟢 理解</span>
-        </div>
-        <p class="mc-content">ERP/MES四层架构：ERP→MES→SCADA/IoT→物理执行；L0-L3 BOM、E-BOM/M-BOM/S-BOM、ECN变更管理</p>
-    </div>
-    <div class="memory-card" data-container="resources" data-stage="🟡 拓展">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#bc8cff">resources</span>
-            <span class="mc-stage" style="background:#f0883e22;color:#f0883e;border:1px solid #f0883e44">🟡 拓展</span>
-        </div>
-        <p class="mc-content">物料流动采用'超市+水蜘蛛'模式，配备AGV/AMR、AS/RS、智能料塔等设备</p>
-    </div>
-    <div class="memory-card" data-container="resources" data-stage="🟢 理解">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#bc8cff">resources</span>
-            <span class="mc-stage" style="background:#3fb95022;color:#3fb950;border:1px solid #3fb95044">🟢 理解</span>
-        </div>
-        <p class="mc-content">6道质量门 QG1-QG6 + Poka-Yoke（防错）、MES扭矩数据上传、首件检、SPC统计过程控制、4M变更管理</p>
-    </div>
-    <div class="memory-card" data-container="resources" data-stage="🔵 获取">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#bc8cff">resources</span>
-            <span class="mc-stage" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">🔵 获取</span>
-        </div>
-        <p class="mc-content">IQC来料检：A类关键件 100%全检或AQL 0.65；B类 1.0；C类 2.5</p>
-    </div>
-    <div class="memory-card" data-container="resources" data-stage="🔵 获取">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#bc8cff">resources</span>
-            <span class="mc-stage" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">🔵 获取</span>
-        </div>
-        <p class="mc-content">关键工艺参数：关节同轴度≤0.02mm、减速器预紧力±5%、线缆弯曲半径≥5×线缆外径、螺栓扭矩±10%、传感器角度±0.5°</p>
-    </div>
-    <div class="memory-card" data-container="resources" data-stage="🔵 获取">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#bc8cff">resources</span>
-            <span class="mc-stage" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">🔵 获取</span>
-        </div>
-        <p class="mc-content">阶段四（整机测试与老化）：时长 24-72 小时</p>
-    </div>
-    <div class="memory-card" data-container="resources" data-stage="⚫ 应用">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#bc8cff">resources</span>
-            <span class="mc-stage" style="background:#8b949e22;color:#8b949e;border:1px solid #8b949e44">⚫ 应用</span>
-        </div>
-        <p class="mc-content">OpenArm 1.0 组装初学者指南（v1.0，2026-06-02）：4阶段学习路径（认零件→学工具→简单组装→高级组装），含术语表、零件识别指南、附录A-C检查清单</p>
-    </div>
-    <div class="memory-card" data-container="resources" data-stage="🟢 理解">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#bc8cff">resources</span>
-            <span class="mc-stage" style="background:#3fb95022;color:#3fb950;border:1px solid #3fb95044">🟢 理解</span>
-        </div>
-        <p class="mc-content">关键术语：自由度(DOF)、扭矩、减速比、编码器、CAN总线、BLDC无刷直流电机；7个自由度 J1-J2肩→J3上臂旋转→J4肘→J5前臂旋转→J6腕弯曲→J7腕旋转→J8夹爪</p>
-    </div>
-    <div class="memory-card" data-container="resources" data-stage="🔴 测试">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#bc8cff">resources</span>
-            <span class="mc-stage" style="background:#bc8cff22;color:#bc8cff;border:1px solid #bc8cff44">🔴 测试</span>
-        </div>
-        <p class="mc-content">gh CLI 2.4.0 不支持 git-credential 时的解决方案：使用 gh api 通过 Contents API 推送文件，流程为 base64 编码后执行 gh api repos/{owner}/{repo}/contents/{path} --method PUT --input payload.json（已验证可行）</p>
-    </div>
-    <div class="memory-card" data-container="resources" data-stage="🔵 获取">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#bc8cff">resources</span>
-            <span class="mc-stage" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">🔵 获取</span>
-        </div>
-        <p class="mc-content">飞书平台配置：App ID cli_aa97b86894b99cc7，websocket 模式，Gateway systemd 服务 + linger 自启</p>
-    </div>
-    <div class="memory-card" data-container="resources" data-stage="🔵 获取">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#bc8cff">resources</span>
-            <span class="mc-stage" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">🔵 获取</span>
-        </div>
-        <p class="mc-content">轴承型号：MR106ZZ1, FL6700ZZ, FL6803ZZ, MR126ZZ；螺丝规格：M3x6, M3x8, M3x15, M4x6, M4x8, M5x10</p>
-    </div>
-    <div class="memory-card" data-container="resources" data-stage="🔵 获取">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#bc8cff">resources</span>
-            <span class="mc-stage" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">🔵 获取</span>
-        </div>
-        <p class="mc-content">工具清单：万用表、CAN分析仪、卡尺、扭力扳手、烙铁</p>
-    </div>
-    <div class="memory-card" data-container="resources" data-stage="🔵 获取">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#bc8cff">resources</span>
-            <span class="mc-stage" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">🔵 获取</span>
-        </div>
-        <p class="mc-content">零件类型：CNC铝合金件、钣金件、深沟球轴承、法兰轴承、T型螺母、铝型材</p>
-    </div>
-    <div class="memory-card" data-container="resources" data-stage="🔵 获取">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#bc8cff">resources</span>
-            <span class="mc-stage" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">🔵 获取</span>
-        </div>
-        <p class="mc-content">Hermes-agent 已安装 10 个社区技能：8 个来自 superpowers-zh，2 个来自 planning-with-files（路径：~/.hermes/skills/community/）</p>
-    </div>
-    <div class="memory-card" data-container="hermes" data-stage="⚫ 应用">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#58a6ff">hermes</span>
-            <span class="mc-stage" style="background:#8b949e22;color:#8b949e;border:1px solid #8b949e44">⚫ 应用</span>
-        </div>
-        <p class="mc-content">PARA 记忆容器体系：hermes（元记忆）、projects（有截止日期的项目知识）、areas（长期关注的领域）、resources（参考/工具/方法）、archives（已完成归档）</p>
-    </div>
-    <div class="memory-card" data-container="hermes" data-stage="🟢 理解">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#58a6ff">hermes</span>
-            <span class="mc-stage" style="background:#3fb95022;color:#3fb950;border:1px solid #3fb95044">🟢 理解</span>
-        </div>
-        <p class="mc-content">SuperMemory 记忆后端：支持语义搜索、显式存储、删除、Profile 查询、自动召回、自动捕获；与 Hermes 内置记忆配合，形成双层记忆体系</p>
-    </div>
-    <div class="memory-card" data-container="hermes" data-stage="⚫ 应用">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#58a6ff">hermes</span>
-            <span class="mc-stage" style="background:#8b949e22;color:#8b949e;border:1px solid #8b949e44">⚫ 应用</span>
-        </div>
-        <p class="mc-content">supermemory-auto-connect 技能：自动在 Hermes 启动时连接 SuperMemory，含 bashrc 别名和手动运行支持，检查 provider/API key/连接状态并列出容器</p>
-    </div>
+
 </div>
 
 <footer>
-🧠 Memory Journal · SuperMemory + Hermes Agent · 每日自动更新 · wxcadk.github.io<br>
-宁缺毋滥 — 只收录有价值的陈述性知识资产
+<p>wxcadk.github.io — 文件夹是唯一真实来源 — 宁缺毋滥</p>
+<p>generated 2026-06-03 CST</p>
 </footer>
 </div>
 
@@ -479,8 +115,10 @@ function filterByStage(stage, btn) {
 
 function applyFilters() {
     document.querySelectorAll('.memory-card').forEach(card => {
-        const matchContainer = activeContainer === 'all' || card.dataset.container === activeContainer;
-        const matchStage = activeStage === 'all' || card.dataset.stage === activeStage;
+        const c = card.dataset.container;
+        const s = card.dataset.stage;
+        const matchContainer = activeContainer === 'all' || c === activeContainer;
+        const matchStage = activeStage === 'all' || s === activeStage;
         card.classList.toggle('hidden', !(matchContainer && matchStage));
     });
 }

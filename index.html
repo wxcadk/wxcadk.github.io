@@ -2,125 +2,291 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>🧠 Memory Journal — wxcadk</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memory Journal — 陈述性知识库</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#0d1117;color:#e6edf3;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;line-height:1.6}
-.container{max-width:1024px;margin:0 auto;padding:40px 20px}
-h1{font-size:2.4em;background:linear-gradient(135deg,#58a6ff,#bc8cff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px}
-.subtitle{color:#8b949e;font-size:1em;margin-bottom:8px}
-.principle{color:#f0883e;font-size:0.85em;margin-bottom:6px;font-style:italic}
-.badge{display:inline-block;background:#238636;color:#fff;padding:4px 12px;border-radius:20px;font-size:0.85em;margin-bottom:24px}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px}
-.stat-card{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:16px;text-align:center}
-.stat-val{font-size:1.8em;font-weight:700;color:#58a6ff}
-.stat-label{color:#8b949e;font-size:0.8em;margin-top:2px}
-.section-title{font-size:1.2em;color:#e6edf3;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #21262d}
-.filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
-.filter-btn{background:#21262d;color:#8b949e;border:1px solid #30363d;padding:5px 12px;border-radius:16px;cursor:pointer;font-size:0.8em;transition:all 0.2s}
-.filter-btn:hover,.filter-btn.active{background:#58a6ff;color:#fff;border-color:#58a6ff}
-.stage-filters .filter-btn:hover,.stage-filters .filter-btn.active{background:#3fb950;border-color:#3fb950}
-.memories{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:24px}
-.memory-card{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:16px;transition:border-color 0.2s,transform 0.15s}
-.memory-card:hover{border-color:#58a6ff;transform:translateY(-1px)}
-.memory-card.hidden{display:none}
-.mc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px}
-.mc-container{color:#fff;padding:2px 8px;border-radius:10px;font-size:0.72em;font-weight:600;text-transform:uppercase;white-space:nowrap}
-.mc-stage{padding:2px 8px;border-radius:10px;font-size:0.72em;white-space:nowrap}
-.mc-content{font-size:0.9em;line-height:1.55;word-break:break-word}
-.mc-source{font-size:0.75em;color:#484f58;margin-top:6px}
-.empty-state{text-align:center;color:#484f58;padding:40px;font-size:0.9em}
-footer{text-align:center;color:#484f58;font-size:0.78em;padding:32px 0 20px;border-top:1px solid #21262d;margin-top:20px}
-@media(max-width:600px){.stats{grid-template-columns:repeat(2,1fr)}h1{font-size:1.5em}}
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#0d1117; color:#c9d1d9; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; min-height:100vh; }
+  .header { padding:2rem; text-align:center; border-bottom:1px solid #21262d; }
+  .header h1 { font-size:1.8rem; color:#f0f6fc; margin-bottom:0.5rem; }
+  .header .subtitle { color:#8b949e; font-size:0.9rem; }
+  .update-badge { display:inline-block; background:#21262d; border:1px solid #30363d; border-radius:20px; padding:4px 12px; font-size:0.75rem; color:#8b949e; margin-top:0.5rem; }
+  .stats { display:flex; gap:1rem; justify-content:center; padding:1.5rem; flex-wrap:wrap; }
+  .stat-card { background:#161b22; border:1px solid #30363d; border-radius:8px; padding:1rem 1.5rem; text-align:center; min-width:140px; }
+  .stat-card .num { font-size:2rem; font-weight:700; color:#f0f6fc; }
+  .stat-card .label { font-size:0.8rem; color:#8b949e; margin-top:4px; }
+  .filters { padding:1rem 2rem; display:flex; gap:0.5rem; flex-wrap:wrap; justify-content:center; }
+  .filter-btn { background:#21262d; border:1px solid #30363d; border-radius:6px; padding:6px 14px; color:#c9d1d9; cursor:pointer; font-size:0.85rem; transition:all 0.2s; }
+  .filter-btn:hover { border-color:#58a6ff; color:#58a6ff; }
+  .filter-btn.active { background:#1f6feb; border-color:#1f6feb; color:#fff; }
+  .filter-group { display:flex; gap:0.5rem; align-items:center; }
+  .filter-label { font-size:0.75rem; color:#8b949e; margin-right:0.25rem; }
+  .section { padding:1.5rem 2rem; }
+  .section h2 { font-size:1.2rem; color:#f0f6fc; margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem; }
+  .cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:1rem; }
+  .card { background:#161b22; border:1px solid #30363d; border-radius:8px; padding:1rem; transition:all 0.2s; }
+  .card:hover { border-color:#58a6ff; transform:translateY(-2px); }
+  .card.hidden { display:none; }
+  .card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; }
+  .container-badge { font-size:0.7rem; padding:2px 8px; border-radius:4px; color:#fff; font-weight:600; text-transform:uppercase; }
+  .stage-badge { font-size:0.75rem; }
+  .card-topic { font-weight:600; color:#f0f6fc; font-size:0.95rem; margin-bottom:0.5rem; }
+  .card-content { font-size:0.85rem; line-height:1.6; color:#c9d1d9; }
+  .card-source { font-size:0.7rem; color:#8b949e; margin-top:0.5rem; word-break:break-all; }
+  .empty { text-align:center; padding:3rem; color:#8b949e; }
+  @media(max-width:600px) { .cards { grid-template-columns:1fr; } }
 </style>
 </head>
 <body>
-<div class="container">
-<h1>🧠 Memory Journal</h1>
-<p class="subtitle">陈述性知识存档 · 宁缺毋滥 · 文件夹驱动 · wxcadk</p>
-<p class="principle">仅收录 PARA 文件夹中有对应源文件的陈述性知识，过滤过程性噪音</p>
-<div class="badge">🟢 已更新 2026-06-03</div>
+  <div class="header">
+    <h1>🧠 Memory Journal</h1>
+    <div class="subtitle">PARA 结构化陈述性知识库 — 双重过滤：文件夹对应 × 质量筛选</div>
+    <div class="update-badge">🕐 最后更新: 2026-06-04 16:59 CST</div>
+  </div>
 
-<div class="stats">
-<div class="stat-card"><div class="stat-val">2</div><div class="stat-label">知识文档</div></div>
-<div class="stat-card"><div class="stat-val">2/4</div><div class="stat-label">活跃容器</div></div>
-<div class="stat-card"><div class="stat-val">⚫</div><div class="stat-label">应用阶段</div></div>
-<div class="stat-card"><div class="stat-val">📂</div><div class="stat-label">文件夹驱动</div></div>
-</div>
+  <div class="stats">
+    <div class="stat-card"><div class="num">21</div><div class="label">总条目</div></div>
+    <div class="stat-card"><div class="num">2</div><div class="label">活跃容器</div></div>
+    <div class="stat-card"><div class="num">0%</div><div class="label">应用成熟度</div></div>
+    <div class="stat-card"><div class="num">2026-06-04</div><div class="label">更新日期</div></div>
+  </div>
 
-<div class="section-title">📂 容器筛选</div>
-<div class="filters">
-<button class="filter-btn active" onclick="filterByContainer('all',this)">全部</button>
-<button class="filter-btn" onclick="filterByContainer('projects',this)">projects</button>
-<button class="filter-btn" onclick="filterByContainer('areas',this)">areas</button>
-<button class="filter-btn" onclick="filterByContainer('resources',this)">resources</button>
-</div>
-
-<div class="section-title">🏷️ 阶段标签</div>
-<div class="filters stage-filters">
-<button class="filter-btn active" onclick="filterByStage('all',this)">全部</button>
-<button class="filter-btn" onclick="filterByStage('获取',this)">🔵 获取</button>
-<button class="filter-btn" onclick="filterByStage('理解',this)">🟢 理解</button>
-<button class="filter-btn" onclick="filterByStage('拓展',this)">🟠 拓展</button>
-<button class="filter-btn" onclick="filterByStage('纠错',this)">🔴 纠错</button>
-<button class="filter-btn" onclick="filterByStage('测试',this)">🟣 测试</button>
-<button class="filter-btn" onclick="filterByStage('应用',this)">⚫ 应用</button>
-</div>
-
-<div class="memories" id="memoryGrid">
-
-    <div class="memory-card" data-container="projects" data-stage="应用">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#3fb950">projects</span>
-            <span class="mc-stage" style="background:#8b949e22;color:#8b949e;border:1px solid #8b949e44">⚫ 应用</span>
-        </div>
-        <p class="mc-content">OpenArm 1.0 流水线组装 SOP — 7-DOF 仿人机械臂，额定 4.1kg/峰值 6.0kg，8 工站 150-225 分钟/臂。电机 DM-J8009P(J1J2)、DM-J4340(J3J4)、DM-J4310(J5-J8)，全 24V BLDC+CAN。BOM 单臂 ~¥983,378。含来料检验/ID配置/子组件装配/布线/总装测试完整流程，及安全规范与资源链接。</p>
-        <p class="mc-source">📄 projects/OpenArm/2026-06-01-OpenArm流水线组装SOP.md</p>
+  <div class="filters">
+    <div class="filter-group">
+      <span class="filter-label">容器:</span>
+      <button class="filter-btn active" data-filter="container" data-value="all">全部</button>
+      <button class="filter-btn" data-filter="container" data-value="projects">🚀 projects (9)</button>
+      <button class="filter-btn" data-filter="container" data-value="areas">📂 areas (12)</button>
+      <button class="filter-btn" data-filter="container" data-value="resources">📚 resources (0)</button>
+      <button class="filter-btn" data-filter="container" data-value="archives">🗄️ archives (0)</button>
     </div>
-    <div class="memory-card" data-container="areas" data-stage="应用">
-        <div class="mc-header">
-            <span class="mc-container" style="background:#f0883e">areas</span>
-            <span class="mc-stage" style="background:#8b949e22;color:#8b949e;border:1px solid #8b949e44">⚫ 应用</span>
-        </div>
-        <p class="mc-content">具身智能机器人组装流水线管理指南 — 10 大章节：行业差异（精度±0.05mm, 慢 4-6 倍）→ SOP 体系 → IQC/质量门/QG1-6 → 8 大功能区（ISO7/8 洁净室）→ 物料 A/B/C 分级 → ERP/MES 四层架构 → 三副主任制+三级培训 → 7 类危险源防护 → VSM/Kanban/8D → KPI（OEE≥85%, FPY≥92%, OTD≥98%）+ 行业标杆（Tesla/Figure/宇树）</p>
-        <p class="mc-source">📄 areas/robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</p>
+    <div class="filter-group">
+      <span class="filter-label">阶段:</span>
+      <button class="filter-btn active" data-filter="stage" data-value="all">全部</button>
+      <button class="filter-btn" data-filter="stage" data-value="acquire">🔵 获取</button>
+      <button class="filter-btn" data-filter="stage" data-value="understand">🟢 理解</button>
+      <button class="filter-btn" data-filter="stage" data-value="expand">🟠 拓展</button>
+      <button class="filter-btn" data-filter="stage" data-value="correct">🔴 纠错</button>
+      <button class="filter-btn" data-filter="stage" data-value="test">🟣 测试</button>
+      <button class="filter-btn" data-filter="stage" data-value="apply">⚫ 应用</button>
     </div>
+  </div>
 
-</div>
-
-<footer>
-<p>wxcadk.github.io — 文件夹是唯一真实来源 — 宁缺毋滥</p>
-<p>generated 2026-06-03 CST</p>
-</footer>
-</div>
+  <div class="section">
+    <div class="cards" id="cards">
+      
+        <div class="card" data-container="projects" data-stage="understand">
+          <div class="card-header">
+            <span class="container-badge" style="background:#238636">🚀 projects</span>
+            <span class="stage-badge">🟢理解</span>
+          </div>
+          <div class="card-topic">OpenArm硬件规格</div>
+          <div class="card-content">OpenArm 1.0 是 7-DOF 人形机器人手臂，额定负载 4.1 kg，峰值负载 6.0 kg。</div>
+          <div class="card-source">📄 projects/OpenArm/2026-06-01-OpenArm流水线组装SOP.md</div>
+        </div>
+        <div class="card" data-container="projects" data-stage="understand">
+          <div class="card-header">
+            <span class="container-badge" style="background:#238636">🚀 projects</span>
+            <span class="stage-badge">🟢理解</span>
+          </div>
+          <div class="card-topic">OpenArm精度规格</div>
+          <div class="card-content">OpenArm 精度 ±0.05 mm（典型消费级设备 ±0.5 mm）。</div>
+          <div class="card-source">📄 projects/OpenArm/2026-06-01-OpenArm流水线组装SOP.md</div>
+        </div>
+        <div class="card" data-container="projects" data-stage="understand">
+          <div class="card-header">
+            <span class="container-badge" style="background:#238636">🚀 projects</span>
+            <span class="stage-badge">🟢理解</span>
+          </div>
+          <div class="card-topic">OpenArm价格与配置</div>
+          <div class="card-content">OpenArm 支持双臂配置，单臂价格约 $6,500 USD。</div>
+          <div class="card-source">📄 projects/OpenArm/2026-06-01-OpenArm流水线组装SOP.md</div>
+        </div>
+        <div class="card" data-container="projects" data-stage="understand">
+          <div class="card-header">
+            <span class="container-badge" style="background:#238636">🚀 projects</span>
+            <span class="stage-badge">🟢理解</span>
+          </div>
+          <div class="card-topic">OpenArm BOM成本</div>
+          <div class="card-content">OpenArm 单臂 BOM 约 ¥983,378：执行器 ¥397,356，机加工件 ¥316,018，底座 ¥20,222，夹爪 ¥107,942，末端执行器 ¥22,940，电气 ¥84,564。</div>
+          <div class="card-source">📄 projects/OpenArm/2026-06-01-OpenArm流水线组装SOP.md</div>
+        </div>
+        <div class="card" data-container="projects" data-stage="understand">
+          <div class="card-header">
+            <span class="container-badge" style="background:#238636">🚀 projects</span>
+            <span class="stage-badge">🟢理解</span>
+          </div>
+          <div class="card-topic">OpenArm培训与良品率</div>
+          <div class="card-content">OpenArm 培训周期 2-4 周；良品率 90-95%（消费级 >99%）。</div>
+          <div class="card-source">📄 projects/OpenArm/2026-06-01-OpenArm流水线组装SOP.md</div>
+        </div>
+        <div class="card" data-container="projects" data-stage="understand">
+          <div class="card-header">
+            <span class="container-badge" style="background:#238636">🚀 projects</span>
+            <span class="stage-badge">🟢理解</span>
+          </div>
+          <div class="card-topic">OpenArm组装工时</div>
+          <div class="card-content">每臂 8 个工位，组装时间 150-225 分钟。</div>
+          <div class="card-source">📄 projects/OpenArm/2026-06-01-OpenArm流水线组装SOP.md</div>
+        </div>
+        <div class="card" data-container="projects" data-stage="understand">
+          <div class="card-header">
+            <span class="container-badge" style="background:#238636">🚀 projects</span>
+            <span class="stage-badge">🟢理解</span>
+          </div>
+          <div class="card-topic">OpenArm电机规格</div>
+          <div class="card-content">电机型号：J1/J2 DM-J8009P-2EC，J3/J4 DM-J4340P-2EC，J5-J8 DM-J4310-2EC V1.1。</div>
+          <div class="card-source">📄 projects/OpenArm/2026-06-01-OpenArm流水线组装SOP.md</div>
+        </div>
+        <div class="card" data-container="projects" data-stage="acquire">
+          <div class="card-header">
+            <span class="container-badge" style="background:#238636">🚀 projects</span>
+            <span class="stage-badge">🔵获取</span>
+          </div>
+          <div class="card-topic">OpenArm资源链接</div>
+          <div class="card-content">OpenArm 官方资源：docs.openarm.dev，GitHub enactic/openarm_hardware，MiSUMi/MEVIY 采购，Discord 社区。</div>
+          <div class="card-source">📄 projects/OpenArm/2026-06-01-OpenArm流水线组装SOP.md</div>
+        </div>
+        <div class="card" data-container="projects" data-stage="understand">
+          <div class="card-header">
+            <span class="container-badge" style="background:#238636">🚀 projects</span>
+            <span class="stage-badge">🟢理解</span>
+          </div>
+          <div class="card-topic">OpenArm安全规范</div>
+          <div class="card-content">安全 PPE：护目镜、安全鞋、手套；始终连接急停；操作中保护线缆。</div>
+          <div class="card-source">📄 projects/OpenArm/2026-06-01-OpenArm流水线组装SOP.md</div>
+        </div>
+        <div class="card" data-container="areas" data-stage="expand">
+          <div class="card-header">
+            <span class="container-badge" style="background:#1f6feb">📂 areas</span>
+            <span class="stage-badge">🟠拓展</span>
+          </div>
+          <div class="card-topic">行业标杆与标准路线图</div>
+          <div class="card-content">行业标杆：Tesla Optimus、Figure AI(BotQ年产12000台)、宇树科技、波士顿动力；导入GB/T19001、GB11291、IATF16949；三期路线图：0-6月基础→6-12月提升→12-24月智能制造。</div>
+          <div class="card-source">📄 areas/robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</div>
+        </div>
+        <div class="card" data-container="areas" data-stage="understand">
+          <div class="card-header">
+            <span class="container-badge" style="background:#1f6feb">📂 areas</span>
+            <span class="stage-badge">🟢理解</span>
+          </div>
+          <div class="card-topic">组装四阶段流程</div>
+          <div class="card-content">四阶段组装：子组件预装、主体组装、软件调试（固件/标定/运动学/AI模型）、整机测试老化（24–72h）。</div>
+          <div class="card-source">📄 areas/robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</div>
+        </div>
+        <div class="card" data-container="areas" data-stage="understand">
+          <div class="card-header">
+            <span class="container-badge" style="background:#1f6feb">📂 areas</span>
+            <span class="stage-badge">🟢理解</span>
+          </div>
+          <div class="card-topic">机器人组装行业核心差异</div>
+          <div class="card-content">核心差异：BOM频繁变更、定制件多，软硬件深度耦合，精度±0.05mm，良品率90-95%，组装比家电慢4-6倍，代工厂核心竞争力在于调参与一体化测试能力。</div>
+          <div class="card-source">📄 areas/robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</div>
+        </div>
+        <div class="card" data-container="areas" data-stage="expand">
+          <div class="card-header">
+            <span class="container-badge" style="background:#1f6feb">📂 areas</span>
+            <span class="stage-badge">🟠拓展</span>
+          </div>
+          <div class="card-topic">物料管理策略</div>
+          <div class="card-content">物料管理：单向流动+拉动式生产，配合AGV/AMR+AS/RS+智能料塔；A类JIT、B类定期补货、C类VMI；安全库存2-4周，呆滞90天预警。</div>
+          <div class="card-source">📄 areas/robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</div>
+        </div>
+        <div class="card" data-container="areas" data-stage="expand">
+          <div class="card-header">
+            <span class="container-badge" style="background:#1f6feb">📂 areas</span>
+            <span class="stage-badge">🟠拓展</span>
+          </div>
+          <div class="card-topic">KPI体系指标</div>
+          <div class="card-content">KPI体系：OEE≥85%；FPY初期≥92%，成熟≥97%；OTD≥98%；不良率≤2000PPM；返修率≤2%；安全0事故；追溯100%。</div>
+          <div class="card-source">📄 areas/robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</div>
+        </div>
+        <div class="card" data-container="areas" data-stage="expand">
+          <div class="card-header">
+            <span class="container-badge" style="background:#1f6feb">📂 areas</span>
+            <span class="stage-badge">🟠拓展</span>
+          </div>
+          <div class="card-topic">信息化架构</div>
+          <div class="card-content">ERP/MES四层架构：ERP → MES → SCADA/IoT → 物理执行层，一机一码实现全流程追溯。</div>
+          <div class="card-source">📄 areas/robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</div>
+        </div>
+        <div class="card" data-container="areas" data-stage="expand">
+          <div class="card-header">
+            <span class="container-badge" style="background:#1f6feb">📂 areas</span>
+            <span class="stage-badge">🟠拓展</span>
+          </div>
+          <div class="card-topic">车间布局与洁净度</div>
+          <div class="card-content">车间八大区域及面积占比：来料仓储15-20%、预加工10%、子装配20-25%、主体装配20-25%、测试调试15-20%、返修5%、包装出货10%；传感器/PCBA区ISO7万级，主装配区ISO8十万级，ESD全员防护。</div>
+          <div class="card-source">📄 areas/robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</div>
+        </div>
+        <div class="card" data-container="areas" data-stage="expand">
+          <div class="card-header">
+            <span class="container-badge" style="background:#1f6feb">📂 areas</span>
+            <span class="stage-badge">🟠拓展</span>
+          </div>
+          <div class="card-topic">精益改善工具</div>
+          <div class="card-content">精益工具：VSM/单件流/Kanban/Andon/SMED/Poka-Yoke/TPM；A3+5Why+鱼骨图+8D+PDCA；提案奖励50-500元。</div>
+          <div class="card-source">📄 areas/robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</div>
+        </div>
+        <div class="card" data-container="areas" data-stage="expand">
+          <div class="card-header">
+            <span class="container-badge" style="background:#1f6feb">📂 areas</span>
+            <span class="stage-badge">🟠拓展</span>
+          </div>
+          <div class="card-topic">来料检验策略</div>
+          <div class="card-content">IQC三层策略：A类件100%全检且AQL0.65；B类件AQL1.0；C类件AQL2.5；6个质量门，配合Poka-Yoke/SPC/MES上传。</div>
+          <div class="card-source">📄 areas/robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</div>
+        </div>
+        <div class="card" data-container="areas" data-stage="expand">
+          <div class="card-header">
+            <span class="container-badge" style="background:#1f6feb">📂 areas</span>
+            <span class="stage-badge">🟠拓展</span>
+          </div>
+          <div class="card-topic">人员组织与培训</div>
+          <div class="card-content">人员管理：三副主任制（生产/质量/技术），三级培训（公司24h+车间16h+班组24h），多能工≥3工位，关键岗位持证上岗。</div>
+          <div class="card-source">📄 areas/robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</div>
+        </div>
+        <div class="card" data-container="areas" data-stage="expand">
+          <div class="card-header">
+            <span class="container-badge" style="background:#1f6feb">📂 areas</span>
+            <span class="stage-badge">🟠拓展</span>
+          </div>
+          <div class="card-topic">安全管理体系</div>
+          <div class="card-content">安全管理：7类危险源防控（ESD/重物/夹挤/电气/锐利/化学/激光），日巡检+周专项+月综合，半年1次应急演练，噪声≤85dB(A)。</div>
+          <div class="card-source">📄 areas/robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</div>
+        </div>
+        <div class="card" data-container="areas" data-stage="expand">
+          <div class="card-header">
+            <span class="container-badge" style="background:#1f6feb">📂 areas</span>
+            <span class="stage-badge">🟠拓展</span>
+          </div>
+          <div class="card-topic">洁净度与ESD</div>
+          <div class="card-content">洁净度与ESD要点：ESD地板、手环、离子风机、门禁测试、湿度≥40%RH。</div>
+          <div class="card-source">📄 areas/robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</div>
+        </div>
+    </div>
+  </div>
 
 <script>
-let activeContainer = 'all';
-let activeStage = 'all';
-
-function filterByContainer(container, btn) {
-    activeContainer = container;
-    document.querySelectorAll('.filters:not(.stage-filters) .filter-btn').forEach(b => b.classList.remove('active'));
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const filterType = btn.dataset.filter;
+    const value = btn.dataset.value;
+    // Update active state within same filter group
+    btn.closest('.filter-group').querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     applyFilters();
-}
-
-function filterByStage(stage, btn) {
-    activeStage = stage;
-    document.querySelectorAll('.stage-filters .filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    applyFilters();
-}
+  });
+});
 
 function applyFilters() {
-    document.querySelectorAll('.memory-card').forEach(card => {
-        const c = card.dataset.container;
-        const s = card.dataset.stage;
-        const matchContainer = activeContainer === 'all' || c === activeContainer;
-        const matchStage = activeStage === 'all' || s === activeStage;
-        card.classList.toggle('hidden', !(matchContainer && matchStage));
-    });
+  const containerVal = document.querySelector('[data-filter="container"].active').dataset.value;
+  const stageVal = document.querySelector('[data-filter="stage"].active').dataset.value;
+  document.querySelectorAll('.card').forEach(card => {
+    const matchContainer = containerVal === 'all' || card.dataset.container === containerVal;
+    const matchStage = stageVal === 'all' || card.dataset.stage === stageVal;
+    card.classList.toggle('hidden', !(matchContainer && matchStage));
+  });
 }
 </script>
 </body>

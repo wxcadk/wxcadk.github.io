@@ -35,7 +35,11 @@ header .updated{display:inline-block;background:#21262d;color:#8b949e;padding:4p
 .tag-resource{background:#9e6a0322;color:#d29922}
 .tag-archive{background:#8b5cf622;color:#bc8cff}
 .tag-stage{background:#21262d;color:#c9d1d9}
+.entry-source{font-size:0.75em;color:#8b949e;margin-bottom:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .entry-content{color:#c9d1d9;font-size:0.95em}
+.entry-content ul{list-style:none;padding:0}
+.entry-content li{padding:3px 0;padding-left:16px;position:relative}
+.entry-content li::before{content:"›";position:absolute;left:0;color:#58a6ff;font-weight:700}
 .hidden{display:none}
 .no-results{text-align:center;color:#8b949e;padding:40px;font-size:1.1em}
 @media(max-width:600px){.stats{flex-direction:column;align-items:center}.stat-card{width:100%}.filter-sep{display:none}.filter-group{width:100%}}
@@ -45,13 +49,13 @@ header .updated{display:inline-block;background:#21262d;color:#8b949e;padding:4p
 <div class="container">
 <header>
 <h1>🧠 Memory Journal</h1>
-<div class="updated">🕐 更新于 2026-06-07 19:01 CST</div>
+<div class="updated">🕐 更新于 2026-06-09 19:00 CST</div>
 </header>
 
 <div class="stats">
-<div class="stat-card"><div class="num">15</div><div class="label">总条目</div></div>
-<div class="stat-card"><div class="num">2</div><div class="label">活跃容器</div></div>
-<div class="stat-card"><div class="num">7%</div><div class="label">应用成熟度</div></div>
+<div class="stat-card"><div class="num">20</div><div class="label">总条目</div></div>
+<div class="stat-card"><div class="num">3</div><div class="label">活跃容器</div></div>
+<div class="stat-card"><div class="num">35%</div><div class="label">应用成熟度</div></div>
 </div>
 
 <div class="filters">
@@ -60,6 +64,7 @@ header .updated{display:inline-block;background:#21262d;color:#8b949e;padding:4p
 <button class="filter-btn active" data-filter="container" data-value="all">全部</button>
 <button class="filter-btn" data-filter="container" data-value="projects">📂 Projects</button>
 <button class="filter-btn" data-filter="container" data-value="areas">📂 Areas</button>
+<button class="filter-btn" data-filter="container" data-value="archives">📂 Archives</button>
 </div>
 <div class="filter-sep"></div>
 <div class="filter-group">
@@ -68,6 +73,8 @@ header .updated{display:inline-block;background:#21262d;color:#8b949e;padding:4p
 <button class="filter-btn" data-filter="stage" data-value="🔵获取">🔵获取</button>
 <button class="filter-btn" data-filter="stage" data-value="🟢理解">🟢理解</button>
 <button class="filter-btn" data-filter="stage" data-value="🟠拓展">🟠拓展</button>
+<button class="filter-btn" data-filter="stage" data-value="🔴纠错">🔴纠错</button>
+<button class="filter-btn" data-filter="stage" data-value="🟣测试">🟣测试</button>
 <button class="filter-btn" data-filter="stage" data-value="⚫应用">⚫应用</button>
 </div>
 </div>
@@ -77,55 +84,7 @@ header .updated{display:inline-block;background:#21262d;color:#8b949e;padding:4p
 <div class="container-section" data-container="projects">
 <div class="section-header">
 <h2>📂 Projects</h2>
-<span class="section-badge">11 条</span>
-</div>
-
-<div class="entry" data-container="projects" data-stage="🟢理解">
-<div class="entry-meta">
-<span class="tag tag-project">projects</span>
-<span class="tag tag-stage">🟢理解</span>
-</div>
-<div class="entry-content">OpenArm supports dual-arm configuration and is priced around $6,500 USD.</div>
-</div>
-
-<div class="entry" data-container="projects" data-stage="🟢理解">
-<div class="entry-meta">
-<span class="tag tag-project">projects</span>
-<span class="tag tag-stage">🟢理解</span>
-</div>
-<div class="entry-content">OpenArm precision is ±0.05 mm (vs ±0.5 mm for typical consumer devices).</div>
-</div>
-
-<div class="entry" data-container="projects" data-stage="🟢理解">
-<div class="entry-meta">
-<span class="tag tag-project">projects</span>
-<span class="tag tag-stage">🟢理解</span>
-</div>
-<div class="entry-content">OpenArm arm BOM around ¥983,378; actuators ¥397,356; machined parts ¥316,018; base ¥20,222; gripper ¥107,942; end effector ¥22,940; electrical ¥84,564.</div>
-</div>
-
-<div class="entry" data-container="projects" data-stage="🟢理解">
-<div class="entry-meta">
-<span class="tag tag-project">projects</span>
-<span class="tag tag-stage">🟢理解</span>
-</div>
-<div class="entry-content">OpenArm 1.0 core specs: 7 DOF + 1 gripper; rated payload 4.1 kg; peak payload 6.0 kg; CAN bus; 24V; dual-arm system ~$6,500.</div>
-</div>
-
-<div class="entry" data-container="projects" data-stage="🟢理解">
-<div class="entry-meta">
-<span class="tag tag-project">projects</span>
-<span class="tag tag-stage">🟢理解</span>
-</div>
-<div class="entry-content">OpenArmX-Pro-Max dual-arm 7DOF×2; uses openarmx-arm-driver 1.3.3; PCAN USB Pro ×2 (can0 right arm, can1 left arm).</div>
-</div>
-
-<div class="entry" data-container="projects" data-stage="🟠拓展">
-<div class="entry-meta">
-<span class="tag tag-project">projects</span>
-<span class="tag tag-stage">🟠拓展</span>
-</div>
-<div class="entry-content">OpenArm training duration is 2-4 weeks; yield 90-95% (vs >99% for consumer-grade devices).</div>
+<span class="section-badge">9 条</span>
 </div>
 
 <div class="entry" data-container="projects" data-stage="⚫应用">
@@ -133,39 +92,28 @@ header .updated{display:inline-block;background:#21262d;color:#8b949e;padding:4p
 <span class="tag tag-project">projects</span>
 <span class="tag tag-stage">⚫应用</span>
 </div>
-<div class="entry-content">OpenArm 1.0 SOP targets small-batch assembly (10-50 units/month).</div>
+<div class="entry-source">projects/OpenArm/2026-06-01-OpenArm流水线组装SOP.md</div>
+<div class="entry-content"><ul>
+<li>OpenArm 1.0 核心规格：7 DOF + 1 夹爪；额定负载 4.1 kg；峰值负载 6.0 kg；双臂系统定价约 $6,500 USD；关节重复定位精度 ±0.05mm</li>
+<li>电机配置：J1/J2 DM-J8009P-2EC（20Nm/40Nm）；J3/J4 DM-J4340P-2EC（9Nm）；J5–J8 DM-J4310-2EC V1.1（3Nm）；全部 24V BLDC + 14-bit 双磁编码器 + CAN 接口</li>
+<li>BOM 构成：总价约 ¥983,378；驱动器 ¥397,356；机加工件 ¥316,018；底座 ¥20,222；夹爪 ¥107,942；末端执行器 ¥22,940；电气 ¥84,564；通过 MiSUMi/MEVIY 下单</li>
+<li>组装工艺：每臂 8 个工站，单臂 150-225 分钟；SOP 目标产能 10-50 台/月；良品率 90-95%（消费电子 >99%）；组装速度比消费电子慢 4-6 倍</li>
+<li>安全要求：PPE（护目镜/安全鞋/手套）；必须连接急停开关后方可上电</li>
+</ul></div>
 </div>
 
-<div class="entry" data-container="projects" data-stage="🟢理解">
+<div class="entry" data-container="projects" data-stage="⚫应用">
 <div class="entry-meta">
 <span class="tag tag-project">projects</span>
-<span class="tag tag-stage">🟢理解</span>
+<span class="tag tag-stage">⚫应用</span>
 </div>
-<div class="entry-content">Five-layer pipeline: Layer 0 env validation (18 checks); Layer 1 hardware auto-diagnosis; Layer 2 communications link validation; Layer 3 motion function tests (MIT/CSP); Layer 4 anomaly intelligent diagnosis (14 types).</div>
-</div>
-
-<div class="entry" data-container="projects" data-stage="🟢理解">
-<div class="entry-meta">
-<span class="tag tag-project">projects</span>
-<span class="tag tag-stage">🟢理解</span>
-</div>
-<div class="entry-content">J1/J2 use DM-J8009P (20 Nm); J3 DM-J4340P (9 Nm); J4 DM-J4340 (9 Nm); J5-J8 DM-J4310 (3 Nm); all 24V BLDC with 14-bit encoders.</div>
-</div>
-
-<div class="entry" data-container="projects" data-stage="🟢理解">
-<div class="entry-meta">
-<span class="tag tag-project">projects</span>
-<span class="tag tag-stage">🟢理解</span>
-</div>
-<div class="entry-content">Full BOM includes MiSUMi standard parts + CNC machined parts + Damiao motors.</div>
-</div>
-
-<div class="entry" data-container="projects" data-stage="🟢理解">
-<div class="entry-meta">
-<span class="tag tag-project">projects</span>
-<span class="tag tag-stage">🟢理解</span>
-</div>
-<div class="entry-content">Eight assembly stations per arm take 150-225 minutes.</div>
+<div class="entry-source">projects/OpenArmX-AI自动化调试/OpenArmX_AI_Automated_Debugging_Plan.md</div>
+<div class="entry-content"><ul>
+<li>OpenArmX-Pro-Max 双臂 7DOF×2 协作机器人；驱动 openarmx-arm-driver 1.3.3；通信 PCAN USB Pro ×2（can0 右臂, can1 左臂）</li>
+<li>五层调试流水线：Layer 0 环境验证（18项检查）→ Layer 1 硬件自动诊断 → Layer 2 通信链路验证 → Layer 3 运动功能测试（MIT/CSP）→ Layer 4 异常智能诊断</li>
+<li>控制模式：MIT（默认，5kg 负载，位置+速度+KP+KD+力矩）和 CSP（纯位置，2kg 负载）；末端执行器重量从额定负载中扣除（如 1.5kg 夹爪后剩 2.6kg）</li>
+<li>软件栈：openarmx_ros2（ROS2+MoveIt）/ openarmx_description（URDF）/ openarmx_motor_manager / openarmx_tools（夹爪/示教）/ openarmx_teleop_bimanual（遥操作）</li>
+</ul></div>
 </div>
 
 </div>
@@ -173,15 +121,7 @@ header .updated{display:inline-block;background:#21262d;color:#8b949e;padding:4p
 <div class="container-section" data-container="areas">
 <div class="section-header">
 <h2>📂 Areas</h2>
-<span class="section-badge">4 条</span>
-</div>
-
-<div class="entry" data-container="areas" data-stage="🟠拓展">
-<div class="entry-meta">
-<span class="tag tag-area">areas</span>
-<span class="tag tag-stage">🟠拓展</span>
-</div>
-<div class="entry-content">行业标杆：Tesla Optimus、Figure AI(BotQ年产12000台)、宇树科技、波士顿动力；导入GB/T19001、GB11291、IATF16949；三期路线图：0-6月基础→6-12月提升→12-24月智能制造。</div>
+<span class="section-badge">9 条</span>
 </div>
 
 <div class="entry" data-container="areas" data-stage="🟢理解">
@@ -189,23 +129,38 @@ header .updated{display:inline-block;background:#21262d;color:#8b949e;padding:4p
 <span class="tag tag-area">areas</span>
 <span class="tag tag-stage">🟢理解</span>
 </div>
-<div class="entry-content">物料管理：单向流动+拉动式生产，配合AGV/AMR+AS/RS+智能料塔；A类JIT、B类定期补货、C类VMI；安全库存2-4周，呆滞90天预警。</div>
+<div class="entry-source">areas/robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</div>
+<div class="entry-content"><ul>
+<li>行业标杆：Tesla Optimus、Figure AI（BotQ 年产 12000 台）、宇树科技、波士顿动力；需导入 GB/T19001、GB11291、IATF16949 体系</li>
+<li>四阶段组装流程：子组件预装 → 主体组装 → 软件调试（固件/标定/运动学/AI模型）→ 整机测试老化（24–72h）</li>
+<li>核心差异（vs 消费电子）：BOM 频繁变更、定制件多、软硬件深度耦合、精度 ±0.05mm、良品率 90-95%；代工厂核心竞争力在于「调」与一体化测试能力</li>
+<li>KPI 体系：OEE ≥85%；FPY 初期 ≥92% 成熟 ≥97%；OTD ≥98%；不良率 ≤2000PPM；返修率 ≤2%；安全 0 事故；追溯 100%</li>
+<li>物料管理：单向流动 + 拉动式生产；A 类 JIT / B 类定期补货 / C 类 VMI；安全库存 2-4 周，呆滞 90 天预警；配合 AGV/AMR + AS/RS + 智能料塔</li>
+<li>车间八大区域及面积占比：来料仓储 15-20%、预加工 10%、子装配 20-25%、主体装配 20-25%、测试调试 15-20%、返修 5%、包装出货 10%；传感器/PCBA 区 ISO 7 万级，主装配区 ISO 8 十万级，ESD 全员防护</li>
+<li>关键工艺参数：关节同轴度 ≤0.02mm、减速器预紧力 ±5%、线缆弯曲半径 ≥5×线缆外径、螺栓扭矩 ±10%、传感器角度 ±0.5°</li>
+<li>IQC 三层策略：A 类件 100% 全检 AQL 0.65；B 类件 AQL 1.0；C 类件 AQL 2.5；6 个质量门 + Poka-Yoke/SPC/MES</li>
+<li>分期建设路线图：0–6 月基础建设（厂房+ERP/MES）→ 6–12 月能力提升（AGV+MES+SPC）→ 12–24 月智能制造（IoT+AI 质检+数字孪生）</li>
+</ul></div>
 </div>
 
-<div class="entry" data-container="areas" data-stage="🟢理解">
-<div class="entry-meta">
-<span class="tag tag-area">areas</span>
-<span class="tag tag-stage">🟢理解</span>
-</div>
-<div class="entry-content">四阶段组装：子组件预装、主体组装、软件调试（固件/标定/运动学/AI模型）、整机测试老化（24–72h）。</div>
 </div>
 
-<div class="entry" data-container="areas" data-stage="🟢理解">
-<div class="entry-meta">
-<span class="tag tag-area">areas</span>
-<span class="tag tag-stage">🟢理解</span>
+<div class="container-section" data-container="archives">
+<div class="section-header">
+<h2>📂 Archives</h2>
+<span class="section-badge">2 条</span>
 </div>
-<div class="entry-content">车间八大区域及面积占比：来料仓储15-20%、预加工10%、子装配20-25%、主体装配20-25%、测试调试15-20%、返修5%、包装出货10%；传感器/PCBA区ISO7万级，主装配区ISO8十万级，ESD全员防护。</div>
+
+<div class="entry" data-container="archives" data-stage="⚫应用">
+<div class="entry-meta">
+<span class="tag tag-archive">archives</span>
+<span class="tag tag-stage">⚫应用</span>
+</div>
+<div class="entry-source">archives/Gitea私人网站创建/目前状态.md</div>
+<div class="entry-content"><ul>
+<li>Gitea 1.22.6 Pages 功能需要 Actions Runner 才能部署，配置门槛过高，方案不可行，已弃用</li>
+<li>已回退到 GitHub Pages 方案（wxcadk.github.io + hacker-daily）；Gitea 服务已停止并禁用开机启动，数据保留在 /var/lib/gitea/data/</li>
+</ul></div>
 </div>
 
 </div>

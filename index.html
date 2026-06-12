@@ -6,211 +6,196 @@
 <title>Memory Journal</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#0d1117;color:#c9d1d9;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;min-height:100vh}
-.header{padding:24px 32px;border-bottom:1px solid #21262d;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
-.header h1{font-size:24px;color:#f0f6fc;font-weight:600}
-.header .meta{font-size:13px;color:#8b949e}
-.stats{display:flex;gap:16px;padding:20px 32px;flex-wrap:wrap}
-.stat-card{background:#161b22;border:1px solid #21262d;border-radius:8px;padding:16px 20px;min-width:140px}
-.stat-card .value{font-size:28px;font-weight:700;color:#f0f6fc}
+body{background:#0d1117;color:#c9d1d9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;min-height:100vh;padding:24px}
+.container{max-width:900px;margin:0 auto}
+header{text-align:center;margin-bottom:32px}
+header h1{font-size:28px;color:#f0f6fc;margin-bottom:8px}
+header .subtitle{color:#8b949e;font-size:14px}
+.stats{display:flex;gap:16px;justify-content:center;margin:20px 0;flex-wrap:wrap}
+.stat-card{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:16px 24px;text-align:center;min-width:140px}
+.stat-card .num{font-size:28px;font-weight:700;color:#f0f6fc}
 .stat-card .label{font-size:12px;color:#8b949e;margin-top:4px}
-.filters{padding:12px 32px;display:flex;gap:8px;flex-wrap:wrap}
-.filter-group{display:flex;gap:4px;align-items:center}
-.filter-group .group-label{font-size:12px;color:#8b949e;margin-right:4px}
-.filter-btn{background:#21262d;color:#c9d1d9;border:1px solid #30363d;border-radius:16px;padding:6px 14px;font-size:12px;cursor:pointer;transition:all .15s}
-.filter-btn:hover{border-color:#58a6ff}
-.filter-btn.active{background:#1f6feb;color:#fff;border-color:#1f6feb}
-.cards{padding:16px 32px;display:flex;flex-direction:column;gap:12px}
-.card{background:#161b22;border:1px solid #21262d;border-radius:8px;padding:16px 20px;transition:border-color .15s}
-.card:hover{border-color:#30363d}
+.filters{margin:20px 0;display:flex;flex-direction:column;gap:12px}
+.filter-group{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.filter-group .group-label{color:#8b949e;font-size:12px;text-transform:uppercase;letter-spacing:1px;min-width:100px}
+.filter-btn{background:#21262d;border:1px solid #30363d;color:#c9d1d9;padding:6px 14px;border-radius:20px;font-size:13px;cursor:pointer;transition:all .2s}
+.filter-btn:hover{border-color:#58a6ff;color:#58a6ff}
+.filter-btn.active{background:var(--accent,#58a6ff);color:#fff;border-color:var(--accent,#58a6ff)}
+.cards{display:flex;flex-direction:column;gap:12px}
+.card{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:16px;transition:all .2s}
+.card:hover{border-color:#58a6ff;transform:translateY(-1px)}
 .card.hidden{display:none}
-.card-header{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
-.container-badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;text-transform:uppercase}
-.container-projects{background:#1f6feb22;color:#58a6ff}
-.container-areas{background:#23863622;color:#3fb950}
-.container-resources{background:#8957e522;color:#bc8cff}
-.container-archives{background:#6e768122;color:#8b949e}
-.topic-badge{font-size:11px;color:#8b949e;background:#21262d;padding:2px 8px;border-radius:4px}
-.stage-badge{font-size:11px;color:#fff;padding:2px 8px;border-radius:4px;font-weight:500}
-.card-content{font-size:14px;line-height:1.7;color:#c9d1d9}
-.footer{padding:24px 32px;text-align:center;color:#484f58;font-size:12px;border-top:1px solid #21262d;margin-top:24px}
-.count-badge{background:#30363d;color:#8b949e;font-size:11px;padding:1px 6px;border-radius:10px;margin-left:4px}
+.card-meta{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.badge{font-size:11px;padding:3px 10px;border-radius:12px;font-weight:600}
+.container-badge{color:#fff}
+.folder-badge{background:#21262d;color:#8b949e;border:1px solid #30363d}
+.stage-badge{color:#fff}
+.card-content{color:#c9d1d9;font-size:14px;line-height:1.6}
+.update-time{text-align:center;color:#484f58;font-size:12px;margin-top:32px}
 </style>
 </head>
 <body>
-<div class="header">
-  <h1>🧠 Memory Journal</h1>
-  <div class="meta">Updated: 2026-06-11 19:03 CST</div>
-</div>
+<div class="container">
+  <header>
+    <h1>🧠 Memory Journal</h1>
+    <p class="subtitle">PARA-synchronized declarative knowledge base</p>
+  </header>
 
-<div class="stats">
-  <div class="stat-card"><div class="value">15</div><div class="label">总条目</div></div>
-  <div class="stat-card"><div class="value">2</div><div class="label">活跃容器</div></div>
-  <div class="stat-card"><div class="value">4</div><div class="label">知识主题</div></div>
-  <div class="stat-card"><div class="value">8</div><div class="label">⚫ 应用级</div></div>
-  <div class="stat-card"><div class="value">4</div><div class="label">🟢 理解/测试级</div></div>
-  <div class="stat-card"><div class="value">3</div><div class="label">🔵 获取级</div></div>
-</div>
+  <div class="stats">
+    <div class="stat-card"><div class="num">13</div><div class="label">Total Entries</div></div>
+    <div class="stat-card"><div class="num">1</div><div class="label">Active Containers</div></div>
+    <div class="stat-card"><div class="num">0%</div><div class="label">Applied (⚫)</div></div>
+  </div>
 
-<div class="filters">
-  <div class="filter-group">
-    <span class="group-label">容器:</span>
-    <button class="filter-btn active" data-filter="container" data-value="all">全部</button>
-    <button class="filter-btn" data-filter="container" data-value="projects">Projects <span class="count-badge">12</span></button>
-    <button class="filter-btn" data-filter="container" data-value="areas">Areas <span class="count-badge">3</span></button>
-  </div>
-  <div class="filter-group">
-    <span class="group-label">阶段:</span>
-    <button class="filter-btn active" data-filter="stage" data-value="all">全部</button>
-    <button class="filter-btn" data-filter="stage" data-value="applied">⚫ 应用</button>
-    <button class="filter-btn" data-filter="stage" data-value="understood">🟢 理解</button>
-    <button class="filter-btn" data-filter="stage" data-value="tested">🟣 测试</button>
-    <button class="filter-btn" data-filter="stage" data-value="acquired">🔵 获取</button>
-  </div>
-</div>
+  <div class="filters">
+    <div class="filter-group">
+      <span class="group-label">Container</span>
+      <button class="filter-btn active" data-filter="all">All Containers</button>
+          <button class="filter-btn" data-filter="projects" style="--accent:#238636">projects (13)</button>
 
-<div class="cards">
-<div class="card" data-container="projects" data-stage="applied">
-  <div class="card-header">
-    <span class="container-badge container-projects">projects</span>
-    <span class="topic-badge">OpenArm</span>
-    <span class="stage-badge" style="background:#238636">⚫应用</span>
-  </div>
-  <p class="card-content">OpenArm 1.0 核心规格：7自由度+1夹爪；额定负载4.1kg；峰值负载6.0kg；CAN总线通信；24V供电；双臂系统约$6,500。</p>
-</div>
-<div class="card" data-container="projects" data-stage="applied">
-  <div class="card-header">
-    <span class="container-badge container-projects">projects</span>
-    <span class="topic-badge">OpenArm</span>
-    <span class="stage-badge" style="background:#238636">⚫应用</span>
-  </div>
-  <p class="card-content">电机配置：J1/J2 DM-J8009P (20Nm)；J3 DM-J4340P (9Nm)；J4 DM-J4340 (9Nm)；J5-J8 DM-J4310 (3Nm)；全部24V无刷直流电机+14位编码器。</p>
-</div>
-<div class="card" data-container="projects" data-stage="applied">
-  <div class="card-header">
-    <span class="container-badge container-projects">projects</span>
-    <span class="topic-badge">OpenArm</span>
-    <span class="stage-badge" style="background:#238636">⚫应用</span>
-  </div>
-  <p class="card-content">BOM成本：单臂约¥983,378；执行器¥397,356；机加工件¥316,018；底座¥20,222；夹爪¥107,942；末端执行器¥22,940；电气¥84,564。</p>
-</div>
-<div class="card" data-container="projects" data-stage="applied">
-  <div class="card-header">
-    <span class="container-badge container-projects">projects</span>
-    <span class="topic-badge">OpenArm</span>
-    <span class="stage-badge" style="background:#238636">⚫应用</span>
-  </div>
-  <p class="card-content">装配精度要求：关节安装同轴度≤0.02mm；齿轮预紧力±5%；线缆弯曲半径≥5倍外径。</p>
-</div>
-<div class="card" data-container="projects" data-stage="applied">
-  <div class="card-header">
-    <span class="container-badge container-projects">projects</span>
-    <span class="topic-badge">OpenArm</span>
-    <span class="stage-badge" style="background:#238636">⚫应用</span>
-  </div>
-  <p class="card-content">组装培训周期2-4周；良品率90-95%（消费级>99%）；8个工位/臂，耗时150-225分钟。</p>
-</div>
-<div class="card" data-container="projects" data-stage="acquired">
-  <div class="card-header">
-    <span class="container-badge container-projects">projects</span>
-    <span class="topic-badge">OpenArmX</span>
-    <span class="stage-badge" style="background:#58a6ff">🔵获取</span>
-  </div>
-  <p class="card-content">OpenArmX-Pro-Max 是双臂7-DOF×2协作机器人，使用Robstride直驱电机。</p>
-</div>
-<div class="card" data-container="projects" data-stage="acquired">
-  <div class="card-header">
-    <span class="container-badge container-projects">projects</span>
-    <span class="topic-badge">OpenArmX</span>
-    <span class="stage-badge" style="background:#58a6ff">🔵获取</span>
-  </div>
-  <p class="card-content">Python驱动 openarmx_arm_driver 暴露 Arm（单臂）、Robot（双臂）接口，以及 can_utils 模块。</p>
-</div>
-<div class="card" data-container="projects" data-stage="acquired">
-  <div class="card-header">
-    <span class="container-badge container-projects">projects</span>
-    <span class="topic-badge">OpenArmX</span>
-    <span class="stage-badge" style="background:#58a6ff">🔵获取</span>
-  </div>
-  <p class="card-content">控制模式：MIT（默认，5kg负载，位置+速度+KP+KD+力矩）和CSP（纯位置，2kg负载）。</p>
-</div>
-<div class="card" data-container="projects" data-stage="understood">
-  <div class="card-header">
-    <span class="container-badge container-projects">projects</span>
-    <span class="topic-badge">OpenArmX-AI调试</span>
-    <span class="stage-badge" style="background:#1f6feb">🟢理解</span>
-  </div>
-  <p class="card-content">五层调试流水线：Layer 0 环境验证(18项)；Layer 1 硬件自动诊断；Layer 2 通信链路验证；Layer 3 运动功能测试(MIT/CSP)；Layer 4 异常智能诊断(14类)。</p>
-</div>
-<div class="card" data-container="projects" data-stage="understood">
-  <div class="card-header">
-    <span class="container-badge container-projects">projects</span>
-    <span class="topic-badge">OpenArmX-AI调试</span>
-    <span class="stage-badge" style="background:#1f6feb">🟢理解</span>
-  </div>
-  <p class="card-content">AI自动化调试思路：Hermes读取文档制定计划→部署执行→封装为一键脚本（AI先跑再生成）→脚本托管到GitHub。</p>
-</div>
-<div class="card" data-container="projects" data-stage="tested">
-  <div class="card-header">
-    <span class="container-badge container-projects">projects</span>
-    <span class="topic-badge">OpenArmX-AI调试</span>
-    <span class="stage-badge" style="background:#8957e5">🟣测试</span>
-  </div>
-  <p class="card-content">调试实测配置：OpenArmX-Pro-Max 双臂7DOF×2；openarmx-arm-driver 1.3.3；PCAN USB Pro ×2 (can0右臂, can1左臂)。</p>
-</div>
-<div class="card" data-container="projects" data-stage="tested">
-  <div class="card-header">
-    <span class="container-badge container-projects">projects</span>
-    <span class="topic-badge">OpenArmX-AI调试</span>
-    <span class="stage-badge" style="background:#8957e5">🟣测试</span>
-  </div>
-  <p class="card-content">Layer 0-3 测试结果：环境验证21/22通过；硬件2/2；通信5/5；运动16/16；系统就绪。</p>
-</div>
-<div class="card" data-container="areas" data-stage="applied">
-  <div class="card-header">
-    <span class="container-badge container-areas">areas</span>
-    <span class="topic-badge">具身智能机器人组装</span>
-    <span class="stage-badge" style="background:#238636">⚫应用</span>
-  </div>
-  <p class="card-content">行业标杆：Tesla Optimus、Figure AI(BotQ年产12000台)、宇树科技、波士顿动力；导入GB/T19001、GB11291、IATF16949；三期路线图：0-6月基础→6-12月提升→12-24月智能制造。</p>
-</div>
-<div class="card" data-container="areas" data-stage="applied">
-  <div class="card-header">
-    <span class="container-badge container-areas">areas</span>
-    <span class="topic-badge">具身智能机器人组装</span>
-    <span class="stage-badge" style="background:#238636">⚫应用</span>
-  </div>
-  <p class="card-content">四阶段组装：子组件预装、主体组装、软件调试（固件/标定/运动学/AI模型）、整机测试老化（24-72h）。</p>
-</div>
-<div class="card" data-container="areas" data-stage="applied">
-  <div class="card-header">
-    <span class="container-badge container-areas">areas</span>
-    <span class="topic-badge">具身智能机器人组装</span>
-    <span class="stage-badge" style="background:#238636">⚫应用</span>
-  </div>
-  <p class="card-content">核心差异：BOM频繁变更、定制件多，软硬件深度耦合，精度±0.05mm，良品率90-95%，组装比家电慢4-6倍，代工厂核心竞争力在于调与一体化测试能力。</p>
-</div>
+    </div>
+    <div class="filter-group">
+      <span class="group-label">Stage</span>
+      <button class="filter-btn active" data-filter="all">All Stages</button>
+          <button class="filter-btn" data-filter="🔵获取" style="--accent:#58a6ff">🔵获取</button>
 
-</div>
+    </div>
+  </div>
 
-<div class="footer">Memory Journal · Auto-generated by Hermes Agent · Data from SuperMemory PARA</div>
+  <div class="cards">
+    
+        <div class="card" data-container="projects" data-stage="🔵获取">
+          <div class="card-meta">
+            <span class="badge container-badge" style="background:#238636">projects</span>
+            <span class="badge folder-badge">OpenArm</span>
+            <span class="badge stage-badge" style="background:#58a6ff">🔵获取</span>
+          </div>
+          <div class="card-content">OpenArm 1.0 SOP targets small-batch assembly (10-50 units/month).</div>
+        </div>
+        <div class="card" data-container="projects" data-stage="🔵获取">
+          <div class="card-meta">
+            <span class="badge container-badge" style="background:#238636">projects</span>
+            <span class="badge folder-badge">OpenArm</span>
+            <span class="badge stage-badge" style="background:#58a6ff">🔵获取</span>
+          </div>
+          <div class="card-content">OpenArm training duration is 2-4 weeks; yield 90-95% (vs >99% for consumer-grade devices).</div>
+        </div>
+        <div class="card" data-container="projects" data-stage="🔵获取">
+          <div class="card-meta">
+            <span class="badge container-badge" style="background:#238636">projects</span>
+            <span class="badge folder-badge">OpenArm</span>
+            <span class="badge stage-badge" style="background:#58a6ff">🔵获取</span>
+          </div>
+          <div class="card-content">Official docs: docs.openarm.dev; GitHub enactic/openarm_hardware; MiSUMi; MEVIY; Discord.</div>
+        </div>
+        <div class="card" data-container="projects" data-stage="🔵获取">
+          <div class="card-meta">
+            <span class="badge container-badge" style="background:#238636">projects</span>
+            <span class="badge folder-badge">OpenArm</span>
+            <span class="badge stage-badge" style="background:#58a6ff">🔵获取</span>
+          </div>
+          <div class="card-content">OpenArm precision is ±0.05 mm (vs ±0.5 mm for typical consumer devices).</div>
+        </div>
+        <div class="card" data-container="projects" data-stage="🔵获取">
+          <div class="card-meta">
+            <span class="badge container-badge" style="background:#238636">projects</span>
+            <span class="badge folder-badge">OpenArm</span>
+            <span class="badge stage-badge" style="background:#58a6ff">🔵获取</span>
+          </div>
+          <div class="card-content">OpenArm supports dual-arm configuration and is priced around $6,500 USD.</div>
+        </div>
+        <div class="card" data-container="projects" data-stage="🔵获取">
+          <div class="card-meta">
+            <span class="badge container-badge" style="background:#238636">projects</span>
+            <span class="badge folder-badge">OpenArmX-AI自动化调试</span>
+            <span class="badge stage-badge" style="background:#58a6ff">🔵获取</span>
+          </div>
+          <div class="card-content">Five-layer pipeline: Layer 0 env validation (18 checks); Layer 1 hardware auto-diagnosis; Layer 2 communications link validation; Layer 3 motion function tests (MIT/CSP); Layer 4 anomaly intelligent diagnosis (14 types).</div>
+        </div>
+        <div class="card" data-container="projects" data-stage="🔵获取">
+          <div class="card-meta">
+            <span class="badge container-badge" style="background:#238636">projects</span>
+            <span class="badge folder-badge">OpenArm</span>
+            <span class="badge stage-badge" style="background:#58a6ff">🔵获取</span>
+          </div>
+          <div class="card-content">OpenArm arm BOM: ~¥983,378 total; actuators ¥397,356; machined parts ¥316,018; base ¥20,222; gripper ¥107,942; end effector ¥22,940; electrical ¥84,564.</div>
+        </div>
+        <div class="card" data-container="projects" data-stage="🔵获取">
+          <div class="card-meta">
+            <span class="badge container-badge" style="background:#238636">projects</span>
+            <span class="badge folder-badge">OpenArm</span>
+            <span class="badge stage-badge" style="background:#58a6ff">🔵获取</span>
+          </div>
+          <div class="card-content">OpenArm 1.0 core specs: 7 DOF + 1 gripper; rated payload 4.1 kg; peak payload 6.0 kg; CAN bus; 24V; dual-arm system ~$6,500.</div>
+        </div>
+        <div class="card" data-container="projects" data-stage="🔵获取">
+          <div class="card-meta">
+            <span class="badge container-badge" style="background:#238636">projects</span>
+            <span class="badge folder-badge">OpenArmX-AI自动化调试</span>
+            <span class="badge stage-badge" style="background:#58a6ff">🔵获取</span>
+          </div>
+          <div class="card-content">OpenArmX-Pro-Max dual-arm 7DOF×2; uses openarmx-arm-driver 1.3.3; PCAN USB Pro ×2 (can0 right arm, can1 left arm).</div>
+        </div>
+        <div class="card" data-container="projects" data-stage="🔵获取">
+          <div class="card-meta">
+            <span class="badge container-badge" style="background:#238636">projects</span>
+            <span class="badge folder-badge">OpenArm</span>
+            <span class="badge stage-badge" style="background:#58a6ff">🔵获取</span>
+          </div>
+          <div class="card-content">Joint motors: J1/J2 DM-J8009P (20 Nm), J3/J4 DM-J4340P (9 Nm), J5-J8 DM-J4310 (3 Nm); all 24V BLDC with 14-bit encoders.</div>
+        </div>
+        <div class="card" data-container="projects" data-stage="🔵获取">
+          <div class="card-meta">
+            <span class="badge container-badge" style="background:#238636">projects</span>
+            <span class="badge folder-badge">OpenArmX-AI自动化调试</span>
+            <span class="badge stage-badge" style="background:#58a6ff">🔵获取</span>
+          </div>
+          <div class="card-content">AI automation debugging approach: Hermes reads docs to plan, deploys scripts; one-click pipeline hosted on GitHub.</div>
+        </div>
+        <div class="card" data-container="projects" data-stage="🔵获取">
+          <div class="card-meta">
+            <span class="badge container-badge" style="background:#238636">projects</span>
+            <span class="badge folder-badge">OpenArm</span>
+            <span class="badge stage-badge" style="background:#58a6ff">🔵获取</span>
+          </div>
+          <div class="card-content">Full BOM includes MiSUMi standard parts + CNC machined parts + Damiao motors.</div>
+        </div>
+        <div class="card" data-container="projects" data-stage="🔵获取">
+          <div class="card-meta">
+            <span class="badge container-badge" style="background:#238636">projects</span>
+            <span class="badge folder-badge">OpenArm</span>
+            <span class="badge stage-badge" style="background:#58a6ff">🔵获取</span>
+          </div>
+          <div class="card-content">Joint installation coaxiality ≤ 0.02 mm; gear preloading ±5%; cable bend radius ≥ 5× outer diameter.</div>
+        </div>
+  </div>
+
+  <p class="update-time">Last updated: 2026-06-12 19:03 CST</p>
+</div>
 
 <script>
-const filters={container:'all',stage:'all'};
-document.querySelectorAll('.filter-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    const group=btn.dataset.filter;
-    const val=btn.dataset.value;
-    filters[group]=val;
-    document.querySelectorAll(`.filter-btn[data-filter="${group}"]`).forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('.card').forEach(card=>{
-      const cOk=filters.container==='all'||card.dataset.container===filters.container;
-      const sOk=filters.stage==='all'||card.dataset.stage===filters.stage;
-      card.classList.toggle('hidden',!(cOk&&sOk));
+document.querySelectorAll('.filter-group').forEach(group => {
+  const btns = group.querySelectorAll('.filter-btn');
+  const isContainer = group.querySelector('[data-filter="projects"]') !== null;
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyFilters();
     });
   });
 });
+
+function applyFilters() {
+  const groups = document.querySelectorAll('.filter-group');
+  const containerVal = groups[0].querySelector('.filter-btn.active').dataset.filter;
+  const stageVal = groups[1].querySelector('.filter-btn.active').dataset.filter;
+  document.querySelectorAll('.card').forEach(card => {
+    const matchC = containerVal === 'all' || card.dataset.container === containerVal;
+    const matchS = stageVal === 'all' || card.dataset.stage === stageVal;
+    card.classList.toggle('hidden', !(matchC && matchS));
+  });
+}
 </script>
 </body>
 </html>

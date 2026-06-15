@@ -1,230 +1,222 @@
-     1|<!DOCTYPE html>
-     2|<html lang="zh-CN">
-     3|<head>
-     4|<meta charset="UTF-8">
-     5|<meta name="viewport" content="width=device-width, initial-scale=1.0">
-     6|<title>Memory Journal</title>
-     7|<style>
-     8|*{margin:0;padding:0;box-sizing:border-box}
-     9|body{background:#0d1117;color:#c9d1d9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;line-height:1.6;padding:20px;max-width:1200px;margin:0 auto}
-    10|h1{font-size:1.8rem;color:#58a6ff;margin-bottom:8px;display:flex;align-items:center;gap:10px}
-    11|h1::before{content:"🧠"}
-    12|.subtitle{color:#8b949e;font-size:.85rem;margin-bottom:24px}
-    13|.stats{display:flex;gap:16px;margin-bottom:24px;flex-wrap:wrap}
-    14|.stat-card{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:16px 20px;min-width:140px}
-    15|.stat-value{font-size:1.8rem;font-weight:700;color:#58a6ff}
-    16|.stat-label{font-size:.75rem;color:#8b949e;text-transform:uppercase;letter-spacing:.5px}
-    17|.filters{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center}
-    18|.filter-group{display:flex;align-items:center;gap:6px}
-    19|.filter-label{font-size:.8rem;color:#8b949e}
-    20|.filter-btn{background:#21262d;color:#c9d1d9;border:1px solid #30363d;border-radius:20px;padding:4px 14px;font-size:.8rem;cursor:pointer;transition:all .2s}
-    21|.filter-btn:hover{border-color:#58a6ff}
-    22|.filter-btn.active{background:#1f6feb;border-color:#1f6feb;color:#fff}
-    23|.container-section{margin-bottom:32px}
-    24|.container-header{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #21262d}
-    25|.container-tag{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.75rem;font-weight:600}
-    26|.tag-projects{background:#1f3a1f;color:#3fb950}
-    27|.tag-areas{background:#1a2a3f;color:#58a6ff}
-    28|.tag-resources{background:#3b1f3f;color:#bc8cff}
-    29|.tag-archives{background:#3b2f1f;color:#d29922}
-    30|.container-title{font-size:1.1rem;font-weight:600;color:#e6edf3}
-    31|.container-count{color:#8b949e;font-size:.8rem}
-    32|.entry{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:14px 18px;margin-bottom:8px;transition:border-color .2s}
-    33|.entry:hover{border-color:#484f58}
-    34|.entry-header{display:flex;align-items:center;gap:8px;margin-bottom:6px}
-    35|.stage{font-size:.85rem}
-    36|.entry-path{font-size:.72rem;color:#8b949e;font-family:'SFMono-Regular',Consolas,monospace}
-    37|.entry-content{font-size:.9rem;color:#c9d1d9;line-height:1.7}
-    38|.entry-tags{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
-    39|.entry-tag{background:#21262d;color:#8b949e;padding:1px 8px;border-radius:10px;font-size:.7rem}
-    40|.empty{color:#8b949e;font-size:.9rem;padding:20px;text-align:center;background:#161b22;border:1px dashed #30363d;border-radius:8px}
-    41|.updated{margin-top:32px;text-align:center;font-size:.75rem;color:#484f58;padding-top:16px;border-top:1px solid #21262d}
-    42|.hidden{display:none}
-    43|</style>
-    44|</head>
-    45|<body>
-    46|
-    47|<h1>Memory Journal</h1>
-    48|<div class="subtitle">陈述性知识库 · 每日自动整理 · 宁缺毋滥</div>
-    49|
-    50|<div class="stats">
-    51|  <div class="stat-card"><div class="stat-value">17</div><div class="stat-label">总条目</div></div>
-    52|  <div class="stat-card"><div class="stat-value">4</div><div class="stat-label">活跃容器</div></div>
-    53|  <div class="stat-card"><div class="stat-value">59%</div><div class="stat-label">应用成熟度</div></div>
-    54|  <div class="stat-card"><div class="stat-value">2026-06-14</div><div class="stat-label">更新日期</div></div>
-    55|</div>
-    56|
-    57|<div class="filters">
-    58|  <div class="filter-group">
-    59|    <span class="filter-label">容器：</span>
-    60|    <button class="filter-btn active" data-filter="container" data-value="all">全部</button>
-    61|    <button class="filter-btn" data-filter="container" data-value="projects">projects</button>
-    62|    <button class="filter-btn" data-filter="container" data-value="areas">areas</button>
-    63|    <button class="filter-btn" data-filter="container" data-value="resources">resources</button>
-    64|    <button class="filter-btn" data-filter="container" data-value="archives">archives</button>
-    65|  </div>
-    66|  <div class="filter-group">
-    67|    <span class="filter-label">阶段：</span>
-    68|    <button class="filter-btn active" data-filter="stage" data-value="all">全部</button>
-    69|    <button class="filter-btn" data-filter="stage" data-value="理解">🟢理解</button>
-    70|    <button class="filter-btn" data-filter="stage" data-value="拓展">🟠拓展</button>
-    71|    <button class="filter-btn" data-filter="stage" data-value="纠错">🔴纠错</button>
-    72|    <button class="filter-btn" data-filter="stage" data-value="应用">⚫应用</button>
-    73|  </div>
-    74|</div>
-    75|
-    76|<!-- projects -->
-    77|<div class="container-section" data-container="projects">
-    78|  <div class="container-header">
-    79|    <span class="container-tag tag-projects">projects</span>
-    80|    <span class="container-title">项目</span>
-    81|    <span class="container-count">6 条</span>
-    82|  </div>
-    83|  <div class="entry" data-container="projects" data-stage="应用">
-    84|    <div class="entry-header"><span class="stage">⚫应用</span><span class="entry-path">projects/OpenArm/2026-06-01-OpenArm流水线组装SOP.md</span></div>
-    85|    <div class="entry-content">OpenArm 1.0 核心参数：7自由度+1夹爪；额定负载4.1kg；峰值负载6.0kg；CAN总线通信；24V供电；双臂系统约$6,500。</div>
-    86|    <div class="entry-tags"><span class="entry-tag">openarm</span><span class="entry-tag">机械臂</span><span class="entry-tag">规格参数</span></div>
-    87|  </div>
-    88|  <div class="entry" data-container="projects" data-stage="应用">
-    89|    <div class="entry-header"><span class="stage">⚫应用</span><span class="entry-path">projects/OpenArm/2026-06-01-OpenArm流水线组装SOP.md</span></div>
-    90|    <div class="entry-content">OpenArm电机型号分配：J1/J2使用DM-J8009P-2EC（20Nm）；J3/J4使用DM-J4340P-2EC（9Nm）；J5–J8使用DM-J4310-2EC V1.1（3Nm）；全部为24V无刷直流电机，14位编码器。</div>
-    91|    <div class="entry-tags"><span class="entry-tag">openarm</span><span class="entry-tag">电机</span><span class="entry-tag">型号</span></div>
-    92|  </div>
-    93|  <div class="entry" data-container="projects" data-stage="应用">
-    94|    <div class="entry-header"><span class="stage">⚫应用</span><span class="entry-path">projects/OpenArm/2026-06-01-OpenArm流水线组装SOP.md</span></div>
-    95|    <div class="entry-content">OpenArm精度±0.05mm（消费级设备±0.5mm）；训练周期2-4周；良品率90-95%（消费级>99%）；8个工位组装，单臂耗时150-225分钟；小批量目标10-50台/月。</div>
-    96|    <div class="entry-tags"><span class="entry-tag">openarm</span><span class="entry-tag">工艺参数</span><span class="entry-tag">组装</span></div>
-    97|  </div>
-    98|  <div class="entry" data-container="projects" data-stage="应用">
-    99|    <div class="entry-header"><span class="stage">⚫应用</span><span class="entry-path">projects/OpenArm/2026-06-01-OpenArm流水线组装SOP.md</span></div>
-   100|    <div class="entry-content">OpenArm装配公差：关节同轴度≤0.02mm；齿轮预紧力±5%；线缆弯曲半径≥5倍外径。</div>
-   101|    <div class="entry-tags"><span class="entry-tag">openarm</span><span class="entry-tag">公差</span><span class="entry-tag">装配</span></div>
-   102|  </div>
-   103|  <div class="entry" data-container="projects" data-stage="应用">
-   104|    <div class="entry-header"><span class="stage">⚫应用</span><span class="entry-path">projects/OpenArm/2026-06-01-OpenArm流水线组装SOP.md</span></div>
-   105|    <div class="entry-content">OpenArm BOM成本结构：整臂约¥983,378；执行器¥397,356；机加工件¥316,018；底座¥20,222；夹爪¥107,942；末端执行器¥22,940；电气件¥84,564。包含MiSUMi标准件+达妙电机。</div>
-   106|    <div class="entry-tags"><span class="entry-tag">openarm</span><span class="entry-tag">BOM</span><span class="entry-tag">成本</span></div>
-   107|  </div>
-   108|  <div class="entry" data-container="projects" data-stage="理解">
-   109|    <div class="entry-header"><span class="stage">🟢理解</span><span class="entry-path">projects/OpenArmX-AI自动化调试/Ai自动化调试机器人个人思路笔记.md</span></div>
-   110|    <div class="entry-content">AI自动化调试五层流水线：Layer 0环境验证（18项检查）→ Layer 1硬件自动诊断 → Layer 2通信链路验证 → Layer 3运动功能测试（MIT/CSP）→ Layer 4异常智能诊断（14类）。脚本托管在GitHub。</div>
-   111|    <div class="entry-tags"><span class="entry-tag">openarmx</span><span class="entry-tag">AI调试</span><span class="entry-tag">流水线</span></div>
-   112|  </div>
-   113|</div>
-   114|
-   115|<!-- areas -->
-   116|<div class="container-section" data-container="areas">
-   117|  <div class="container-header">
-   118|    <span class="container-tag tag-areas">areas</span>
-   119|    <span class="container-title">领域</span>
-   120|    <span class="container-count">8 条</span>
-   121|  </div>
-   122|  <div class="entry" data-container="areas" data-stage="应用">
-   123|    <div class="entry-header"><span class="stage">⚫应用</span><span class="entry-path">areas/robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</span></div>
-   124|    <div class="entry-content">机器人组装核心差异：BOM频繁变更、定制件多，软硬件深度耦合，精度±0.05mm，良品率90-95%，组装比家电慢4-6倍，代工厂核心竞争力在于调参与一体化测试能力。</div>
-   125|    <div class="entry-tags"><span class="entry-tag">机器人组装</span><span class="entry-tag">核心差异</span><span class="entry-tag">代工厂</span></div>
-   126|  </div>
-   127|  <div class="entry" data-container="areas" data-stage="应用">
-   128|    <div class="entry-header"><span class="stage">⚫应用</span><span class="entry-path">areas/robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</span></div>
-   129|    <div class="entry-content">四阶段组装流程：子组件预装 → 主体组装 → 软件调试（固件/标定/运动学/AI模型）→ 整机测试老化（24–72h）。</div>
-   130|    <div class="entry-tags"><span class="entry-tag">组装流程</span><span class="entry-tag">老化测试</span></div>
-   131|  </div>
-   132|  <div class="entry" data-container="areas" data-stage="应用">
-   133|    <div class="entry-header"><span class="stage">⚫应用</span><span class="entry-path">areas/robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</span></div>
-   134|    <div class="entry-content">车间八大区域及面积占比：来料仓储15-20%、预加工10%、子装配20-25%、主体装配20-25%、测试调试15-20%、返修5%、包装出货10%；传感器/PCBA区ISO7万级，主装配区ISO8十万级。</div>
-   135|    <div class="entry-tags"><span class="entry-tag">车间布局</span><span class="entry-tag">洁净度</span></div>
-   136|  </div>
-   137|  <div class="entry" data-container="areas" data-stage="应用">
-   138|    <div class="entry-header"><span class="stage">⚫应用</span><span class="entry-path">areas/robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</span></div>
-   139|    <div class="entry-content">IQC三层策略：A类件100%全检+AQL0.65；B类件AQL1.0；C类件AQL2.5；6个质量门，配合Poka-Yoke/SPC/MES上传。KPI体系：OEE≥85%；FPY初期≥92%成熟≥97%；OTD≥98%；不良率≤2000PPM。</div>
-   140|    <div class="entry-tags"><span class="entry-tag">质量管理</span><span class="entry-tag">IQC</span><span class="entry-tag">KPI</span></div>
-   141|  </div>
-   142|  <div class="entry" data-container="areas" data-stage="应用">
-   143|    <div class="entry-header"><span class="stage">⚫应用</span><span class="entry-path">areas/robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</span></div>
-   144|    <div class="entry-content">精益工具集：VSM/单件流/Kanban/Andon/SMED/Poka-Yoke/TPM；问题分析：A3+5Why+鱼骨图+8D+PDCA；提案奖励50-500元。</div>
-   145|    <div class="entry-tags"><span class="entry-tag">精益生产</span><span class="entry-tag">问题分析</span></div>
-   146|  </div>
-   147|  <div class="entry" data-container="areas" data-stage="应用">
-   148|    <div class="entry-header"><span class="stage">⚫应用</span><span class="entry-path">areas/robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</span></div>
-   149|    <div class="entry-content">ERP/MES四层架构：ERP → MES → SCADA/IoT → 物理执行层，一机一码实现全流程追溯。物料管理：A类JIT、B类定期补货、C类VMI；安全库存2-4周，呆滞90天预警。</div>
-   150|    <div class="entry-tags"><span class="entry-tag">ERP</span><span class="entry-tag">MES</span><span class="entry-tag">物料管理</span></div>
-   151|  </div>
-   152|  <div class="entry" data-container="areas" data-stage="应用">
-   153|    <div class="entry-header"><span class="stage">⚫应用</span><span class="entry-path">areas/robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</span></div>
-   154|    <div class="entry-content">安全管理：7类危险源防控（ESD/重物/夹挤/电气/锐利/化学/激光），日巡检+周专项+月综合，半年1次应急演练，噪声≤85dB(A)。ESD防护：地板+手环+离子风机+湿度≥40%RH。</div>
-   155|    <div class="entry-tags"><span class="entry-tag">安全管理</span><span class="entry-tag">ESD</span></div>
-   156|  </div>
-   157|  <div class="entry" data-container="areas" data-stage="拓展">
-   158|    <div class="entry-header"><span class="stage">🟠拓展</span><span class="entry-path">areas/robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</span></div>
-   159|    <div class="entry-content">行业标杆：Tesla Optimus、Figure AI（BotQ年产12000台）、宇树科技、波士顿动力；质量体系导入GB/T19001、GB11291、IATF16949；三期路线图：0-6月基础→6-12月提升→12-24月智能制造。</div>
-   160|    <div class="entry-tags"><span class="entry-tag">行业标杆</span><span class="entry-tag">质量体系</span><span class="entry-tag">路线图</span></div>
-   161|  </div>
-   162|</div>
-   163|
-   164|<!-- resources -->
-   165|<div class="container-section" data-container="resources">
-   166|  <div class="container-header">
-   167|    <span class="container-tag tag-resources">resources</span>
-   168|    <span class="container-title">资源</span>
-   169|    <span class="container-count">0 条</span>
-   170|  </div>
-   171|  <div class="empty">今日无匹配条目</div>
-   172|</div>
-   173|
-   174|<!-- archives -->
-   175|<div class="container-section" data-container="archives">
-   176|  <div class="container-header">
-   177|    <span class="container-tag tag-archives">archives</span>
-   178|    <span class="container-title">归档</span>
-   179|    <span class="container-count">2 条</span>
-   180|  </div>
-   181|  <div class="entry" data-container="archives" data-stage="纠错">
-   182|    <div class="entry-header"><span class="stage">🔴纠错</span><span class="entry-path">archives/Gitea私人网站创建/目前状态.md</span></div>
-   183|    <div class="entry-content">Gitea 1.22.6 Pages 部署需要 Actions Runner，配置门槛高，不适合个人轻量站点。</div>
-   184|    <div class="entry-tags"><span class="entry-tag">gitea</span><span class="entry-tag">pages</span><span class="entry-tag">部署限制</span></div>
-   185|  </div>
-   186|  <div class="entry" data-container="archives" data-stage="纠错">
-   187|    <div class="entry-header"><span class="stage">🔴纠错</span><span class="entry-path">archives/Gitea私人网站创建/目前状态.md</span></div>
-   188|    <div class="entry-content">Cloudflare 临时隧道（trycloudflare.com）域名每次重启变化，不适合生产环境，需改用固定域名隧道或 Cloudflare Tunnel。</div>
-   189|    <div class="entry-tags"><span class="entry-tag">cloudflare</span><span class="entry-tag">隧道</span><span class="entry-tag">域名</span></div>
-   190|  </div>
-   191|</div>
-   192|
-   193|<div class="updated">更新于 2026-06-14 19:00 CST · 由 Hermes Agent 自动生成</div>
-   194|
-   195|<script>
-   196|const containerBtns=document.querySelectorAll('[data-filter="container"]');
-   197|const stageBtns=document.querySelectorAll('[data-filter="stage"]');
-   198|let activeContainer='all',activeStage='all';
-   199|
-   200|function applyFilters(){
-   201|  document.querySelectorAll('.entry').forEach(e=>{
-   202|    const c=e.dataset.container,s=e.dataset.stage;
-   203|    const showC=activeContainer==='all'||c===activeContainer;
-   204|    const showS=activeStage==='all'||s===activeStage;
-   205|    e.style.display=(showC&&showS)?'':'none';
-   206|  });
-   207|  document.querySelectorAll('.container-section').forEach(sec=>{
-   208|    const c=sec.dataset.container;
-   209|    if(activeContainer!=='all'&&c!==activeContainer){sec.style.display='none';return}
-   210|    sec.style.display='';
-   211|    const visible=sec.querySelectorAll('.entry:not([style*="display: none"])').length;
-   212|    sec.querySelector('.container-count').textContent=visible+' 条';
-   213|  });
-   214|}
-   215|
-   216|containerBtns.forEach(b=>b.addEventListener('click',()=>{
-   217|  containerBtns.forEach(x=>x.classList.remove('active'));
-   218|  b.classList.add('active');
-   219|  activeContainer=b.dataset.value;
-   220|  applyFilters();
-   221|}));
-   222|stageBtns.forEach(b=>b.addEventListener('click',()=>{
-   223|  stageBtns.forEach(x=>x.classList.remove('active'));
-   224|  b.classList.add('active');
-   225|  activeStage=b.dataset.value;
-   226|  applyFilters();
-   227|}));
-   228|</script>
-   229|</body>
-   230|</html>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memory Journal</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0d1117;color:#c9d1d9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;line-height:1.6;min-height:100vh}
+.container{max-width:960px;margin:0 auto;padding:24px 16px}
+header{text-align:center;margin-bottom:32px}
+header h1{font-size:1.8rem;color:#58a6ff;margin-bottom:4px;letter-spacing:1px}
+header .subtitle{color:#8b949e;font-size:0.85rem}
+.stats{display:flex;gap:12px;justify-content:center;margin:20px 0;flex-wrap:wrap}
+.stat-card{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:14px 20px;text-align:center;min-width:120px}
+.stat-card .num{font-size:1.6rem;font-weight:700;color:#58a6ff}
+.stat-card .label{font-size:0.75rem;color:#8b949e;margin-top:2px}
+.filters{margin:20px 0;display:flex;flex-direction:column;gap:10px}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.filter-row .filter-label{font-size:0.8rem;color:#8b949e;min-width:60px}
+.filter-btn{background:#21262d;border:1px solid #30363d;color:#c9d1d9;padding:5px 14px;border-radius:20px;font-size:0.78rem;cursor:pointer;transition:all .15s}
+.filter-btn:hover{border-color:#58a6ff;color:#58a6ff}
+.filter-btn.active{background:#1f6feb;border-color:#1f6feb;color:#fff}
+.update-badge{text-align:center;margin-bottom:20px}
+.update-badge span{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:4px 12px;font-size:0.72rem;color:#8b949e}
+.section{margin-bottom:28px}
+.section-title{display:flex;align-items:center;gap:8px;margin-bottom:12px;font-size:1.05rem;font-weight:600}
+.section-title .dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.dot-projects{background:#3fb950}
+.dot-areas{background:#58a6ff}
+.dot-resources{background:#d29922}
+.dot-archives{background:#8b949e}
+.card{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:14px 16px;margin-bottom:10px;transition:opacity .2s,transform .2s}
+.card.hidden{display:none}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:6px}
+.badge{font-size:0.68rem;padding:2px 8px;border-radius:10px;font-weight:500}
+.badge-container{border:1px solid}
+.badge-projects{color:#3fb950;border-color:#3fb950;background:rgba(63,185,80,.1)}
+.badge-areas{color:#58a6ff;border-color:#58a6ff;background:rgba(88,166,255,.1)}
+.badge-resources{color:#d29922;border-color:#d29922;background:rgba(210,153,34,.1)}
+.badge-archives{color:#8b949e;border-color:#8b949e;background:rgba(139,148,158,.1)}
+.badge-stage{border:1px solid}
+.stage-🔵{color:#58a6ff;border-color:#58a6ff;background:rgba(88,166,255,.08)}
+.stage-🟢{color:#3fb950;border-color:#3fb950;background:rgba(63,185,80,.08)}
+.stage-🟠{color:#d29922;border-color:#d29922;background:rgba(210,153,34,.08)}
+.stage-🔴{color:#f85149;border-color:#f85149;background:rgba(248,81,73,.08)}
+.stage-🟣{color:#bc8cff;border-color:#bc8cff;background:rgba(188,140,255,.08)}
+.stage-⚫{color:#8b949e;border-color:#8b949e;background:rgba(139,148,158,.08)}
+.card-content{font-size:0.88rem;color:#c9d1d9}
+.card-meta{font-size:0.7rem;color:#6e7681;margin-top:6px}
+.empty{text-align:center;color:#484f58;padding:40px 0;font-size:0.9rem}
+footer{text-align:center;margin-top:40px;padding:16px;border-top:1px solid #21262d;color:#484f58;font-size:0.72rem}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>📚 Memory Journal</h1>
+<p class="subtitle">Declarative Knowledge · PARA Structure · Auto-Filtered</p>
+</header>
+<div class="update-badge"><span>🕐 更新时间: 2026-06-15 19:00 CST</span></div>
+
+<div class="stats">
+<div class="stat-card"><div class="num">10</div><div class="label">总条目</div></div>
+<div class="stat-card"><div class="num">2</div><div class="label">活跃容器</div></div>
+<div class="stat-card"><div class="num">60%</div><div class="label">应用成熟度</div></div>
+</div>
+
+<div class="filters">
+<div class="filter-row">
+<span class="filter-label">📂 容器</span>
+<button class="filter-btn active" data-filter="container" data-value="all">全部</button>
+<button class="filter-btn" data-filter="container" data-value="projects">projects</button>
+<button class="filter-btn" data-filter="container" data-value="areas">areas</button>
+</div>
+<div class="filter-row">
+<span class="filter-label">🏷️ 阶段</span>
+<button class="filter-btn active" data-filter="stage" data-value="all">全部</button>
+<button class="filter-btn" data-filter="stage" data-value="🔵">🔵 获取</button>
+<button class="filter-btn" data-filter="stage" data-value="🟢">🟢 理解</button>
+<button class="filter-btn" data-filter="stage" data-value="⚫">⚫ 应用</button>
+</div>
+</div>
+
+<div id="cards">
+
+<div class="section" data-container="projects">
+<div class="section-title"><span class="dot dot-projects"></span> Projects</div>
+
+<div class="card" data-container="projects" data-stage="🟢">
+<div class="card-header">
+<div><span class="badge badge-container badge-projects">projects</span> <span class="badge badge-stage stage-🟢">🟢 理解</span></div>
+<span style="font-size:0.68rem;color:#6e7681">2026-06-04</span>
+</div>
+<div class="card-content">Five-layer pipeline: Layer 0 env validation (18 checks); Layer 1 hardware auto-diagnosis; Layer 2 communications link validation; Layer 3 motion function tests (MIT/CSP); Layer 4 anomaly intelligent diagnosis (14 types).</div>
+<div class="card-meta">📄 OpenArmX-AI自动化调试/Ai自动化调试机器人个人思路笔记.md</div>
+</div>
+
+<div class="card" data-container="projects" data-stage="⚫">
+<div class="card-header">
+<div><span class="badge badge-container badge-projects">projects</span> <span class="badge badge-stage stage-⚫">⚫ 应用</span></div>
+<span style="font-size:0.68rem;color:#6e7681">2026-06-04</span>
+</div>
+<div class="card-content">Full BOM includes MiSUMi standard parts + CNC machined parts + Damiao motors.</div>
+<div class="card-meta">📄 OpenArm/2026-06-01-OpenArm流水线组装SOP.md</div>
+</div>
+
+<div class="card" data-container="projects" data-stage="🟢">
+<div class="card-header">
+<div><span class="badge badge-container badge-projects">projects</span> <span class="badge badge-stage stage-🟢">🟢 理解</span></div>
+<span style="font-size:0.68rem;color:#6e7681">2026-06-04</span>
+</div>
+<div class="card-content">AI automation debugging: Hermes reads docs to plan, then deploy; wrap into one-click script (AI runs first, then generates); script hosted on GitHub.</div>
+<div class="card-meta">📄 OpenArmX-AI自动化调试/Ai自动化调试机器人个人思路笔记.md</div>
+</div>
+
+<div class="card" data-container="projects" data-stage="⚫">
+<div class="card-header">
+<div><span class="badge badge-container badge-projects">projects</span> <span class="badge badge-stage stage-⚫">⚫ 应用</span></div>
+<span style="font-size:0.68rem;color:#6e7681">2026-06-04</span>
+</div>
+<div class="card-content">J1/J2 use DM-J8009P (20 Nm); J3 DM-J4340P (9 Nm); J4 DM-J4340 (9 Nm); J5-J8 DM-J4310 (3 Nm); all 24V BLDC with 14-bit encoders.</div>
+<div class="card-meta">📄 OpenArm/2026-06-01-OpenArm流水线组装SOP.md</div>
+</div>
+
+<div class="card" data-container="projects" data-stage="⚫">
+<div class="card-header">
+<div><span class="badge badge-container badge-projects">projects</span> <span class="badge badge-stage stage-⚫">⚫ 应用</span></div>
+<span style="font-size:0.68rem;color:#6e7681">2026-06-04</span>
+</div>
+<div class="card-content">Joint installation coaxiality ≤ 0.02 mm; gear preloading ±5%; cable bend radius ≥ 5× outer diameter.</div>
+<div class="card-meta">📄 OpenArm/2026-06-01-OpenArm流水线组装SOP.md</div>
+</div>
+
+<div class="card" data-container="projects" data-stage="🟢">
+<div class="card-header">
+<div><span class="badge badge-container badge-projects">projects</span> <span class="badge badge-stage stage-🟢">🟢 理解</span></div>
+<span style="font-size:0.68rem;color:#6e7681">2026-06-03</span>
+</div>
+<div class="card-content">Safety PPE: safety glasses, safety shoes, gloves; always connect emergency stop; protect cables during operation.</div>
+<div class="card-meta">📄 OpenArm/2026-06-01-OpenArm流水线组装SOP.md</div>
+</div>
+
+<div class="card" data-container="projects" data-stage="⚫">
+<div class="card-header">
+<div><span class="badge badge-container badge-projects">projects</span> <span class="badge badge-stage stage-⚫">⚫ 应用</span></div>
+<span style="font-size:0.68rem;color:#6e7681">2026-06-04</span>
+</div>
+<div class="card-content">OpenArm 1.0 SOP targets small-batch assembly (10-50 units/month).</div>
+<div class="card-meta">📄 OpenArm/2026-06-01-OpenArm流水线组装SOP.md</div>
+</div>
+
+<div class="card" data-container="projects" data-stage="⚫">
+<div class="card-header">
+<div><span class="badge badge-container badge-projects">projects</span> <span class="badge badge-stage stage-⚫">⚫ 应用</span></div>
+<span style="font-size:0.68rem;color:#6e7681">2026-06-04</span>
+</div>
+<div class="card-content">OpenArm 1.0 core specs: 7 DOF + 1 gripper; rated payload 4.1 kg; peak payload 6.0 kg; CAN bus; 24V; dual-arm system ~$6,500.</div>
+<div class="card-meta">📄 OpenArm/2026-06-01-OpenArm流水线组装SOP.md</div>
+</div>
+
+</div>
+
+<div class="section" data-container="areas">
+<div class="section-title"><span class="dot dot-areas"></span> Areas</div>
+
+<div class="card" data-container="areas" data-stage="🔵">
+<div class="card-header">
+<div><span class="badge badge-container badge-areas">areas</span> <span class="badge badge-stage stage-🔵">🔵 获取</span></div>
+<span style="font-size:0.68rem;color:#6e7681">2026-06-03</span>
+</div>
+<div class="card-content">安全与ESD：7大危险源、分级安全标识、日巡检/应急演练</div>
+<div class="card-meta">📄 robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</div>
+</div>
+
+<div class="card" data-container="areas" data-stage="🔵">
+<div class="card-header">
+<div><span class="badge badge-container badge-areas">areas</span> <span class="badge badge-stage stage-🔵">🔵 获取</span></div>
+<span style="font-size:0.68rem;color:#6e7681">2026-06-03</span>
+</div>
+<div class="card-content">ERP/MES系统：ERP→MES→SCADA/IoT→物理执行，BOM多版本、替代料、ECN变更</div>
+<div class="card-meta">📄 robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</div>
+</div>
+
+</div>
+
+</div>
+
+<div class="empty" id="empty-msg" style="display:none">没有匹配的条目</div>
+
+<footer>Memory Journal · Auto-generated by Hermes · PARA declarative knowledge base</footer>
+</div>
+
+<script>
+const state={container:'all',stage:'all'};
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+btn.addEventListener('click',()=>{
+const filterType=btn.dataset.filter;
+const value=btn.dataset.value;
+state[filterType]=value;
+document.querySelectorAll(`.filter-btn[data-filter="${filterType}"]`).forEach(b=>b.classList.remove('active'));
+btn.classList.add('active');
+applyFilters();
+});
+});
+function applyFilters(){
+let visible=0;
+document.querySelectorAll('.card').forEach(card=>{
+const cMatch=state.container==='all'||card.dataset.container===state.container;
+const sMatch=state.stage==='all'||card.dataset.stage===state.stage;
+if(cMatch&&sMatch){card.classList.remove('hidden');visible++}
+else{card.classList.add('hidden')}
+});
+document.querySelectorAll('.section').forEach(sec=>{
+const hasVisible=sec.querySelectorAll('.card:not(.hidden)').length>0;
+sec.style.display=hasVisible?'':'none';
+});
+document.getElementById('empty-msg').style.display=visible?'none':'';
+}
+</script>
+</body>
+</html>

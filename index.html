@@ -6,111 +6,118 @@
 <title>Memory Journal</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#0d1117;color:#c9d1d9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;line-height:1.6;min-height:100vh}
-.container{max-width:960px;margin:0 auto;padding:24px 16px}
-header{text-align:center;padding:40px 0 32px}
-header h1{font-size:2rem;font-weight:700;background:linear-gradient(135deg,#58a6ff,#bc8cff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
-header .updated{font-size:.85rem;color:#8b949e}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:28px}
-.stat-card{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:16px;text-align:center}
-.stat-card .num{font-size:1.8rem;font-weight:700;color:#58a6ff}
-.stat-card .label{font-size:.75rem;color:#8b949e;text-transform:uppercase;letter-spacing:.5px}
-.filters{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:24px}
-.filter-group{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.filter-group .group-label{font-size:.8rem;color:#8b949e;margin-right:4px}
-.filter-btn{padding:5px 14px;border-radius:20px;border:1px solid #30363d;background:transparent;color:#c9d1d9;font-size:.8rem;cursor:pointer;transition:all .2s}
+body{background:#0d1117;color:#c9d1d9;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;line-height:1.6;padding:20px}
+.container{max-width:960px;margin:0 auto}
+header{text-align:center;padding:30px 0 20px;border-bottom:1px solid #21262d;margin-bottom:24px}
+header h1{font-size:1.8em;color:#f0f6fc;margin-bottom:6px}
+header .subtitle{color:#8b949e;font-size:0.9em}
+.badge{display:inline-block;background:#1f6feb33;color:#58a6ff;padding:2px 10px;border-radius:12px;font-size:0.78em;margin-left:8px}
+.stats{display:flex;gap:16px;justify-content:center;margin:20px 0;flex-wrap:wrap}
+.stat-card{background:#161b22;border:1px solid #21262d;border-radius:8px;padding:14px 22px;text-align:center;min-width:130px}
+.stat-card .num{font-size:1.6em;font-weight:700;color:#f0f6fc}
+.stat-card .label{font-size:0.78em;color:#8b949e;margin-top:2px}
+.filters{display:flex;gap:16px;margin:20px 0;flex-wrap:wrap;justify-content:center}
+.filter-group{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.filter-group .glabel{color:#8b949e;font-size:0.82em;margin-right:4px}
+.filter-btn{background:#21262d;color:#c9d1d9;border:1px solid #30363d;padding:4px 12px;border-radius:6px;font-size:0.8em;cursor:pointer;transition:all .15s}
 .filter-btn:hover{border-color:#58a6ff;color:#58a6ff}
-.filter-btn.active{background:#58a6ff;color:#0d1117;border-color:#58a6ff}
-.filter-btn.active.area{background:#da3633;border-color:#da3633}
-.filter-btn.active.resource{background:#d29922;border-color:#d29922}
-.filter-btn.active.archive{background:#8b949e;border-color:#8b949e}
-.section{margin-bottom:32px}
-.section-title{font-size:1.1rem;font-weight:600;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #21262d;display:flex;align-items:center;gap:8px}
-.section-title .dot{width:10px;height:10px;border-radius:50%;display:inline-block}
-.dot.projects{background:#58a6ff}.dot.areas{background:#da3633}.dot.resources{background:#d29922}.dot.archives{background:#8b949e}
-.entry{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:14px 16px;margin-bottom:10px;transition:border-color .2s}
-.entry:hover{border-color:#484f58}
-.entry-meta{display:flex;gap:8px;margin-bottom:6px;flex-wrap:wrap}
-.tag{font-size:.7rem;padding:2px 8px;border-radius:10px;font-weight:500}
-.tag.project{background:#1f3a5f;color:#58a6ff}.tag.area{background:#3d1418;color:#f85149}.tag.resource{background:#3d2e00;color:#e3b341}.tag.archive{background:#1c1c1c;color:#8b949e}
-.stage{font-size:.7rem;padding:2px 8px;border-radius:10px;background:#1c2333;color:#8b949e}
-.entry-content{font-size:.9rem;color:#c9d1d9}
-.entry-file{font-size:.72rem;color:#484f58;margin-top:6px}
-.entry-title{font-size:.95rem;font-weight:600;color:#e6edf3;margin-bottom:4px}
-.empty{text-align:center;padding:40px;color:#484f58;font-size:.9rem}
-footer{text-align:center;padding:32px 0;color:#484f58;font-size:.75rem;border-top:1px solid #21262d;margin-top:24px}
-@media(max-width:600px){.stats{grid-template-columns:repeat(2,1fr)}header h1{font-size:1.5rem}}
+.filter-btn.active{background:#1f6feb;border-color:#1f6feb;color:#fff}
+.container-section{margin:20px 0}
+.container-section h2{font-size:1.1em;color:#f0f6fc;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.container-section h2 .tag{font-size:0.7em;padding:2px 8px;border-radius:4px;font-weight:500}
+.tag-projects{background:#238636;color:#fff}
+.tag-areas{background:#8957e5;color:#fff}
+.tag-resources{background:#d29922;color:#fff}
+.tag-archives{background:#6e7681;color:#fff}
+.entry{background:#161b22;border:1px solid #21262d;border-radius:8px;padding:16px 20px;margin-bottom:12px;transition:border-color .15s}
+.entry:hover{border-color:#30363d}
+.entry-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.entry-title{font-weight:600;color:#f0f6fc;font-size:0.95em}
+.stage{font-size:0.72em;padding:1px 8px;border-radius:4px;white-space:nowrap}
+.stage-green{background:#238636;color:#fff}
+.stage-orange{background:#d29922;color:#fff}
+.stage-purple{background:#8957e5;color:#fff}
+.stage-black{background:#484f58;color:#fff}
+.stage-blue{background:#1f6feb;color:#fff}
+.stage-red{background:#da3633;color:#fff}
+.entry-summary{color:#8b949e;font-size:0.85em;line-height:1.55}
+.entry-reason{margin-top:6px;font-size:0.78em;color:#58a6ff;font-style:italic}
+.entry-file{margin-top:6px;font-size:0.72em;color:#6e7681}
+.footer{text-align:center;padding:30px 0 10px;border-top:1px solid #21262d;margin-top:30px;color:#484f58;font-size:0.78em}
+@media(max-width:600px){.stats{flex-direction:column;align-items:center}.filters{flex-direction:column;align-items:center}}
 </style>
 </head>
 <body>
 <div class="container">
 <header>
-<h1>🧠 Memory Journal</h1>
-<div class="updated">🕐 更新于 2026-06-28 19:00 CST</div>
+<h1>🧠 Memory Journal <span class="badge">2026-06-29 20:13 CST</span></h1>
+<div class="subtitle">陈述性知识库 · 双重过滤 · PARA 结构</div>
 </header>
 
 <div class="stats">
 <div class="stat-card"><div class="num">3</div><div class="label">总条目</div></div>
 <div class="stat-card"><div class="num">3</div><div class="label">活跃容器</div></div>
-<div class="stat-card"><div class="num">⚫</div><div class="label">最高阶段</div></div>
-<div class="stat-card"><div class="num">40%</div><div class="label">过滤率</div></div>
+<div class="stat-card"><div class="num">67%</div><div class="label">应用成熟度</div></div>
 </div>
 
 <div class="filters">
 <div class="filter-group">
-<span class="group-label">容器:</span>
+<span class="glabel">容器:</span>
 <button class="filter-btn active" data-filter="container" data-value="all">全部</button>
-<button class="filter-btn" data-filter="container" data-value="project">Projects</button>
-<button class="filter-btn" data-filter="container" data-value="area">Areas</button>
-<button class="filter-btn" data-filter="container" data-value="archive">Archives</button>
+<button class="filter-btn" data-filter="container" data-value="projects">projects</button>
+<button class="filter-btn" data-filter="container" data-value="areas">areas</button>
+<button class="filter-btn" data-filter="container" data-value="archives">archives</button>
 </div>
 <div class="filter-group">
-<span class="group-label">阶段:</span>
+<span class="glabel">阶段:</span>
 <button class="filter-btn active" data-filter="stage" data-value="all">全部</button>
-<button class="filter-btn" data-filter="stage" data-value="🟢理解">🟢 理解</button>
-<button class="filter-btn" data-filter="stage" data-value="⚫应用">⚫ 应用</button>
+<button class="filter-btn" data-filter="stage" data-value="🟢理解">🟢理解</button>
+<button class="filter-btn" data-filter="stage" data-value="⚫应用">⚫应用</button>
 </div>
 </div>
 
-<div class="section" data-container="project">
-<div class="section-title"><span class="dot projects"></span>Projects <span style="font-weight:400;color:#8b949e;font-size:.85rem">(1)</span></div>
-
-<div class="entry" data-container="project" data-stage="🟢理解">
-<div class="entry-meta"><span class="tag project">Projects</span><span class="stage">🟢 理解</span></div>
-<div class="entry-title">AI自动化调试机器人开发思路</div>
-<div class="entry-content">五层渐进式机器人自动调试管线框架：环境验证→硬件诊断→通信验证→运动测试→智能错误分析。属于方法论层面的概念知识，跨项目可复用。</div>
-<div class="entry-file">📄 OpenArmX-AI自动化调试/Ai自动化调试机器人个人思路笔记.md</div>
+<div class="container-section" data-container="projects">
+<h2><span class="tag tag-projects">projects</span> 项目</h2>
+<div class="entry" data-container="projects" data-stage="🟢理解">
+<div class="entry-header">
+<span class="entry-title">AI自动化调试机器人开发思路</span>
+<span class="stage stage-green">🟢理解</span>
+</div>
+<div class="entry-summary">五层渐进式机器人自动调试管线框架：环境验证→硬件诊断→通信验证→运动测试→智能错误分析。属于方法论层面的概念知识，跨项目可复用。</div>
+<div class="entry-reason">声明式概念框架，非一次性事件记录</div>
+<div class="entry-file">📁 projects/OpenArmX-AI自动化调试/Ai自动化调试机器人个人思路笔记.md</div>
 </div>
 </div>
 
-<div class="section" data-container="area">
-<div class="section-title"><span class="dot areas"></span>Areas <span style="font-weight:400;color:#8b949e;font-size:.85rem">(1)</span></div>
-
-<div class="entry" data-container="area" data-stage="⚫应用">
-<div class="entry-meta"><span class="tag area">Areas</span><span class="stage">⚫ 应用</span></div>
-<div class="entry-title">具身智能机器人组装流水线管理指南</div>
-<div class="entry-content">四阶段组装流程框架（子组件预装→整机测试）、IQC质量控制、ESD防护、ERP集成标准、关节定位精度工艺参数。面向车间主任的持续管理知识。</div>
-<div class="entry-file">📄 robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</div>
+<div class="container-section" data-container="areas">
+<h2><span class="tag tag-areas">areas</span> 领域</h2>
+<div class="entry" data-container="areas" data-stage="⚫应用">
+<div class="entry-header">
+<span class="entry-title">具身智能机器人组装流水线管理指南</span>
+<span class="stage stage-black">⚫应用</span>
+</div>
+<div class="entry-summary">四阶段组装流程框架（子组件预装→整机测试）、IQC质量控制、ESD防护、ERP集成标准、关节定位精度工艺参数。面向车间主任的持续管理知识。</div>
+<div class="entry-reason">领域管理知识，长期有效，已进入应用阶段</div>
+<div class="entry-file">📁 areas/robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</div>
 </div>
 </div>
 
-<div class="section" data-container="resource" style="display:none">
-<div class="section-title"><span class="dot resources"></span>Resources <span style="font-weight:400;color:#8b949e;font-size:.85rem">(0)</span></div>
-<div class="empty">暂无条目</div>
+<div class="container-section" data-container="archives">
+<h2><span class="tag tag-archives">archives</span> 归档</h2>
+<div class="entry" data-container="archives" data-stage="⚫应用">
+<div class="entry-header">
+<span class="entry-title">Gitea 私人网站项目弃用说明</span>
+<span class="stage stage-black">⚫应用</span>
 </div>
-
-<div class="section" data-container="archive">
-<div class="section-title"><span class="dot archives"></span>Archives <span style="font-weight:400;color:#8b949e;font-size:.85rem">(1)</span></div>
-
-<div class="entry" data-container="archive" data-stage="⚫应用">
-<div class="entry-meta"><span class="tag archive">Archives</span><span class="stage">⚫ 应用</span></div>
-<div class="entry-title">Gitea 私人网站项目弃用说明</div>
-<div class="entry-content">弃用 Gitea 1.22.6 Pages + Cloudflare 隧道方案，回退至 GitHub Pages (wxcadk.github.io)。记录了基础设施选型决策及其原因。</div>
-<div class="entry-file">📄 Gitea私人网站创建/目前状态.md</div>
+<div class="entry-summary">弃用 Gitea 1.22.6 Pages + Cloudflare 隧道方案，回退至 GitHub Pages (wxcadk.github.io)。记录了基础设施选型决策及其原因。</div>
+<div class="entry-reason">基础设施决策记录，避免重复踩坑，有长期参考价值</div>
+<div class="entry-file">📁 archives/Gitea私人网站创建/目前状态.md</div>
 </div>
 </div>
 
-<footer>Memory Journal · 双过滤系统 · 陈述性知识 · 2026</footer>
+<div class="footer">
+Memory Journal · 每日自动整理 · 宁缺毋滥 · 双重过滤（文件夹 + 质量）
+</div>
 </div>
 
 <script>
@@ -120,23 +127,16 @@ const group=btn.dataset.filter;
 const val=btn.dataset.value;
 document.querySelectorAll(`.filter-btn[data-filter="${group}"]`).forEach(b=>b.classList.remove('active'));
 btn.classList.add('active');
-const cBtn=document.querySelector('.filter-btn[data-filter="container"].active');
-const sBtn=document.querySelector('.filter-btn[data-filter="stage"].active');
-const cVal=cBtn?cBtn.dataset.value:'all';
-const sVal=sBtn?sBtn.dataset.value:'all';
+const activeContainer=document.querySelector('.filter-btn[data-filter="container"].active').dataset.value;
+const activeStage=document.querySelector('.filter-btn[data-filter="stage"].active').dataset.value;
 document.querySelectorAll('.entry').forEach(e=>{
-const c=e.dataset.container;
-const s=e.dataset.stage;
-const cOk=cVal==='all'||c===cVal;
-const sOk=sVal==='all'||s===sVal;
-e.style.display=(cOk&&sOk)?'':'none';
+const matchC=activeContainer==='all'||e.dataset.container===activeContainer;
+const matchS=activeStage==='all'||e.dataset.stage===activeStage;
+e.style.display=(matchC&&matchS)?'':'none';
 });
-document.querySelectorAll('.section').forEach(sec=>{
-const sc=sec.dataset.container;
-if(sc){
-const hasVisible=[...sec.querySelectorAll('.entry')].some(e=>e.style.display!=='none');
-sec.style.display=(cVal==='all'||sc===cVal)?(hasVisible?'':'none'):'none';
-}
+document.querySelectorAll('.container-section').forEach(s=>{
+const hasVisible=[...s.querySelectorAll('.entry')].some(e=>e.style.display!=='none');
+s.style.display=hasVisible?'':'none';
 });
 });
 });

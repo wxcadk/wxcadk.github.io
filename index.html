@@ -3,142 +3,281 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Memory Journal</title>
+<title>Memory Journal — 陈述性知识库</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#0d1117;color:#c9d1d9;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;line-height:1.6;padding:20px}
-.container{max-width:960px;margin:0 auto}
-header{text-align:center;padding:30px 0 20px;border-bottom:1px solid #21262d;margin-bottom:24px}
-header h1{font-size:1.8em;color:#f0f6fc;margin-bottom:6px}
-header .subtitle{color:#8b949e;font-size:0.9em}
-.badge{display:inline-block;background:#1f6feb33;color:#58a6ff;padding:2px 10px;border-radius:12px;font-size:0.78em;margin-left:8px}
-.stats{display:flex;gap:16px;justify-content:center;margin:20px 0;flex-wrap:wrap}
-.stat-card{background:#161b22;border:1px solid #21262d;border-radius:8px;padding:14px 22px;text-align:center;min-width:130px}
-.stat-card .num{font-size:1.6em;font-weight:700;color:#f0f6fc}
-.stat-card .label{font-size:0.78em;color:#8b949e;margin-top:2px}
-.filters{display:flex;gap:16px;margin:20px 0;flex-wrap:wrap;justify-content:center}
-.filter-group{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-.filter-group .glabel{color:#8b949e;font-size:0.82em;margin-right:4px}
-.filter-btn{background:#21262d;color:#c9d1d9;border:1px solid #30363d;padding:4px 12px;border-radius:6px;font-size:0.8em;cursor:pointer;transition:all .15s}
+body{background:#0d1117;color:#c9d1d9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;line-height:1.6;min-height:100vh}
+.container{max-width:1200px;margin:0 auto;padding:24px}
+header{text-align:center;padding:40px 0 24px;border-bottom:1px solid #21262d;margin-bottom:32px}
+header h1{font-size:2rem;color:#f0f6fc;font-weight:700;margin-bottom:8px}
+header .subtitle{color:#8b949e;font-size:0.95rem}
+.badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:0.8rem;font-weight:500;margin-left:12px}
+.badge-time{background:#1f6feb22;color:#58a6ff;border:1px solid #1f6feb44}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:32px}
+.stat-card{background:#161b22;border:1px solid #21262d;border-radius:12px;padding:20px;text-align:center}
+.stat-card .num{font-size:2rem;font-weight:700;color:#f0f6fc}
+.stat-card .label{color:#8b949e;font-size:0.85rem;margin-top:4px}
+.filters{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:24px;padding:16px;background:#161b22;border:1px solid #21262d;border-radius:12px}
+.filter-group{display:flex;align-items:center;gap:8px}
+.filter-group .label{color:#8b949e;font-size:0.85rem;font-weight:600;white-space:nowrap}
+.filter-btn{padding:6px 14px;border-radius:20px;border:1px solid #30363d;background:transparent;color:#c9d1d9;font-size:0.82rem;cursor:pointer;transition:all .2s}
 .filter-btn:hover{border-color:#58a6ff;color:#58a6ff}
-.filter-btn.active{background:#1f6feb;border-color:#1f6feb;color:#fff}
-.container-section{margin:20px 0}
-.container-section h2{font-size:1.1em;color:#f0f6fc;margin-bottom:12px;display:flex;align-items:center;gap:8px}
-.container-section h2 .tag{font-size:0.7em;padding:2px 8px;border-radius:4px;font-weight:500}
-.tag-projects{background:#238636;color:#fff}
-.tag-areas{background:#8957e5;color:#fff}
-.tag-resources{background:#d29922;color:#fff}
-.tag-archives{background:#6e7681;color:#fff}
-.entry{background:#161b22;border:1px solid #21262d;border-radius:8px;padding:16px 20px;margin-bottom:12px;transition:border-color .15s}
-.entry:hover{border-color:#30363d}
-.entry-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
-.entry-title{font-weight:600;color:#f0f6fc;font-size:0.95em}
-.stage{font-size:0.72em;padding:1px 8px;border-radius:4px;white-space:nowrap}
-.stage-green{background:#238636;color:#fff}
-.stage-orange{background:#d29922;color:#fff}
-.stage-purple{background:#8957e5;color:#fff}
-.stage-black{background:#484f58;color:#fff}
-.stage-blue{background:#1f6feb;color:#fff}
-.stage-red{background:#da3633;color:#fff}
-.entry-summary{color:#8b949e;font-size:0.85em;line-height:1.55}
-.entry-reason{margin-top:6px;font-size:0.78em;color:#58a6ff;font-style:italic}
-.entry-file{margin-top:6px;font-size:0.72em;color:#6e7681}
-.footer{text-align:center;padding:30px 0 10px;border-top:1px solid #21262d;margin-top:30px;color:#484f58;font-size:0.78em}
-@media(max-width:600px){.stats{flex-direction:column;align-items:center}.filters{flex-direction:column;align-items:center}}
+.filter-btn.active{background:#1f6feb;color:#fff;border-color:#1f6feb}
+.filter-btn .count{opacity:0.7;margin-left:4px}
+.section{margin-bottom:32px}
+.section-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid #21262d}
+.section-header h2{font-size:1.2rem;color:#f0f6fc}
+.section-icon{font-size:1.3rem}
+.cards{display:grid;gap:12px}
+.card{background:#161b22;border:1px solid #21262d;border-radius:10px;padding:16px 20px;transition:all .25s;border-left:3px solid transparent}
+.card:hover{border-color:#30363d;background:#1c2128}
+.card.projects{border-left-color:#1f6feb}
+.card.areas{border-left-color:#238636}
+.card.resources{border-left-color:#d29922}
+.card.archives{border-left-color:#8b949e}
+.card-top{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.container-tag{display:inline-block;padding:2px 10px;border-radius:12px;font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
+.tag-projects{background:#1f6feb22;color:#58a6ff}
+.tag-areas{background:#23863622;color:#3fb950}
+.tag-resources{background:#d2992222;color:#d29922}
+.tag-archives{background:#8b949e22;color:#8b949e}
+.stage-tag{font-size:0.78rem;padding:2px 8px;border-radius:10px;font-weight:500}
+.stage-获取{background:#1f6feb22;color:#58a6ff}
+.stage-理解{background:#23863622;color:#3fb950}
+.stage-拓展{background:#d2992222;color:#d29922}
+.stage-纠错{background:#f8514922;color:#f85149}
+.stage-测试{background:#a371f722;color:#a371f7}
+.stage-应用{background:#30363d;color:#8b949e}
+.card-content{color:#c9d1d9;font-size:0.92rem;line-height:1.7}
+.card-meta{display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap}
+.card-file{font-size:0.75rem;color:#8b949e;background:#0d1117;padding:2px 8px;border-radius:6px;font-family:'SFMono-Regular',Consolas,monospace}
+.card-tags{display:flex;gap:4px;flex-wrap:wrap}
+.card-tags span{font-size:0.7rem;color:#58a6ff;background:#1f6feb11;padding:1px 6px;border-radius:4px}
+.empty-state{text-align:center;padding:60px 20px;color:#484f58}
+.empty-state .icon{font-size:3rem;margin-bottom:12px}
+footer{text-align:center;padding:32px 0;color:#484f58;font-size:0.8rem;border-top:1px solid #21262d;margin-top:40px}
+@media(max-width:640px){.container{padding:16px}.stats{grid-template-columns:1fr 1fr}.filters{flex-direction:column}}
 </style>
 </head>
 <body>
 <div class="container">
 <header>
-<h1>🧠 Memory Journal <span class="badge">2026-06-29 20:13 CST</span></h1>
-<div class="subtitle">陈述性知识库 · 双重过滤 · PARA 结构</div>
+<h1>🧠 Memory Journal <span class="badge badge-time">2026-06-30 19:00 CST</span></h1>
+<p class="subtitle">陈述性知识库 · 双过滤系统 · 宁缺毋滥</p>
 </header>
 
 <div class="stats">
-<div class="stat-card"><div class="num">3</div><div class="label">总条目</div></div>
-<div class="stat-card"><div class="num">3</div><div class="label">活跃容器</div></div>
-<div class="stat-card"><div class="num">67%</div><div class="label">应用成熟度</div></div>
+<div class="stat-card"><div class="num" id="totalCount">17</div><div class="label">总条目数</div></div>
+<div class="stat-card"><div class="num" id="activeContainers">2</div><div class="label">活跃容器</div></div>
+<div class="stat-card"><div class="num" id="appMaturity">0%</div><div class="label">应用成熟度</div></div>
+<div class="stat-card"><div class="num" id="acquireStage">100%</div><div class="label">获取阶段占比</div></div>
 </div>
 
 <div class="filters">
 <div class="filter-group">
-<span class="glabel">容器:</span>
-<button class="filter-btn active" data-filter="container" data-value="all">全部</button>
-<button class="filter-btn" data-filter="container" data-value="projects">projects</button>
-<button class="filter-btn" data-filter="container" data-value="areas">areas</button>
-<button class="filter-btn" data-filter="container" data-value="archives">archives</button>
+<span class="label">📂 容器</span>
+<button class="filter-btn active" data-filter="container" data-value="all">全部 <span class="count">17</span></button>
+<button class="filter-btn" data-filter="container" data-value="projects">Projects <span class="count">12</span></button>
+<button class="filter-btn" data-filter="container" data-value="areas">Areas <span class="count">5</span></button>
+<button class="filter-btn" data-filter="container" data-value="resources">Resources <span class="count">0</span></button>
+<button class="filter-btn" data-filter="container" data-value="archives">Archives <span class="count">0</span></button>
 </div>
 <div class="filter-group">
-<span class="glabel">阶段:</span>
+<span class="label">🏷️ 阶段</span>
 <button class="filter-btn active" data-filter="stage" data-value="all">全部</button>
-<button class="filter-btn" data-filter="stage" data-value="🟢理解">🟢理解</button>
-<button class="filter-btn" data-filter="stage" data-value="⚫应用">⚫应用</button>
+<button class="filter-btn" data-filter="stage" data-value="获取">🔵 获取</button>
+<button class="filter-btn" data-filter="stage" data-value="理解">🟢 理解</button>
+<button class="filter-btn" data-filter="stage" data-value="拓展">🟠 拓展</button>
+<button class="filter-btn" data-filter="stage" data-value="纠错">🔴 纠错</button>
+<button class="filter-btn" data-filter="stage" data-value="测试">🟣 测试</button>
+<button class="filter-btn" data-filter="stage" data-value="应用">⚫ 应用</button>
 </div>
 </div>
 
-<div class="container-section" data-container="projects">
-<h2><span class="tag tag-projects">projects</span> 项目</h2>
-<div class="entry" data-container="projects" data-stage="🟢理解">
-<div class="entry-header">
-<span class="entry-title">AI自动化调试机器人开发思路</span>
-<span class="stage stage-green">🟢理解</span>
+<div id="sections">
+
+<div class="section" data-container="projects">
+<div class="section-header"><span class="section-icon">🚀</span><h2>Projects — 项目驱动知识</h2></div>
+<div class="cards">
+
+<div class="card projects" data-container="projects" data-stage="获取">
+<div class="card-top"><span class="container-tag tag-projects">Projects</span><span class="stage-tag stage-获取">🔵 获取</span></div>
+<div class="card-content">OpenArmX AI 自动化调试系统技术蓝图：集成 Ubuntu 22.04、ROS2 Humble 和基于 Shell 的自动化脚本，用于结构化系统验证。</div>
+<div class="card-meta"><span class="card-file">OpenArmX-AI自动化调试/OpenArmX_AI_Automated_Debugging_Plan.md</span><div class="card-tags"><span>openarmx</span><span>AI调试</span><span>计划书</span></div></div>
 </div>
-<div class="entry-summary">五层渐进式机器人自动调试管线框架：环境验证→硬件诊断→通信验证→运动测试→智能错误分析。属于方法论层面的概念知识，跨项目可复用。</div>
-<div class="entry-reason">声明式概念框架，非一次性事件记录</div>
-<div class="entry-file">📁 projects/OpenArmX-AI自动化调试/Ai自动化调试机器人个人思路笔记.md</div>
+
+<div class="card projects" data-container="projects" data-stage="获取">
+<div class="card-top"><span class="container-tag tag-projects">Projects</span><span class="stage-tag stage-获取">🔵 获取</span></div>
+<div class="card-content">AI 驱动机器人调试的概念框架：五层渐进式部署流水线 — 环境验证、硬件诊断、通信验证、运动测试、智能错误分析。</div>
+<div class="card-meta"><span class="card-file">OpenArmX-AI自动化调试/Ai自动化调试机器人个人思路笔记.md</span><div class="card-tags"><span>openarmx</span><span>AI调试</span><span>思路</span></div></div>
+</div>
+
+<div class="card projects" data-container="projects" data-stage="获取">
+<div class="card-top"><span class="container-tag tag-projects">Projects</span><span class="stage-tag stage-获取">🔵 获取</span></div>
+<div class="card-content">OpenArm 1.0 装配 SOP：7-DOF 机器人配置，Damiao BLDC 电机，装配公差 0.02mm 同轴度，24V CAN 总线电气参数。</div>
+<div class="card-meta"><span class="card-file">OpenArm/2026-06-01-OpenArm流水线组装SOP.md</span><div class="card-tags"><span>openarm</span><span>SOP</span><span>组装</span></div></div>
+</div>
+
+<div class="card projects" data-container="projects" data-stage="获取">
+<div class="card-top"><span class="container-tag tag-projects">Projects</span><span class="stage-tag stage-获取">🔵 获取</span></div>
+<div class="card-content">OpenArm 1.0 SOP 详情：Enactic 开源机械臂，8 工位组装（150-225 分钟），BOM 约 $6,500/对，预组装电机 ID 配置、走线、QC 测试。</div>
+<div class="card-meta"><span class="card-file">OpenArm/2026-06-01-OpenArm流水线组装SOP.md</span><div class="card-tags"><span>openarm</span><span>sop</span><span>assembly</span><span>bom</span><span>qc</span></div></div>
+</div>
+
+<div class="card projects" data-container="projects" data-stage="获取">
+<div class="card-top"><span class="container-tag tag-projects">Projects</span><span class="stage-tag stage-获取">🔵 获取</span></div>
+<div class="card-content">五层调试流水线：Layer 0 环境验证（18 项检查）→ Layer 1 硬件自动诊断 → Layer 2 通信链路验证 → Layer 3 运动功能测试（MIT/CSP）→ Layer 4 异常智能诊断（14 种类型）。</div>
+<div class="card-meta"><span class="card-file">OpenArmX-AI自动化调试/Ai自动化调试机器人个人思路笔记.md</span><div class="card-tags"><span>openarmx</span><span>AI调试</span><span>流水线</span></div></div>
+</div>
+
+<div class="card projects" data-container="projects" data-stage="获取">
+<div class="card-top"><span class="container-tag tag-projects">Projects</span><span class="stage-tag stage-获取">🔵 获取</span></div>
+<div class="card-content">关键装配参数：关节安装同轴度 ≤ 0.02mm，齿轮预紧 ±5%，线缆弯曲半径 ≥ 5 倍外径。</div>
+<div class="card-meta"><span class="card-file">OpenArm/2026-06-01-OpenArm流水线组装SOP.md</span><div class="card-tags"><span>openarm</span><span>SOP</span><span>公差</span></div></div>
+</div>
+
+<div class="card projects" data-container="projects" data-stage="获取">
+<div class="card-top"><span class="container-tag tag-projects">Projects</span><span class="stage-tag stage-获取">🔵 获取</span></div>
+<div class="card-content">AI 自动化调试策略：Hermes 读取文档生成计划 → 部署 → 封装为一键脚本（AI 先行运行，再生成）→ 脚本托管于 GitHub。</div>
+<div class="card-meta"><span class="card-file">OpenArmX-AI自动化调试/Ai自动化调试机器人个人思路笔记.md</span><div class="card-tags"><span>openarmx</span><span>AI调试</span><span>自动化</span></div></div>
+</div>
+
+<div class="card projects" data-container="projects" data-stage="获取">
+<div class="card-top"><span class="container-tag tag-projects">Projects</span><span class="stage-tag stage-获取">🔵 获取</span></div>
+<div class="card-content">完整 BOM 构成：MiSUMi 标准件 + CNC 加工件 + Damiao 电机。</div>
+<div class="card-meta"><span class="card-file">OpenArm/2026-06-01-OpenArm流水线组装SOP.md</span><div class="card-tags"><span>openarm</span><span>SOP</span><span>BOM</span></div></div>
+</div>
+
+<div class="card projects" data-container="projects" data-stage="获取">
+<div class="card-top"><span class="container-tag tag-projects">Projects</span><span class="stage-tag stage-获取">🔵 获取</span></div>
+<div class="card-content">OpenArm 1.0 SOP 目标产能：小批量组装（10-50 台/月）。</div>
+<div class="card-meta"><span class="card-file">OpenArm/2026-06-01-OpenArm流水线组装SOP.md</span><div class="card-tags"><span>openarm</span><span>SOP</span><span>产能</span></div></div>
+</div>
+
+<div class="card projects" data-container="projects" data-stage="获取">
+<div class="card-top"><span class="container-tag tag-projects">Projects</span><span class="stage-tag stage-获取">🔵 获取</span></div>
+<div class="card-content">电机规格：J1/J2 用 DM-J8009P（20 Nm），J3 用 DM-J4340P（9 Nm），J4 用 DM-J4340（9 Nm），J5-J8 用 DM-J4310（3 Nm）；全部 24V BLDC + 14-bit 编码器。</div>
+<div class="card-meta"><span class="card-file">OpenArm/2026-06-01-OpenArm流水线组装SOP.md</span><div class="card-tags"><span>openarm</span><span>电机</span><span>Damiao</span></div></div>
+</div>
+
+<div class="card projects" data-container="projects" data-stage="获取">
+<div class="card-top"><span class="container-tag tag-projects">Projects</span><span class="stage-tag stage-获取">🔵 获取</span></div>
+<div class="card-content">OpenArm 1.0 核心规格：7 DOF + 1 夹爪，额定负载 4.1 kg，峰值负载 6.0 kg，CAN 总线，24V，双臂系统约 $6,500。</div>
+<div class="card-meta"><span class="card-file">OpenArm/2026-06-01-OpenArm流水线组装SOP.md</span><div class="card-tags"><span>openarm</span><span>规格</span><span>参数</span></div></div>
+</div>
+
+<div class="card projects" data-container="projects" data-stage="获取">
+<div class="card-top"><span class="container-tag tag-projects">Projects</span><span class="stage-tag stage-获取">🔵 获取</span></div>
+<div class="card-content">安全防护要求：安全眼镜、安全鞋、手套；必须连接急停开关；操作过程中保护线缆。</div>
+<div class="card-meta"><span class="card-file">OpenArm/2026-06-01-OpenArm流水线组装SOP.md</span><div class="card-tags"><span>openarm</span><span>safety</span><span>PPE</span></div></div>
+</div>
+
 </div>
 </div>
 
-<div class="container-section" data-container="areas">
-<h2><span class="tag tag-areas">areas</span> 领域</h2>
-<div class="entry" data-container="areas" data-stage="⚫应用">
-<div class="entry-header">
-<span class="entry-title">具身智能机器人组装流水线管理指南</span>
-<span class="stage stage-black">⚫应用</span>
+<div class="section" data-container="areas">
+<div class="section-header"><span class="section-icon">🏗️</span><h2>Areas — 领域知识</h2></div>
+<div class="cards">
+
+<div class="card areas" data-container="areas" data-stage="获取">
+<div class="card-top"><span class="container-tag tag-areas">Areas</span><span class="stage-tag stage-获取">🔵 获取</span></div>
+<div class="card-content">具身智能机器人组装流水线全方位管理手册：行业背景对比、SOP 体系、质量管理、车间区域划分、物料物流、ERP/MES、人员培训、安全管理、精益生产、KPI + 行业标杆。</div>
+<div class="card-meta"><span class="card-file">robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</span><div class="card-tags"><span>robot-assembly</span><span>流水线管理</span><span>精益生产</span></div></div>
 </div>
-<div class="entry-summary">四阶段组装流程框架（子组件预装→整机测试）、IQC质量控制、ESD防护、ERP集成标准、关节定位精度工艺参数。面向车间主任的持续管理知识。</div>
-<div class="entry-reason">领域管理知识，长期有效，已进入应用阶段</div>
-<div class="entry-file">📁 areas/robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</div>
+
+<div class="card areas" data-container="areas" data-stage="获取">
+<div class="card-top"><span class="container-tag tag-areas">Areas</span><span class="stage-tag stage-获取">🔵 获取</span></div>
+<div class="card-content">安全与 ESD 防护体系：7 大危险源识别、分级安全标识、日巡检制度、应急演练流程。</div>
+<div class="card-meta"><span class="card-file">robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</span><div class="card-tags"><span>robot-assembly</span><span>ESD</span><span>安全管理</span></div></div>
+</div>
+
+<div class="card areas" data-container="areas" data-stage="获取">
+<div class="card-top"><span class="container-tag tag-areas">Areas</span><span class="stage-tag stage-获取">🔵 获取</span></div>
+<div class="card-content">ERP/MES 系统集成架构：ERP → MES → SCADA/IoT → 物理执行层，BOM 多版本管理、替代料处理、ECN 变更流程。</div>
+<div class="card-meta"><span class="card-file">robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</span><div class="card-tags"><span>robot-assembly</span><span>ERP</span><span>MES</span></div></div>
+</div>
+
+<div class="card areas" data-container="areas" data-stage="获取">
+<div class="card-top"><span class="container-tag tag-areas">Areas</span><span class="stage-tag stage-获取">🔵 获取</span></div>
+<div class="card-content">机器人组装质量管理要点：来料检验（IQC）、过程检验（IPQC）、出货检验（OQC）三级质量关卡，关节精度检测与标定验证。</div>
+<div class="card-meta"><span class="card-file">robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</span><div class="card-tags"><span>robot-assembly</span><span>质量管理</span><span>IQC</span><span>OQC</span></div></div>
+</div>
+
+<div class="card areas" data-container="areas" data-stage="获取">
+<div class="card-top"><span class="container-tag tag-areas">Areas</span><span class="stage-tag stage-获取">🔵 获取</span></div>
+<div class="card-content">精益生产在机器人组装中的应用：单元化生产布局、标准作业、看板管理、快速换型（SMED）、持续改善（Kaizen）。</div>
+<div class="card-meta"><span class="card-file">robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</span><div class="card-tags"><span>robot-assembly</span><span>精益生产</span><span>Kaizen</span></div></div>
+</div>
+
 </div>
 </div>
 
-<div class="container-section" data-container="archives">
-<h2><span class="tag tag-archives">archives</span> 归档</h2>
-<div class="entry" data-container="archives" data-stage="⚫应用">
-<div class="entry-header">
-<span class="entry-title">Gitea 私人网站项目弃用说明</span>
-<span class="stage stage-black">⚫应用</span>
-</div>
-<div class="entry-summary">弃用 Gitea 1.22.6 Pages + Cloudflare 隧道方案，回退至 GitHub Pages (wxcadk.github.io)。记录了基础设施选型决策及其原因。</div>
-<div class="entry-reason">基础设施决策记录，避免重复踩坑，有长期参考价值</div>
-<div class="entry-file">📁 archives/Gitea私人网站创建/目前状态.md</div>
-</div>
+<div class="section" data-container="resources" style="display:none">
+<div class="section-header"><span class="section-icon">📚</span><h2>Resources — 资源知识</h2></div>
+<div class="cards"><div class="empty-state"><div class="icon">📭</div><p>本期无收录条目</p></div></div>
 </div>
 
-<div class="footer">
-Memory Journal · 每日自动整理 · 宁缺毋滥 · 双重过滤（文件夹 + 质量）
+<div class="section" data-container="archives" style="display:none">
+<div class="section-header"><span class="section-icon">📦</span><h2>Archives — 归档知识</h2></div>
+<div class="cards"><div class="empty-state"><div class="icon">📭</div><p>本期无收录条目</p></div></div>
 </div>
+
+</div>
+
+<footer>
+Memory Journal · 宁缺毋滥 · 双过滤系统 · 数据来源: SuperMemory + PARA 文件夹<br>
+自动更新于 2026-06-30 19:00 CST · <a href="https://github.com/wxcadk/wxcadk.github.io" style="color:#58a6ff">GitHub</a>
+</footer>
 </div>
 
 <script>
-document.querySelectorAll('.filter-btn').forEach(btn=>{
-btn.addEventListener('click',()=>{
-const group=btn.dataset.filter;
-const val=btn.dataset.value;
-document.querySelectorAll(`.filter-btn[data-filter="${group}"]`).forEach(b=>b.classList.remove('active'));
-btn.classList.add('active');
-const activeContainer=document.querySelector('.filter-btn[data-filter="container"].active').dataset.value;
-const activeStage=document.querySelector('.filter-btn[data-filter="stage"].active').dataset.value;
-document.querySelectorAll('.entry').forEach(e=>{
-const matchC=activeContainer==='all'||e.dataset.container===activeContainer;
-const matchS=activeStage==='all'||e.dataset.stage===activeStage;
-e.style.display=(matchC&&matchS)?'':'none';
+const allCards = document.querySelectorAll('.card');
+const containerBtns = document.querySelectorAll('[data-filter="container"]');
+const stageBtns = document.querySelectorAll('[data-filter="stage"]');
+let activeContainer = 'all';
+let activeStage = 'all';
+
+function updateFilters() {
+  let visible = 0;
+  allCards.forEach(card => {
+    const c = card.dataset.container;
+    const s = card.dataset.stage;
+    const showC = activeContainer === 'all' || c === activeContainer;
+    const showS = activeStage === 'all' || s === activeStage;
+    card.style.display = (showC && showS) ? '' : 'none';
+    if (showC && showS) visible++;
+  });
+  document.getElementById('totalCount').textContent = visible;
+  // Show/hide sections
+  document.querySelectorAll('.section').forEach(sec => {
+    const sc = sec.dataset.container;
+    if (activeContainer !== 'all' && sc !== activeContainer) {
+      sec.style.display = 'none';
+    } else {
+      sec.style.display = '';
+      // Check if any visible cards
+      const hasVisible = sec.querySelectorAll('.card:not([style*="display: none"])').length > 0;
+      sec.style.display = hasVisible ? '' : 'none';
+    }
+  });
+}
+
+containerBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    containerBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeContainer = btn.dataset.value;
+    updateFilters();
+  });
 });
-document.querySelectorAll('.container-section').forEach(s=>{
-const hasVisible=[...s.querySelectorAll('.entry')].some(e=>e.style.display!=='none');
-s.style.display=hasVisible?'':'none';
-});
-});
+
+stageBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    stageBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeStage = btn.dataset.value;
+    updateFilters();
+  });
 });
 </script>
 </body>

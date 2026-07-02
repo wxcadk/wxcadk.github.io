@@ -62,25 +62,25 @@ footer{text-align:center;padding:32px 0;color:#484f58;font-size:0.8rem;border-to
 <body>
 <div class="container">
 <header>
-<h1>🧠 Memory Journal <span class="badge badge-time">2026-07-01 19:03 CST</span></h1>
+<h1>🧠 Memory Journal <span class="badge badge-time">2026-07-02 19:03 CST</span></h1>
 <p class="subtitle">陈述性知识库 · 双过滤系统 · 宁缺毋滥</p>
 </header>
 
 <div class="stats">
-<div class="stat-card"><div class="num" id="totalCount">16</div><div class="label">总条目数</div></div>
-<div class="stat-card"><div class="num" id="activeContainers">2</div><div class="label">活跃容器</div></div>
-<div class="stat-card"><div class="num" id="appMaturity">0%</div><div class="label">应用成熟度</div></div>
-<div class="stat-card"><div class="num" id="acquireStage">25%</div><div class="label">获取阶段占比</div></div>
+<div class="stat-card"><div class="num" id="totalCount">4</div><div class="label">总条目数</div></div>
+<div class="stat-card"><div class="num" id="activeContainers">3</div><div class="label">活跃容器</div></div>
+<div class="stat-card"><div class="num" id="appMaturity">25%</div><div class="label">应用成熟度</div></div>
+<div class="stat-card"><div class="num" id="acquireStage">50%</div><div class="label">获取阶段占比</div></div>
 </div>
 
 <div class="filters">
 <div class="filter-group">
 <span class="label">📂 容器</span>
-<button class="filter-btn active" data-filter="container" data-value="all">全部 <span class="count">16</span></button>
-<button class="filter-btn" data-filter="container" data-value="projects">Projects <span class="count">8</span></button>
-<button class="filter-btn" data-filter="container" data-value="areas">Areas <span class="count">8</span></button>
+<button class="filter-btn active" data-filter="container" data-value="all">全部 <span class="count">4</span></button>
+<button class="filter-btn" data-filter="container" data-value="projects">Projects <span class="count">2</span></button>
+<button class="filter-btn" data-filter="container" data-value="areas">Areas <span class="count">1</span></button>
 <button class="filter-btn" data-filter="container" data-value="resources">Resources <span class="count">0</span></button>
-<button class="filter-btn" data-filter="container" data-value="archives">Archives <span class="count">0</span></button>
+<button class="filter-btn" data-filter="container" data-value="archives">Archives <span class="count">1</span></button>
 </div>
 <div class="filter-group">
 <span class="label">🏷️ 阶段</span>
@@ -98,94 +98,25 @@ footer{text-align:center;padding:32px 0;color:#484f58;font-size:0.8rem;border-to
 
 <div class="section" data-container="projects">
 <div class="section-header"><span class="section-icon">🚀</span><h2>Projects — 项目驱动知识</h2></div>
-<div class="cards">
-<div class="card projects" data-container="projects" data-stage="获取">
+<div class="cards"><div class="card projects" data-container="projects" data-stage="获取">
 <div class="card-top"><span class="container-tag tag-projects">Projects</span><span class="stage-tag stage-获取">🔵 获取</span></div>
-<div class="card-content">OpenArmX AI 自动化调试系统技术蓝图：集成 Ubuntu 22.04、ROS2 Humble 和 Shell 自动化脚本，用于结构化系统验证。</div>
-<div class="card-meta"><span class="card-file">OpenArmX-AI自动化调试/OpenArmX_AI_Automated_Debugging_Plan.md</span><div class="card-tags"><span>openarmx</span><span>AI调试</span><span>计划书</span></div></div>
+<div class="card-content">OpenArmX AI 自动化调试计划书 v1.0：构建 AI 驱动的自动化调试系统，实现环境自动配置→硬件自动诊断→通信链路验证→运动功能测试→异常诊断→报告生成。核心设计：逐层递进（每层通过后才进入下一层）、安全第一（运动测试前必须通过硬件/通信验证）、人机协同（关键步骤需人工确认）。技术栈：Ubuntu 22.04 + ROS2 Humble + KCAN 8.20.0 + openarmx_arm_driver 1.3.3。已有完整脚本体系：setup.sh/hwcheck.sh/commcheck.sh/layer3_test.sh(16/16✓)。规范：.sh独立运行+交互菜单+--auto模式。</div>
+<div class="card-meta"><span class="card-file">OpenArmX-AI自动化调试/Ai自动化调试机器人个人思路笔记.md</span><div class="card-tags"><span>openarmx</span><span>AI调试</span><span>计划书</span></div></div>
 </div>
-<div class="card projects" data-container="projects" data-stage="获取">
-<div class="card-top"><span class="container-tag tag-projects">Projects</span><span class="stage-tag stage-获取">🔵 获取</span></div>
-<div class="card-content">AI 驱动机器人调试概念框架：五层渐进式部署流水线 — 环境验证、硬件诊断、通信验证、运动测试、智能错误分析。</div>
-<div class="card-meta"><span class="card-file">OpenArmX-AI自动化调试/Ai自动化调试机器人个人思路笔记.md</span><div class="card-tags"><span>openarmx</span><span>AI调试</span><span>思路</span></div></div>
-</div>
-<div class="card projects" data-container="projects" data-stage="理解">
-<div class="card-top"><span class="container-tag tag-projects">Projects</span><span class="stage-tag stage-理解">🟢 理解</span></div>
-<div class="card-content">五层调试流水线详解：Layer 0 环境验证（18 项检查）→ Layer 1 硬件自动诊断 → Layer 2 通信链路验证 → Layer 3 运动功能测试（MIT/CSP）→ Layer 4 异常智能诊断（14 种类型）。</div>
-<div class="card-meta"><span class="card-file">OpenArmX-AI自动化调试/Ai自动化调试机器人个人思路笔记.md</span><div class="card-tags"><span>openarmx</span><span>AI调试</span><span>流水线</span></div></div>
-</div>
-<div class="card projects" data-container="projects" data-stage="理解">
-<div class="card-top"><span class="container-tag tag-projects">Projects</span><span class="stage-tag stage-理解">🟢 理解</span></div>
-<div class="card-content">OpenArm 1.0 核心规格：7 DOF + 1 夹爪，额定负载 4.1 kg，峰值 6.0 kg，24V CAN 总线，双臂系统约 $6,500 USD。</div>
-<div class="card-meta"><span class="card-file">OpenArm/2026-06-01-OpenArm流水线组装SOP.md</span><div class="card-tags"><span>openarm</span><span>规格</span><span>参数</span></div></div>
-</div>
-<div class="card projects" data-container="projects" data-stage="理解">
-<div class="card-top"><span class="container-tag tag-projects">Projects</span><span class="stage-tag stage-理解">🟢 理解</span></div>
-<div class="card-content">OpenArm 1.0 装配 SOP：Enactic 开源机械臂，8 工位组装（150-225 分钟），BOM 约 $6,500/对，Damiao BLDC 电机，装配公差 0.02mm 同轴度。</div>
-<div class="card-meta"><span class="card-file">OpenArm/2026-06-01-OpenArm流水线组装SOP.md</span><div class="card-tags"><span>openarm</span><span>SOP</span><span>组装</span></div></div>
-</div>
-<div class="card projects" data-container="projects" data-stage="理解">
-<div class="card-top"><span class="container-tag tag-projects">Projects</span><span class="stage-tag stage-理解">🟢 理解</span></div>
-<div class="card-content">电机规格：J1/J2 用 DM-J8009P（20 Nm），J3 用 DM-J4340P（9 Nm），J4 用 DM-J4340（9 Nm），J5-J8 用 DM-J4310（3 Nm）；全部 24V BLDC + 14-bit 编码器。</div>
-<div class="card-meta"><span class="card-file">OpenArm/2026-06-01-OpenArm流水线组装SOP.md</span><div class="card-tags"><span>openarm</span><span>电机</span><span>Damiao</span></div></div>
-</div>
-<div class="card projects" data-container="projects" data-stage="理解">
-<div class="card-top"><span class="container-tag tag-projects">Projects</span><span class="stage-tag stage-理解">🟢 理解</span></div>
-<div class="card-content">OpenArm 训练周期 2-4 周；组装良率 90-95%（消费级设备 >99%）；关键装配参数：关节同轴度 ≤ 0.02mm，齿轮预紧 ±5%，线缆弯曲半径 ≥ 5 倍外径。</div>
-<div class="card-meta"><span class="card-file">OpenArm/2026-06-01-OpenArm流水线组装SOP.md</span><div class="card-tags"><span>openarm</span><span>良率</span><span>公差</span></div></div>
-</div>
-<div class="card projects" data-container="projects" data-stage="理解">
-<div class="card-top"><span class="container-tag tag-projects">Projects</span><span class="stage-tag stage-理解">🟢 理解</span></div>
-<div class="card-content">OpenArm 官方资源：docs.openarm.dev（文档）、GitHub enactic/openarm_hardware（硬件仓库）、MiSUMi/MEVIY（标准件采购）、Discord 社区。</div>
-<div class="card-meta"><span class="card-file">OpenArm/2026-06-01-OpenArm流水线组装SOP.md</span><div class="card-tags"><span>openarm</span><span>资源</span><span>链接</span></div></div>
-</div>
-</div>
+<div class="card projects" data-container="projects" data-stage="应用">
+<div class="card-top"><span class="container-tag tag-projects">Projects</span><span class="stage-tag stage-应用">⚫ 应用</span></div>
+<div class="card-content">OpenArm 1.0 流水线组装 SOP（标准作业程序）：8工站流水线 · BOM ¥98万日元/臂 · 150-225分钟/臂 · 适用于小批量10-50台/月。OpenArm 是 Enactic 公司开源的 7 自由度仿人机械臂。核心参数：7DOF+1夹爪、额定负载4.1kg、峰值6.0kg、CAN总线、24V供电（J1/J2支持24-48V）、双臂~$6,500 USD。电机规格：DM-J8009P(J1J2肩/20Nm/896g)、DM-J4340P(J3上臂/9Nm/362g)、DM-J4340(J4肘/9Nm)、DM-J4310(J5-J8前臂腕夹爪/3Nm/300g)，全部24V BLDC、14-bit双编码器、CAN接口。BOM总览：电机¥397,356 + 加工件¥316,018(CNC Al6061+SUS304钣金/MiSUMi MEVIY) + 标准件¥34,336 + 底座¥20,222 + 夹爪¥107,942 + 末端执行器¥22,940 + 电气件¥84,564 = 总计~¥983,378。</div>
+<div class="card-meta"><span class="card-file">OpenArm/2026-06-01-OpenArm流水线组装SOP.md</span><div class="card-tags"><span>openarm</span><span>SOP</span><span>BOM</span></div></div>
+</div></div>
 </div>
 
 <div class="section" data-container="areas">
 <div class="section-header"><span class="section-icon">🏗️</span><h2>Areas — 领域知识</h2></div>
-<div class="cards">
-<div class="card areas" data-container="areas" data-stage="获取">
+<div class="cards"><div class="card areas" data-container="areas" data-stage="获取">
 <div class="card-top"><span class="container-tag tag-areas">Areas</span><span class="stage-tag stage-获取">🔵 获取</span></div>
-<div class="card-content">具身智能机器人组装流水线全方位管理手册：行业背景对比、四阶段组装逻辑、SOP 体系、质量管理、车间区域划分、物料物流、ERP/MES、人员培训、安全管理、精益生产、KPI 体系。</div>
-<div class="card-meta"><span class="card-file">robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</span><div class="card-tags"><span>robot-assembly</span><span>流水线管理</span><span>精益生产</span></div></div>
-</div>
-<div class="card areas" data-container="areas" data-stage="获取">
-<div class="card-top"><span class="container-tag tag-areas">Areas</span><span class="stage-tag stage-获取">🔵 获取</span></div>
-<div class="card-content">流水线四阶段组装逻辑 + 六个关键质量门控（QG1-QG6），目标直通率 ≥ 97%。差异化生产流程适应不同产品类型。</div>
-<div class="card-meta"><span class="card-file">robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</span><div class="card-tags"><span>robot-assembly</span><span>质量门控</span><span>直通率</span></div></div>
-</div>
-<div class="card areas" data-container="areas" data-stage="理解">
-<div class="card-top"><span class="container-tag tag-areas">Areas</span><span class="stage-tag stage-理解">🟢 理解</span></div>
-<div class="card-content">IQC 三层策略：A 类件 100% 全检 + AQL 0.65；B 类件 AQL 1.0；C 类件 AQL 2.5；配合 Poka-Yoke/SPC/MES 上传的 6 个质量门。</div>
-<div class="card-meta"><span class="card-file">robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</span><div class="card-tags"><span>robot-assembly</span><span>IQC</span><span>AQL</span></div></div>
-</div>
-<div class="card areas" data-container="areas" data-stage="理解">
-<div class="card-top"><span class="container-tag tag-areas">Areas</span><span class="stage-tag stage-理解">🟢 理解</span></div>
-<div class="card-content">安全与 ESD 防护体系：7 大危险源识别、分级安全标识、日巡检制度、应急演练流程。</div>
-<div class="card-meta"><span class="card-file">robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</span><div class="card-tags"><span>robot-assembly</span><span>ESD</span><span>安全管理</span></div></div>
-</div>
-<div class="card areas" data-container="areas" data-stage="理解">
-<div class="card-top"><span class="container-tag tag-areas">Areas</span><span class="stage-tag stage-理解">🟢 理解</span></div>
-<div class="card-content">KPI 体系：OEE ≥ 85%；FPY 初期 ≥ 92%，成熟 ≥ 97%；OTD ≥ 98%；不良率 ≤ 2000PPM；返修率 ≤ 2%；安全 0 事故；追溯 100%。</div>
-<div class="card-meta"><span class="card-file">robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</span><div class="card-tags"><span>robot-assembly</span><span>KPI</span><span>OEE</span><span>FPY</span></div></div>
-</div>
-<div class="card areas" data-container="areas" data-stage="理解">
-<div class="card-top"><span class="container-tag tag-areas">Areas</span><span class="stage-tag stage-理解">🟢 理解</span></div>
-<div class="card-content">ERP/MES 系统集成架构：ERP → MES → SCADA/IoT → 物理执行层，BOM 多版本管理、替代料处理、ECN 变更流程。</div>
-<div class="card-meta"><span class="card-file">robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</span><div class="card-tags"><span>robot-assembly</span><span>ERP</span><span>MES</span></div></div>
-</div>
-<div class="card areas" data-container="areas" data-stage="理解">
-<div class="card-top"><span class="container-tag tag-areas">Areas</span><span class="stage-tag stage-理解">🟢 理解</span></div>
-<div class="card-content">洁净度与 ESD 要点：ESD 地板、手环、离子风机、门禁测试、湿度 ≥ 40%RH。</div>
-<div class="card-meta"><span class="card-file">robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</span><div class="card-tags"><span>robot-assembly</span><span>ESD</span><span>洁净室</span></div></div>
-</div>
-<div class="card areas" data-container="areas" data-stage="拓展">
-<div class="card-top"><span class="container-tag tag-areas">Areas</span><span class="stage-tag stage-拓展">🟠 拓展</span></div>
-<div class="card-content">行业标杆：Tesla Optimus、Figure AI（BotQ 年产 12,000 台）、宇树科技、波士顿动力。导入 GB/T 19001、GB 11291、IATF 16949。三期路线图：0-6 月基础 → 6-12 月提升 → 12-24 月智能制造。</div>
+<div class="card-content">具身智能机器人组装行业标杆与路线图：Tesla Optimus、Figure AI（BotQ 年产12,000台）、宇树科技、波士顿动力。导入 GB/T 19001、GB 11291、IATF 16949。三期路线图：0-6月基础→6-12月提升→12-24月智能制造。</div>
 <div class="card-meta"><span class="card-file">robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</span><div class="card-tags"><span>robot-assembly</span><span>行业标杆</span><span>路线图</span></div></div>
-</div>
-</div>
+</div></div>
 </div>
 
 <div class="section" data-container="resources" style="display:none">
@@ -193,16 +124,20 @@ footer{text-align:center;padding:32px 0;color:#484f58;font-size:0.8rem;border-to
 <div class="cards"><div class="empty-state"><div class="icon">📭</div><p>本期无收录条目</p></div></div>
 </div>
 
-<div class="section" data-container="archives" style="display:none">
+<div class="section" data-container="archives">
 <div class="section-header"><span class="section-icon">📦</span><h2>Archives — 归档知识</h2></div>
-<div class="cards"><div class="empty-state"><div class="icon">📭</div><p>本期无收录条目</p></div></div>
+<div class="cards"><div class="card archives" data-container="archives" data-stage="纠错">
+<div class="card-top"><span class="container-tag tag-archives">Archives</span><span class="stage-tag stage-纠错">🔴 纠错</span></div>
+<div class="card-content">Gitea Pages 方案不可行，已弃用，已回退到 GitHub Pages（wxcadk.github.io + hacker-daily）。</div>
+<div class="card-meta"><span class="card-file">Gitea私人网站创建/目前状态.md</span><div class="card-tags"><span>gitea</span><span>GitHub Pages</span><span>方案结论</span></div></div>
+</div></div>
 </div>
 
 </div>
 
 <footer>
 Memory Journal · 宁缺毋滥 · 双过滤系统 · 数据来源: SuperMemory + PARA 文件夹<br>
-自动更新于 2026-07-01 19:03 CST · <a href="https://github.com/wxcadk/wxcadk.github.io" style="color:#58a6ff">GitHub</a>
+自动更新于 2026-07-02 19:03 CST · <a href="https://github.com/wxcadk/wxcadk.github.io" style="color:#58a6ff">GitHub</a>
 </footer>
 </div>
 

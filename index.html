@@ -3,142 +3,338 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Memory Journal</title>
+<title>Memory Journal — 陈述性知识库</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#0d1117;color:#c9d1d9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;min-height:100vh;padding:24px}
-.container{max-width:960px;margin:0 auto}
-header{text-align:center;margin-bottom:32px}
-header h1{font-size:28px;font-weight:700;color:#f0f6fc;margin-bottom:8px}
-.update-time{display:inline-block;background:#21262d;border:1px solid #30363d;border-radius:12px;padding:4px 12px;font-size:13px;color:#8b949e}
-.stats{display:flex;gap:16px;margin:24px 0;flex-wrap:wrap}
-.stat-card{flex:1;min-width:140px;background:#161b22;border:1px solid #30363d;border-radius:12px;padding:16px;text-align:center}
-.stat-num{font-size:32px;font-weight:700;color:#58a6ff}
-.stat-label{font-size:13px;color:#8b949e;margin-top:4px}
-.filters{display:flex;gap:12px;margin:24px 0;flex-wrap:wrap}
-.filter-group{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-.filter-group .label{font-size:13px;color:#8b949e;margin-right:4px}
-.filter-btn{background:#21262d;border:1px solid #30363d;border-radius:8px;padding:6px 14px;font-size:13px;color:#c9d1d9;cursor:pointer;transition:all .15s}
-.filter-btn:hover{border-color:#58a6ff;color:#58a6ff}
-.filter-btn.active{background:#1f6feb;border-color:#1f6feb;color:#fff}
-.section{margin-bottom:24px}
-.section-title{font-size:18px;font-weight:600;color:#f0f6fc;margin-bottom:12px;display:flex;align-items:center;gap:8px}
-.section-title .badge{font-size:12px;background:#21262d;border:1px solid #30363d;border-radius:6px;padding:2px 8px;color:#8b949e;font-weight:400}
-.card{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:16px;margin-bottom:12px;transition:border-color .15s}
-.card:hover{border-color:#484f58}
-.card-meta{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap}
-.tag{font-size:11px;border-radius:6px;padding:2px 8px;font-weight:500}
-.tag-projects{background:#1a3a2a;color:#3fb950;border:1px solid #238636}
-.tag-areas{background:#1a2a3a;color:#58a6ff;border:1px solid #1f6feb}
-.tag-resources{background:#3a2a1a;color:#d29922;border:1px solid #9e6a03}
-.tag-archives{background:#2a1a2a;color:#bc8cff;border:1px solid #8b5cf6}
-.stage{font-size:11px;border-radius:6px;padding:2px 8px;font-weight:500;background:#21262d;border:1px solid #30363d}
-.card-content{font-size:14px;line-height:1.7;color:#c9d1d9}
-.card-source{font-size:12px;color:#484f58;margin-top:8px;word-break:break-all}
-.empty{text-align:center;padding:48px;color:#484f58;font-size:14px}
-@media(max-width:600px){body{padding:12px}.stats{flex-direction:column}.stat-card{min-width:auto}}
+:root{--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--green:#3fb950;--orange:#d29922;--purple:#bc8cff;--red:#f85149;--blue:#58a6ff;--gray:#6e7681}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:0}
+.header{background:linear-gradient(135deg,#161b22 0%,#0d1117 100%);border-bottom:1px solid var(--border);padding:2rem 1.5rem 1.5rem;max-width:1200px;margin:0 auto}
+.header h1{font-size:1.6rem;font-weight:700;margin-bottom:.3rem}
+.header h1 span{color:var(--accent)}
+.header p{color:var(--muted);font-size:.85rem}
+.badge{display:inline-block;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:.25rem .75rem;font-size:.75rem;color:var(--muted);margin-top:.5rem}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.75rem;max-width:1200px;margin:1.5rem auto;padding:0 1.5rem}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.stat-card .num{font-size:1.8rem;font-weight:700;color:var(--accent)}
+.stat-card .label{font-size:.75rem;color:var(--muted);margin-top:.2rem}
+
+.filters{max-width:1200px;margin:1.5rem auto;padding:0 1.5rem;display:flex;flex-wrap:wrap;gap:1rem}
+.filter-group{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.filter-group .label{font-size:.8rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.filter-btn{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:.35rem .7rem;font-size:.78rem;color:var(--muted);cursor:pointer;transition:all .15s}
+.filter-btn:hover{border-color:var(--accent);color:var(--text)}
+.filter-btn.active{background:var(--accent);color:#0d1117;border-color:var(--accent);font-weight:600}
+
+.container-section{max-width:1200px;margin:1.5rem auto;padding:0 1.5rem}
+.container-title{font-size:1.1rem;font-weight:600;margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
+.container-title .dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.container-title .count{color:var(--muted);font-size:.8rem;font-weight:400}
+
+.entries{display:grid;gap:.6rem}
+.entry{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1rem 1.2rem;display:flex;align-items:flex-start;gap:1rem;transition:border-color .15s}
+.entry:hover{border-color:var(--accent)}
+.entry .stage{font-size:1.2rem;flex-shrink:0;margin-top:.1rem}
+.entry .body{flex:1}
+.entry .content{font-size:.88rem;line-height:1.6}
+.entry .meta{margin-top:.4rem;display:flex;gap:.5rem;flex-wrap:wrap}
+.entry .tag{font-size:.68rem;padding:.15rem .5rem;border-radius:4px;font-weight:600}
+.tag-container{background:#1f2937;color:var(--muted);border:1px solid var(--border)}
+.tag-stage{border:1px solid}
+.tag-获取{background:rgba(88,166,255,.1);color:var(--blue);border-color:rgba(88,166,255,.3)}
+.tag-理解{background:rgba(63,185,80,.1);color:var(--green);border-color:rgba(63,185,80,.3)}
+.tag-拓展{background:rgba(210,153,34,.1);color:var(--orange);border-color:rgba(210,153,34,.3)}
+.tag-纠错{background:rgba(248,81,73,.1);color:var(--red);border-color:rgba(248,81,73,.3)}
+.tag-测试{background:rgba(188,140,255,.1);color:var(--purple);border-color:rgba(188,140,255,.3)}
+.tag-应用{background:rgba(110,118,129,.15);color:var(--gray);border-color:rgba(110,118,129,.3)}
+
+.empty{color:var(--muted);font-size:.85rem;padding:2rem;text-align:center}
+
+.footer{text-align:center;padding:3rem 1rem;color:var(--muted);font-size:.75rem;border-top:1px solid var(--border);margin-top:3rem}
+
+.entry.hidden{display:none}
 </style>
 </head>
 <body>
-<div class="container">
-<header>
-<h1>🧠 Memory Journal</h1>
-<div class="update-time">🕐 更新于 2026-07-03 19:01 CST</div>
-</header>
+
+<div class="header">
+  <h1>🧠 Memory <span>Journal</span></h1>
+  <p>陈述性知识自动整理 · PARA 结构 · 双重过滤</p>
+  <div class="badge">🕐 更新于 2026-07-04 19:01 CST</div>
+</div>
 
 <div class="stats">
-<div class="stat-card"><div class="stat-num">2</div><div class="stat-label">总条目</div></div>
-<div class="stat-card"><div class="stat-num">2</div><div class="stat-label">活跃容器</div></div>
-<div class="stat-card"><div class="stat-num">0%</div><div class="stat-label">应用成熟度</div></div>
+  <div class="stat-card"><div class="num">22</div><div class="label">总条目</div></div>
+  <div class="stat-card"><div class="num">3</div><div class="label">活跃容器</div></div>
+  <div class="stat-card"><div class="num">68%</div><div class="label">应用成熟度</div></div>
+  <div class="stat-card"><div class="num">4</div><div class="label">学习阶段</div></div>
 </div>
 
 <div class="filters">
-<div class="filter-group">
-<span class="label">容器:</span>
-<button class="filter-btn active" data-filter="container" data-value="all">全部</button>
-<button class="filter-btn" data-filter="container" data-value="projects">projects</button>
-<button class="filter-btn" data-filter="container" data-value="areas">areas</button>
-<button class="filter-btn" data-filter="container" data-value="resources">resources</button>
-<button class="filter-btn" data-filter="container" data-value="archives">archives</button>
-</div>
-<div class="filter-group">
-<span class="label">阶段:</span>
-<button class="filter-btn active" data-filter="stage" data-value="all">全部</button>
-<button class="filter-btn" data-filter="stage" data-value="获取">🔵获取</button>
-<button class="filter-btn" data-filter="stage" data-value="理解">🟢理解</button>
-<button class="filter-btn" data-filter="stage" data-value="拓展">🟠拓展</button>
-<button class="filter-btn" data-filter="stage" data-value="纠错">🔴纠错</button>
-<button class="filter-btn" data-filter="stage" data-value="测试">🟣测试</button>
-<button class="filter-btn" data-filter="stage" data-value="应用">⚫应用</button>
-</div>
+  <div class="filter-group">
+    <span class="label">容器</span>
+    <button class="filter-btn active" data-filter="container" data-value="all">全部</button>
+    <button class="filter-btn" data-filter="container" data-value="projects">📁 projects (9)</button>
+    <button class="filter-btn" data-filter="container" data-value="areas">📁 areas (12)</button>
+    <button class="filter-btn" data-filter="container" data-value="archives">📁 archives (1)</button>
+  </div>
+  <div class="filter-group">
+    <span class="label">阶段</span>
+    <button class="filter-btn active" data-filter="stage" data-value="all">全部</button>
+    <button class="filter-btn" data-filter="stage" data-value="获取">🔵 获取</button>
+    <button class="filter-btn" data-filter="stage" data-value="理解">🟢 理解</button>
+    <button class="filter-btn" data-filter="stage" data-value="应用">⚫ 应用</button>
+  </div>
 </div>
 
-<div id="entries">
+<!-- projects -->
+<div class="container-section" data-container="projects">
+  <div class="container-title"><span class="dot" style="background:var(--accent)"></span> Projects <span class="count">(9)</span></div>
+  <div class="entries">
 
-<div class="section" data-container="projects">
-<div class="section-title">📂 Projects <span class="badge">1</span></div>
-<div class="card" data-container="projects" data-stage="获取">
-<div class="card-meta">
-<span class="tag tag-projects">projects</span>
-<span class="stage">🔵获取</span>
-</div>
-<div class="card-content">OpenArm training duration is 2-4 weeks; yield 90-95% (vs >99% for consumer-grade devices).</div>
-<div class="card-source">📁 1 projects/OpenArm/2026-06-01-OpenArm流水线组装SOP.md</div>
-</div>
+    <div class="entry" data-container="projects" data-stage="获取">
+      <div class="stage">🔵</div>
+      <div class="body">
+        <div class="content">OpenArmX-Pro-Max: dual-arm 7-DOF × 2 collaborative robot, Robstride direct-drive motors.</div>
+        <div class="meta"><span class="tag tag-container">projects</span><span class="tag tag-stage tag-获取">🔵 获取</span></div>
+      </div>
+    </div>
+
+    <div class="entry" data-container="projects" data-stage="获取">
+      <div class="stage">🔵</div>
+      <div class="body">
+        <div class="content">OpenArmX software stack: motor_manager, tools (gripper/teach), ros2 (ROS2+MoveIt), description (URDF), teleop_bimanual, arm_driver (Arm/Robot/can_utils).</div>
+        <div class="meta"><span class="tag tag-container">projects</span><span class="tag tag-stage tag-获取">🔵 获取</span></div>
+      </div>
+    </div>
+
+    <div class="entry" data-container="projects" data-stage="获取">
+      <div class="stage">🔵</div>
+      <div class="body">
+        <div class="content">OpenArmX control modes: MIT (default, 5kg payload, pos+vel+KP+KD+torque) and CSP (pure position, 2kg payload). PCAN USB Pro ×2 (can0 right, can1 left).</div>
+        <div class="meta"><span class="tag tag-container">projects</span><span class="tag tag-stage tag-获取">🔵 获取</span></div>
+      </div>
+    </div>
+
+    <div class="entry" data-container="projects" data-stage="理解">
+      <div class="stage">🟢</div>
+      <div class="body">
+        <div class="content">OpenArmX 五层调试流水线: Layer 0 环境验证(18项) → Layer 1 硬件诊断 → Layer 2 通信验证 → Layer 3 运动测试(MIT/CSP) → Layer 4 异常诊断(14类)。</div>
+        <div class="meta"><span class="tag tag-container">projects</span><span class="tag tag-stage tag-理解">🟢 理解</span></div>
+      </div>
+    </div>
+
+    <div class="entry" data-container="projects" data-stage="应用">
+      <div class="stage">⚫</div>
+      <div class="body">
+        <div class="content">OpenArm 1.0 specs: 7 DOF + 1 gripper, rated payload 4.1kg, peak 6.0kg, CAN bus, 24V, precision ±0.05mm, dual-arm ~$6,500.</div>
+        <div class="meta"><span class="tag tag-container">projects</span><span class="tag tag-stage tag-应用">⚫ 应用</span></div>
+      </div>
+    </div>
+
+    <div class="entry" data-container="projects" data-stage="应用">
+      <div class="stage">⚫</div>
+      <div class="body">
+        <div class="content">OpenArm motors: J1/J2 DM-J8009P (20Nm), J3 DM-J4340P (9Nm), J4 DM-J4340 (9Nm), J5-J8 DM-J4310 (3Nm), all 24V BLDC 14-bit encoders.</div>
+        <div class="meta"><span class="tag tag-container">projects</span><span class="tag tag-stage tag-应用">⚫ 应用</span></div>
+      </div>
+    </div>
+
+    <div class="entry" data-container="projects" data-stage="应用">
+      <div class="stage">⚫</div>
+      <div class="body">
+        <div class="content">OpenArm BOM: total ~983K CNY; actuators 397K, machined parts 316K, gripper 108K, electrical 85K, base 20K, end effector 23K. Via MiSUMi/MEVIY.</div>
+        <div class="meta"><span class="tag tag-container">projects</span><span class="tag tag-stage tag-应用">⚫ 应用</span></div>
+      </div>
+    </div>
+
+    <div class="entry" data-container="projects" data-stage="应用">
+      <div class="stage">⚫</div>
+      <div class="body">
+        <div class="content">OpenArm production: 10-50 units/month, training 2-4 weeks, yield 90-95%, assembly 4-6× slower than consumer electronics.</div>
+        <div class="meta"><span class="tag tag-container">projects</span><span class="tag tag-stage tag-应用">⚫ 应用</span></div>
+      </div>
+    </div>
+
+    <div class="entry" data-container="projects" data-stage="应用">
+      <div class="stage">⚫</div>
+      <div class="body">
+        <div class="content">End-effector weight subtracted from rated payload (e.g. 1.5kg gripper leaves 2.6kg payload).</div>
+        <div class="meta"><span class="tag tag-container">projects</span><span class="tag tag-stage tag-应用">⚫ 应用</span></div>
+      </div>
+    </div>
+
+  </div>
 </div>
 
-<div class="section" data-container="areas">
-<div class="section-title">📂 Areas <span class="badge">1</span></div>
-<div class="card" data-container="areas" data-stage="获取">
-<div class="card-meta">
-<span class="tag tag-areas">areas</span>
-<span class="stage">🔵获取</span>
-</div>
-<div class="card-content">精益工具：VSM/单件流/Kanban/Andon/SMED/Poka-Yoke/TPM；A3+5Why+鱼骨图+8D+PDCA；提案奖励50-500元。</div>
-<div class="card-source">📁 2 areas/robot assembly/2026-06-03-具身智能机器人组装流水线管理指南.md</div>
-</div>
+<!-- areas -->
+<div class="container-section" data-container="areas">
+  <div class="container-title"><span class="dot" style="background:var(--green)"></span> Areas <span class="count">(12)</span></div>
+  <div class="entries">
+
+    <div class="entry" data-container="areas" data-stage="应用">
+      <div class="stage">⚫</div>
+      <div class="body">
+        <div class="content">机器人代工厂核心差异: BOM频繁变更、定制件多、软硬件深度耦合、精度±0.05mm、良品率90-95%、组装比家电慢4-6倍。核心竞争力在于调试与一体化测试能力。</div>
+        <div class="meta"><span class="tag tag-container">areas</span><span class="tag tag-stage tag-应用">⚫ 应用</span></div>
+      </div>
+    </div>
+
+    <div class="entry" data-container="areas" data-stage="应用">
+      <div class="stage">⚫</div>
+      <div class="body">
+        <div class="content">四阶段组装流程: 子组件预装 → 主体组装 → 软件调试(固件/标定/运动学/AI) → 整机测试老化(24-72h)。</div>
+        <div class="meta"><span class="tag tag-container">areas</span><span class="tag tag-stage tag-应用">⚫ 应用</span></div>
+      </div>
+    </div>
+
+    <div class="entry" data-container="areas" data-stage="应用">
+      <div class="stage">⚫</div>
+      <div class="body">
+        <div class="content">车间八大区域: 来料仓储15-20%, 预加工10%, 子装配20-25%, 主体装配20-25%, 测试调试15-20%, 返修5%, 包装出货10%。</div>
+        <div class="meta"><span class="tag tag-container">areas</span><span class="tag tag-stage tag-应用">⚫ 应用</span></div>
+      </div>
+    </div>
+
+    <div class="entry" data-container="areas" data-stage="应用">
+      <div class="stage">⚫</div>
+      <div class="body">
+        <div class="content">IQC三层策略: A类件100%全检AQL0.65, B类AQL1.0, C类AQL2.5。6个质量门+Poka-Yoke+SPC+MES。</div>
+        <div class="meta"><span class="tag tag-container">areas</span><span class="tag tag-stage tag-应用">⚫ 应用</span></div>
+      </div>
+    </div>
+
+    <div class="entry" data-container="areas" data-stage="应用">
+      <div class="stage">⚫</div>
+      <div class="body">
+        <div class="content">KPI: OEE≥85%, FPY初期≥92%成熟≥97%, OTD≥98%, 不良率≤2000PPM, 返修率≤2%, 安全0事故, 追溯100%。</div>
+        <div class="meta"><span class="tag tag-container">areas</span><span class="tag tag-stage tag-应用">⚫ 应用</span></div>
+      </div>
+    </div>
+
+    <div class="entry" data-container="areas" data-stage="应用">
+      <div class="stage">⚫</div>
+      <div class="body">
+        <div class="content">安全管理: 7类危险源(ESD/重物/夹挤/电气/锐利/化学/激光), 日巡检+周专项+月综合, 半年1次应急演练, 噪声≤85dB(A)。</div>
+        <div class="meta"><span class="tag tag-container">areas</span><span class="tag tag-stage tag-应用">⚫ 应用</span></div>
+      </div>
+    </div>
+
+    <div class="entry" data-container="areas" data-stage="应用">
+      <div class="stage">⚫</div>
+      <div class="body">
+        <div class="content">精益工具: VSM/单件流/Kanban/Andon/SMED/Poka-Yoke/TPM; A3+5Why+鱼骨图+8D+PDCA; 提案奖励50-500元。</div>
+        <div class="meta"><span class="tag tag-container">areas</span><span class="tag tag-stage tag-应用">⚫ 应用</span></div>
+      </div>
+    </div>
+
+    <div class="entry" data-container="areas" data-stage="应用">
+      <div class="stage">⚫</div>
+      <div class="body">
+        <div class="content">行业标杆: Tesla Optimus, Figure AI(BotQ年产12000台), 宇树科技, 波士顿动力。三期路线图: 0-6月基础→6-12月提升→12-24月智能制造。</div>
+        <div class="meta"><span class="tag tag-container">areas</span><span class="tag tag-stage tag-应用">⚫ 应用</span></div>
+      </div>
+    </div>
+
+    <div class="entry" data-container="areas" data-stage="应用">
+      <div class="stage">⚫</div>
+      <div class="body">
+        <div class="content">人员管理: 三副主任制(生产/质量/技术), 三级培训(公司24h+车间16h+班组24h), 多能工≥3工位, 关键岗位持证上岗。</div>
+        <div class="meta"><span class="tag tag-container">areas</span><span class="tag tag-stage tag-应用">⚫ 应用</span></div>
+      </div>
+    </div>
+
+    <div class="entry" data-container="areas" data-stage="应用">
+      <div class="stage">⚫</div>
+      <div class="body">
+        <div class="content">物料管理: 单向流动+拉动式, AGV/AMR+AS/RS+智能料塔; A类JIT/B类定期补货/C类VMI; 安全库存2-4周, 呆滞90天预警。</div>
+        <div class="meta"><span class="tag tag-container">areas</span><span class="tag tag-stage tag-应用">⚫ 应用</span></div>
+      </div>
+    </div>
+
+    <div class="entry" data-container="areas" data-stage="获取">
+      <div class="stage">🔵</div>
+      <div class="body">
+        <div class="content">ERP/MES架构: ERP→MES→SCADA/IoT→物理执行, BOM多版本、替代料、ECN变更。</div>
+        <div class="meta"><span class="tag tag-container">areas</span><span class="tag tag-stage tag-获取">🔵 获取</span></div>
+      </div>
+    </div>
+
+    <div class="entry" data-container="areas" data-stage="获取">
+      <div class="stage">🔵</div>
+      <div class="body">
+        <div class="content">ESD要点: ESD地板、手环、离子风机、门禁测试、湿度≥40%RH。</div>
+        <div class="meta"><span class="tag tag-container">areas</span><span class="tag tag-stage tag-获取">🔵 获取</span></div>
+      </div>
+    </div>
+
+  </div>
 </div>
 
-<div class="section" data-container="resources" style="display:none">
-<div class="section-title">📂 Resources <span class="badge">0</span></div>
-<div class="empty">暂无条目</div>
+<!-- archives -->
+<div class="container-section" data-container="archives">
+  <div class="container-title"><span class="dot" style="background:var(--gray)"></span> Archives <span class="count">(1)</span></div>
+  <div class="entries">
+
+    <div class="entry" data-container="archives" data-stage="应用">
+      <div class="stage">⚫</div>
+      <div class="body">
+        <div class="content">Gitea Pages方案不可行(Gitea 1.22.6 Pages需Actions Runner), 已弃用回退GitHub Pages(wxcadk.github.io)。Gitea服务已停止, 数据保留/var/lib/gitea/data/。</div>
+        <div class="meta"><span class="tag tag-container">archives</span><span class="tag tag-stage tag-应用">⚫ 应用</span></div>
+      </div>
+    </div>
+
+  </div>
 </div>
 
-<div class="section" data-container="archives" style="display:none">
-<div class="section-title">📂 Archives <span class="badge">0</span></div>
-<div class="empty">暂无条目</div>
+<!-- resources (empty) -->
+<div class="container-section" data-container="resources" style="display:none">
+  <div class="container-title"><span class="dot" style="background:var(--orange)"></span> Resources <span class="count">(0)</span></div>
+  <div class="entries"><div class="empty">暂无条目</div></div>
 </div>
 
-</div>
+<div class="footer">
+  Memory Journal · 自动生成于 PARA 文件夹 × SuperMemory 双重过滤 · 每日 19:00 CST 更新
 </div>
 
 <script>
-const state={container:'all',stage:'all'};
-document.querySelectorAll('.filter-btn').forEach(btn=>{
-btn.addEventListener('click',()=>{
-const group=btn.dataset.filter;
-const val=btn.dataset.value;
-state[group]=val;
-document.querySelectorAll(`.filter-btn[data-filter="${group}"]`).forEach(b=>b.classList.remove('active'));
-btn.classList.add('active');
-applyFilters();
-});
-});
-function applyFilters(){
-document.querySelectorAll('.section[data-container]').forEach(sec=>{
-const c=sec.dataset.container;
-const showC=state.container==='all'||state.container===c;
-sec.style.display=showC?'':'none';
-if(!showC)return;
-sec.querySelectorAll('.card').forEach(card=>{
-const cs=card.dataset.container;
-const ss=card.dataset.stage;
-const matchC=state.container==='all'||state.container===cs;
-const matchS=state.stage==='all'||state.stage===ss;
-card.style.display=(matchC&&matchS)?'':'none';
-});
-});
-}
+(function(){
+  let activeContainer = 'all';
+  let activeStage = 'all';
+
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const filterType = this.dataset.filter;
+      const value = this.dataset.value;
+
+      // Update active state
+      document.querySelectorAll(`.filter-btn[data-filter="${filterType}"]`).forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+
+      if (filterType === 'container') activeContainer = value;
+      if (filterType === 'stage') activeStage = value;
+
+      applyFilters();
+    });
+  });
+
+  function applyFilters() {
+    document.querySelectorAll('.entry').forEach(entry => {
+      const matchContainer = activeContainer === 'all' || entry.dataset.container === activeContainer;
+      const matchStage = activeStage === 'all' || entry.dataset.stage === activeStage;
+      entry.classList.toggle('hidden', !(matchContainer && matchStage));
+    });
+
+    // Show/hide container sections
+    document.querySelectorAll('.container-section').forEach(section => {
+      const container = section.dataset.container;
+      if (!container) return;
+      const matchContainer = activeContainer === 'all' || container === activeContainer;
+      const hasVisible = matchContainer && section.querySelectorAll('.entry:not(.hidden)').length > 0;
+      section.style.display = hasVisible ? '' : 'none';
+    });
+  }
+})();
 </script>
 </body>
 </html>
